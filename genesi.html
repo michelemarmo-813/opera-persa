@@ -168,22 +168,16 @@ if(edizioni.length === 0){
   const singolo = TUTTI_LIBRI.find(l => l.label === operaCercata);
   if(singolo) edizioni = [singolo];
 }
+// (2026-10-21) Il «Focus sull'opera» riguarda solo le raccolte: romanzi e libri non raccolta (di cui il dataset
+// registra solo gli estratti) non hanno focus, e gli estratti non compaiono mai nel diagramma.
+edizioni = edizioni.filter(l => (l.tipo_libro || "raccolta") === "raccolta");
 
-// Per i romanzi e i libri non raccolta non esiste un vero processo di "genesi"
-// del libro (il dataset registra solo l'estratto giornalistico, non un
-// indice di capitoli): titolo e sottotitolo della scheda riflettono quindi
-// cosa mostra davvero la pagina in quel caso, coerentemente con l'etichetta
-// del bottone che porta qui da Raccolte (vedi index.html).
+// Titolo e sottotitolo della scheda (il focus riguarda solo le raccolte).
 function impostaTitoliSidebar(tipoLibro){
   const h1 = document.getElementById("genesi-titolo-h1");
   const sottotitolo = document.getElementById("genesi-sottotitolo");
-  if(tipoLibro !== "raccolta"){
-    h1.textContent = "Articoli collegati";
-    sottotitolo.textContent = "Gli articoli che ne sono un estratto";
-  } else {
-    h1.textContent = "Genesi dell'opera";
-    sottotitolo.textContent = "Come si e' formata, articolo per articolo";
-  }
+  h1.textContent = "Genesi dell'opera";
+  sottotitolo.textContent = "Come si e' formata, articolo per articolo";
   // un solo diagramma per edizione: il sottotitolo dice di quale
   if(edizioni.length === 1 && baseOperaLibro(edizioni[0].label)) sottotitolo.textContent = edizioni[0].label + " - " + sottotitolo.textContent;
 }
@@ -193,6 +187,44 @@ if(edizioni.length === 0){
 } else {
   impostaTitoliSidebar(edizioni[0].tipo_libro || "raccolta");
   disegnaGenesi(edizioni);
+}
+
+// (2026-10-21) CAPITOLI SENZA ARTICOLO, SEMPRE DALL'INDICE DEL VOLUME.
+// Il focus mostra come «capitoli senza articolo» tutte le voci dell'indice stampato (DATI.indici, la stessa fonte
+// della sezione Raccolte) che non hanno un articolo collegato, introduzioni escluse: se la voce indica un volume
+// d'origine -> «noto solo da un volume»; se e' inedita -> «inedito»; altrimenti (inedito/N.D. o ristampa senza fonte)
+// -> «senza fonte individuata». La lista dei capitoli non collegati del libro (capitoli_non_collegati) serve solo ad
+// arricchire la scheda (note, dati del volume) e come ripiego per i libri senza indice. Vale per ogni raccolta.
+const NOTA_VOLUME_COLLETTIVO = /^Capitolo tratto da un contributo pubblicato originariamente in un volume collettivo/i;
+function capitoliSenzaArticolo(ed){
+  const norm = t => String(t || "").toLowerCase().replace(/[’‘]/g, "'").replace(/[^a-z0-9]/g, "");
+  const nc = ed.capitoli_non_collegati || [];
+  const prefisso = "capitolo-nc-" + ed.id.split("/").pop() + "-";
+  const indice = (typeof DATI.indici !== "undefined" && DATI.indici) ? DATI.indici[ed.id] : null;
+  if(!indice || !indice.length){
+    return nc.map((c, idx) => Object.assign({ id: prefisso + idx, kind: "capitolo_nc" }, c));
+  }
+  const NOTA_ND = "Non abbiamo informazioni sulla versione originale di questo capitolo nel dataset.";
+  return indice.filter(v => v.stato !== "introduzione" && !v.articolo && !(v.articoli && v.articoli.length)).map(v => {
+    const base = nc.find(c => norm(c.titolo) === norm(v.titolo))
+      || (v.volume && nc.find(c => norm(c.titolo_volume_originale) === norm(v.volume.libro))) || null;
+    const o = { id: prefisso + "i" + v.posizione, kind: "capitolo_nc", titolo: v.titolo,
+      titolo_volume_originale: null, curatori_volume_originale: null, citta_volume_originale: null,
+      editore_volume_originale: null, anno_volume_originale: null, pagine_volume_originale: null, nota_volume_originale: null };
+    if(v.volume && v.volume.libro){
+      Object.assign(o, { titolo_volume_originale: v.volume.libro, curatori_volume_originale: v.volume.curatore || null,
+        citta_volume_originale: v.volume.luogo || null, editore_volume_originale: v.volume.editore || null,
+        anno_volume_originale: v.volume.anno || null, pagine_volume_originale: v.volume.pagine || null });
+      o.nota = null;   // niente nota per i capitoli da volume (vedi NOTA_VOLUME_COLLETTIVO)
+    } else if(v.stato === "inedito"){
+      o.nota = (base && /^Testo inedito/i.test(base.nota || "")) ? base.nota : "Testo inedito, scritto per la raccolta.";
+    } else if(base && base.titolo_volume_originale){
+      Object.assign(o, base, { id: o.id, kind: "capitolo_nc", titolo: v.titolo });
+    } else {
+      o.nota = (base && base.nota) || NOTA_ND;
+    }
+    return o;
+  });
 }
 
 function chiaveData(a){ return (a.anno||"0000") + "-" + (a.data_completa || (a.numero||"")); }
@@ -210,7 +242,6 @@ function tronca(s, n){ return s && s.length > n ? s.slice(0, n-1) + "…" : (s||
 // richiesta esplicita, la freccia va dal libro all'articolo, quindi la
 // punta va posta sul nodo "from" (arrows:"from").
 function stileArcoConfluenza(tipoArco){
-  if(tipoArco === "estrattoDi") return { color:{color:COLORI.arco, opacity:0.9}, width:2, dashes:[6,4], arrows:"from" };
   return { color:{color:COLORI.libro, opacity:0.9}, width:2, dashes:false, arrows:"to" };
 }
 
@@ -220,21 +251,20 @@ function stileArcoConfluenza(tipoArco){
 // il basso (una riga per anno, o piu' righe dello stesso anno: mai due anni
 // diversi sulla stessa riga; fino a 3 colonne - vedi "RIGHE PER ANNO" sotto), dentro un imbuto che converge sul libro in basso. I capitoli
 // senza data (senza fonte periodica individuata) chiudono la serie, appena
-// sopra il libro. Per i libri di soli estratti (romanzi, libri non raccolta)
-// l'imbuto e' rovesciato: il libro e' in alto e gli articoli che ne derivano
-// scendono sotto di lui, sempre in ordine di data.
+// sopra il libro. Gli estratti non compaiono mai nel focus (e romanzi e libri
+// non raccolta, che hanno solo estratti, non hanno focus).
 // Colori coerenti con il resto del sito: libro arancione, ristampa gialla,
-// estratto fucsia, rivista (seconda riga di ogni voce) azzurra.
+// rivista (seconda riga di ogni voce) azzurra.
 // =====================================================================
 function disegnaGenesiImbuto(ed){
   const COL_W = 250, ROW_H = 74, PAD = 40;
   const archiPerArticolo = {};
-  DATI.edges.filter(e => e.to === ed.id && (e.type === "isVersionOf" || e.type === "estrattoDi"))
+  // (2026-10-21) solo le ristampe (isVersionOf): gli estratti (estrattoDi) non compaiono mai nel focus
+  DATI.edges.filter(e => e.to === ed.id && e.type === "isVersionOf")
     .forEach(e => { archiPerArticolo[e.from] = e.type; });
   const articoli = Object.keys(archiPerArticolo).map(id => nodiById[id]).filter(Boolean)
     .sort((a,b) => { const x = chiaveData(a), y = chiaveData(b); return x < y ? -1 : (x > y ? 1 : 0); });
-  const capitoliNC = (ed.capitoli_non_collegati || []).map((c, idx) => Object.assign({
-    id: "capitolo-nc-" + ed.id.split("/").pop() + "-" + idx, kind: "capitolo_nc" }, c));
+  const capitoliNC = capitoliSenzaArticolo(ed);
   const voci = articoli.map(a => ({ tipo:"articolo", nodo:a, arco:archiPerArticolo[a.id] }))
     .concat(capitoliNC.map(c => ({ tipo:"capitolo_nc", nodo:c })));
   const N = voci.length;
@@ -290,9 +320,8 @@ function disegnaGenesiImbuto(ed){
   // (2026-10-21) PASSAGGIO VIA UN ALTRO LIBRO (PASSAGGI_VIA_VOLUME): riga a se' dopo le righe degli articoli
   const cfgVia = PASSAGGI_VIA_VOLUME[ed.id];
   const libroVia = cfgVia ? nodiById[cfgVia.via] : null;
-  const haVia = !!(libroVia && articoli.some(a => DATI.edges.some(e => e.from === a.id && e.to === libroVia.id && (e.type === "isVersionOf" || e.type === "estrattoDi"))));
-  const soloEstratti = articoli.length > 0 && articoli.every(a => archiPerArticolo[a.id] === "estrattoDi") && capitoliNC.length === 0;
-  const yPrima = soloEstratti ? 150 : 0;
+  const haVia = !!(libroVia && articoli.some(a => DATI.edges.some(e => e.from === a.id && e.to === libroVia.id && e.type === "isVersionOf")));
+  const yPrima = 0;
   const nodi = [], archi = [];
   voci.forEach((v, i) => {
     const pos = posizioneVoce.get(v);
@@ -300,8 +329,8 @@ function disegnaGenesiImbuto(ed){
     const x = (pos.col - (pos.nInRiga - 1) / 2) * COL_W, y = yPrima + pos.riga * ROW_H;
     let bordo, sfondo, dash = false, titolo, seconda;
     if(v.tipo === "articolo"){
-      const a = v.nodo, estr = v.arco === "estrattoDi";
-      bordo = estr ? COL_IMB.estr : COL_IMB.rist; sfondo = estr ? COL_IMB.estrSfondo : COL_IMB.ristSfondo;
+      const a = v.nodo;
+      bordo = COL_IMB.rist; sfondo = COL_IMB.ristSfondo;
       titolo = a.titolo_capitolo ? ("«" + tronca(a.titolo_capitolo, 46) + "»") : tronca(a.label, 46);
       seconda = [a.rivista, a.anno].filter(Boolean).join(", ");
     } else {
@@ -343,7 +372,7 @@ function disegnaGenesiImbuto(ed){
                 color: { background: "rgba(0,0,0,0)", border: "rgba(0,0,0,0)" }, label: "", raw: null });
     archi.push({ from: "imbuto-ancora-via", to: libroVia.id, arrows: "to", width: 2.5, color: { color: COL_IMB.rist, opacity: 0.9 }, smooth: false });
   }
-  const yLibro = soloEstratti ? 0 : yUltima + 150;
+  const yLibro = yUltima + 150;
   nodi.push({
     id: ed.id, x: 0, y: yLibro, fixed: true, shape: "box", margin: 12, label: ed.label,
     color: { background: COL_IMB.libro, border: COL_IMB.libroBordo, highlight: { background: COL_IMB.libro, border: "#fff" } },
@@ -353,11 +382,9 @@ function disegnaGenesiImbuto(ed){
   // Frecce: una sola, fra l'imbuto e il libro (non una per voce, per non
   // incrociare i riquadri); la differenza ristampa/estratto la dicono colore e legenda.
   const yFine = yUltima;
-  nodi.push({ id: "imbuto-ancora", x: 0, y: soloEstratti ? 55 : yFine + 105, fixed: true, shape: "dot", size: 1,
+  nodi.push({ id: "imbuto-ancora", x: 0, y: yFine + 105, fixed: true, shape: "dot", size: 1,
               color: { background: "rgba(0,0,0,0)", border: "rgba(0,0,0,0)" }, label: "", raw: null });
-  archi.push(soloEstratti
-    ? { from: ed.id, to: "imbuto-ancora", arrows: "to", dashes: [6,4], width: 2, color: { color: "#f0abfc", opacity: 0.9 }, smooth: false }
-    : { from: "imbuto-ancora", to: ed.id, arrows: "to", width: 2.5, color: { color: COL_IMB.libro, opacity: 0.9 }, smooth: false });
+  archi.push({ from: "imbuto-ancora", to: ed.id, arrows: "to", width: 2.5, color: { color: COL_IMB.libro, opacity: 0.9 }, smooth: false });
   const nodiCorrentiById = {};
   nodi.forEach(n => { nodiCorrentiById[n.id] = n.raw; });
 
@@ -372,15 +399,11 @@ function disegnaGenesiImbuto(ed){
     const wMax = larghezzaAlta, wMid = larghezzaAlta * 0.9, wNeck = 100;
     ctx.save();
     ctx.beginPath();
-    if(soloEstratti){   // imbuto rovesciato: collo in alto (sotto il libro), allarga verso il basso
-      ctx.moveTo(-wNeck / 2, 55); ctx.lineTo(wNeck / 2, 55); ctx.lineTo(wMid / 2, yAlto); ctx.lineTo(wMax / 2, yBasso);
-      ctx.lineTo(-wMax / 2, yBasso); ctx.lineTo(-wMid / 2, yAlto);
-    } else {            // largo in alto, quasi dritto lungo le righe, poi collo verso il libro
-      ctx.moveTo(-wMax / 2, yAlto); ctx.lineTo(wMax / 2, yAlto); ctx.lineTo(wMid / 2, yBasso); ctx.lineTo(wNeck / 2, yBasso + 55);
-      ctx.lineTo(-wNeck / 2, yBasso + 55); ctx.lineTo(-wMid / 2, yBasso);
-    }
+    // largo in alto, quasi dritto lungo le righe, poi collo verso il libro
+    ctx.moveTo(-wMax / 2, yAlto); ctx.lineTo(wMax / 2, yAlto); ctx.lineTo(wMid / 2, yBasso); ctx.lineTo(wNeck / 2, yBasso + 55);
+    ctx.lineTo(-wNeck / 2, yBasso + 55); ctx.lineTo(-wMid / 2, yBasso);
     ctx.closePath();
-    ctx.fillStyle = soloEstratti ? "rgba(217,70,239,0.05)" : "rgba(255,204,77,0.05)";
+    ctx.fillStyle = "rgba(255,204,77,0.05)";
     ctx.fill();
     ctx.setLineDash([6, 6]); ctx.strokeStyle = "rgba(139,150,163,0.45)"; ctx.lineWidth = 1.2; ctx.stroke();
     ctx.setLineDash([]);
@@ -409,8 +432,6 @@ function disegnaGenesiImbuto(ed){
     mostraDettaglioGenesi(nodiCorrentiById[params.nodes[0]]);
   });
 
-  const aiuto = document.querySelector("#sidebar .aiuto-campo");
-  if(aiuto && soloEstratti) aiuto.textContent = "In alto il libro; sotto, a imbuto, gli articoli che ne sono un estratto, dal piu' antico (in alto) al piu' recente: ogni riga contiene solo articoli dello stesso anno (affiancati, fino a tre colonne). Sotto il titolo di ogni articolo, in azzurro, la rivista e l'anno.";
   if(haVia && !document.getElementById("genesi-passaggio-via")){
     const par = document.createElement("div");
     par.id = "genesi-passaggio-via"; par.className = "aiuto-campo"; par.style.marginTop = "10px";
@@ -419,10 +440,8 @@ function disegnaGenesiImbuto(ed){
   }
   const box = document.getElementById("genesi-legenda");
   const haRist = articoli.some(a => archiPerArticolo[a.id] === "isVersionOf");
-  const haEstr = articoli.some(a => archiPerArticolo[a.id] === "estrattoDi");
   let html = "<div class='legenda-voce'><span class='quadrato' style='background:" + COL_IMB.libro + "'></span> libro (questa edizione)</div>";
   if(haRist) html += "<div class='legenda-voce'><span class='quadrato' style='background:" + COL_IMB.rist + "'></span> Fonte dell'articolo: intervento in testata periodica</div>";
-  if(haEstr) html += "<div class='legenda-voce'><span class='quadrato' style='background:" + COL_IMB.estr + "'></span> articolo estratto dal libro (da libro a rivista)</div>";
   const nVol = capitoliNC.filter(c => c.titolo_volume_originale).length;
   const nIned = capitoliNC.filter(c => !c.titolo_volume_originale && /^Testo inedito/i.test(c.nota || "")).length;
   const nSenza = capitoliNC.length - nVol - nIned;
@@ -461,11 +480,9 @@ function disegnaGenesi(edizioni){
     // piu' con prism:isVersionOf (vedi ontologia_eco.ttl) - entrambi vanno
     // presi qui, la differenza si gestisce arco per arco in stileArcoConfluenza.
     const articoli = DATI.edges
-      .filter(e => e.to === ed.id && (e.type === "isVersionOf" || e.type === "estrattoDi"))
+      .filter(e => e.to === ed.id && e.type === "isVersionOf")
       .map(e => nodiById[e.from]).filter(Boolean);
-    const capitoliNC = (ed.capitoli_non_collegati || []).map((c, idx) => Object.assign({
-      id: "capitolo-nc-" + ed.id.split("/").pop() + "-" + idx, kind: "capitolo_nc"
-    }, c));
+    const capitoliNC = capitoliSenzaArticolo(ed);
     return { edizione: ed, articoli, capitoliNC };
   });
 
@@ -680,11 +697,7 @@ function disegnaLegenda(conCatena, tipoLibro, haFontiRivista, haFontiVolume){
   if(conCatena) html += "<div class='legenda-voce'><span class='legenda-linea-piena' style='border-color:" + COLORI.arco + "'></span> successione cronologica fra edizioni</div>";
   html += "<div class='legenda-voce'><span class='pallino' style='background:" + COLORI.libro + "'></span> edizione del libro</div>";
   html += "<div class='legenda-voce'><span class='pallino' style='background:" + COLORI.articolo + "'></span> articolo uscito su rivista/quotidiano</div>";
-  if(tipoLibro !== "raccolta"){
-    html += "<div class='legenda-voce'><span class='legenda-linea-tratteggiata' style='border-color:" + COLORI.arco + "'></span> articolo estratto dal libro (non è un capitolo dell'indice)</div>";
-  } else {
-    html += "<div class='legenda-voce'><span class='legenda-linea-piena' style='border-color:" + COLORI.libro + "'></span> articolo ripubblicato come capitolo</div>";
-  }
+  html += "<div class='legenda-voce'><span class='legenda-linea-piena' style='border-color:" + COLORI.libro + "'></span> articolo ripubblicato come capitolo</div>";
   html += "<div class='legenda-voce'><span class='rombo' style='background:" + COLORI.capitolo + "'></span> capitolo/contributo noto solo da un volume, o senza fonte individuata</div>";
   if(haFontiRivista) html += "<div class='legenda-voce'><span class='triangolo' style='border-bottom-color:" + COLORI.rivista + "'></span> rivista/quotidiano di provenienza</div>";
   if(haFontiVolume) html += "<div class='legenda-voce'><span class='esagono' style='background:" + COLORI.volume + "'></span> volume di provenienza</div>";
@@ -729,7 +742,9 @@ function mostraDettaglioGenesi(raw){
     html += "<div class='campo'><b>Tipo:</b> Capitolo senza fonte periodica individuata</div>";
     if(raw.titolo_volume_originale) html += "<div class='campo'><b>Tratto da:</b> «" + raw.titolo_volume_originale + "»" + (raw.anno_volume_originale ? " (" + raw.anno_volume_originale + ")" : "") + "</div>";
     if(raw.curatori_volume_originale) html += "<div class='campo'><b>Curatori/autori:</b> " + raw.curatori_volume_originale + "</div>";
-    if(raw.nota) html += "<div class='campo'>" + raw.nota + "</div>";
+    // (2026-10-21) la nota «Capitolo tratto da un contributo pubblicato originariamente in un volume collettivo (…)»
+    // non si mostra mai nel focus: i dati del volume sono gia' nei campi «Tratto da» e «Curatori/autori».
+    if(raw.nota && !NOTA_VOLUME_COLLETTIVO.test(raw.nota)) html += "<div class='campo'>" + raw.nota + "</div>";
   } else if(raw.group === "fonte"){
     html += "<div class='campo'><b>Tipo:</b> " + (raw.tipo === "rivista" ? "Rivista/quotidiano di provenienza" : "Volume di provenienza") + "</div>";
     html += "<div class='campo'>Le voci collegate a questo nodo (linea tratteggiata) sono tutte tratte da qui.</div>";

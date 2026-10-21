@@ -3,6 +3,31 @@
 Registro delle versioni del progetto (sito + dati RDF). Copre l'intero progetto; per lo storico delle sole modifiche
 allo schema dell'ontologia, vedi anche il commento "STORICO VERSIONI" in `grafo_eco/ontologia_eco.ttl`.
 
+## 2026-10-21 (71) — «Focus sull'opera»: tolta la nota «Capitolo tratto da un contributo pubblicato originariamente in un volume collettivo…»
+
+Backup `20261021-1612` (suffisso `_note_volume`: `genesi.html`, CHANGELOG, Word). Solo `genesi.html` (visualizzazione) e Word; nessun dato toccato.
+- `genesi.html`: nelle schede dei capitoli senza articolo la nota «Capitolo tratto da un contributo pubblicato originariamente in un volume collettivo (dati bibliografici riportati sotto), non in un periodico: per questo non è collegato a un fabio:JournalArticle.» (17 capitoli nei dati) non compare più, per nessun libro (`NOTA_VOLUME_COLLETTIVO`). I dati del volume restano nei campi «Tratto da» e «Curatori/autori»; le altre note (inedito, «Non abbiamo informazioni sulla versione originale…», fonte citata nell'indice) restano.
+- Verifica Playwright (`file://`): aperte le 37 schede di capitoli senza articolo delle 15 raccolte, nessuna contiene più la nota; nessun errore JS.
+- Word: cap. 12.5 aggiornato.
+
+## 2026-10-21 (70) — «Focus sull'opera»: i capitoli senza articolo vengono sempre dall'indice del volume
+
+Backup `20261021-1609` (suffisso `_capitoli_da_indice`: `genesi.html`, CHANGELOG, Word). Solo `genesi.html` (visualizzazione) e Word; nessun dato, Excel o altro file toccato (nodi 2780, archi 3183).
+- **Problema**: il focus leggeva i capitoli senza articolo da `capitoli_non_collegati` del libro, una lista che non coincideva con l'indice. In *La bustina di Minerva* le quattro voci «Inedito / N.D.» (Kosovo, Dell'importanza delle lettere maiuscole, L'Opus Dei smentisce che io sia l'Anticristo!, Come scrivere bene) comparivano, in *Apocalittici e integrati* no («La musica e la macchina», «Sulla fantascienza» e altre mancavano).
+- **Regola (ora uguale per tutte le raccolte)**: `capitoliSenzaArticolo(ed)` in `genesi.html` prende dall'indice (`DATI.indici`, la fonte della sezione Raccolte) ogni voce senza articolo collegato, introduzioni escluse. Volume d'origine indicato → «noto solo da un volume»; voce inedita → «inedito»; altrimenti → «senza fonte individuata». `capitoli_non_collegati` arricchisce soltanto la scheda (note) ed è il ripiego per i libri senza indice.
+- **Effetto per raccolta** (voci senza articolo, prima → ora): *Apocalittici e integrati* 4 → 7 (+ le 2 voci senza fonte, + «La struttura del cattivo gusto», + il titolo del volume, «La musica, la radio e la televisione» al posto di «La radio e la televisione»; «Prefazione» ora «inedito» come nell'indice; «Valori estetici e cultura di massa», che non è nell'indice, non compare più); *Diario minimo (1975)* 0 → 1 («Nota all'edizione 1975», inedito); *La struttura assente (1980)* 3 → 4 («La frontiera semiologica», inedito); *Le poetiche di Joyce* 0 → 1 («Ulysses», inedito); *Opera aperta (1976)* 1 → 2 («Opera aperta: il tempo, la società», inedito); *La bustina di Minerva* 5 → 4 («La peste dello straccio» ha un articolo collegato ed era un doppione). Invariate: Dalla periferia dell'impero 5, Il costume di casa 5, La definizione dell'arte 5, Opera aperta (1966) 1, Pape Satàn Aleppe 2, Diario minimo (1963, 1966), Opera aperta (1962), Sette anni di desiderio (0).
+- Verifica Playwright (`file://`): in tutte le 15 raccolte il numero di capitoli senza articolo mostrati coincide con quello dell'indice, nessun errore JS; controllato a vista il focus di *Apocalittici e integrati*.
+- Word: cap. 12.5 («Capitoli senza articolo») aggiornato allo stato attuale.
+
+## 2026-10-21 (69) — «Focus sull'opera»: gli estratti non compaiono mai
+
+Backup `20261021-1602` (`backup_genesi_…html`, `backup_CHANGELOG_…md`, `backup_Opera_Persa_Documentazione_Tecnica_…docx`). Solo `genesi.html` (visualizzazione) e Word; nessun dato, Excel o altro file toccato (nodi 2780, archi 3183).
+- `genesi.html`: nel diagramma a imbuto entrano solo le ristampe (`isVersionOf`); gli archi `estrattoDi` sono ignorati. Tolti l'imbuto rovesciato dei soli estratti, la freccia tratteggiata rosa, la voce di legenda «articolo estratto dal libro», il testo d'aiuto dedicato e lo stile fucsia delle voci. Stessa regola nel codice non raggiungibile per le edizioni multiple.
+- Il focus riguarda solo le raccolte: le edizioni con `tipo_libro` diverso da «raccolta» (7 romanzi, 5 non raccolta) sono scartate e, se si apre l'indirizzo a mano, compare «Nessuna opera trovata per questo indirizzo.». Dalla sezione Raccolte non erano comunque raggiungibili.
+- Effetto sui dati mostrati: in Apocalittici e integrati spariscono dal focus i 4 articoli collegati come estratto; nelle altre raccolte nulla cambia.
+- Verifica Playwright (`file://`, vis-network 9.1.9 in locale): 15 raccolte senza errori JS e senza la parola «estratto» in pagina; 12 libri non raccolta → messaggio di opera non trovata. `node --check` del blocco script superato.
+- Word: cap. 12.5 aggiornato allo stato attuale.
+
 ## 2026-10-21 (68) — La pagina principale si chiama ora `index.html`
 
 Backup `20261021-1238` (suffisso `_rinomina_index`: pagina principale, `index.html` precedente, `genesi.html`, `stile.css`, `note_oscurate.md`, `genera_dati_sito.py`, `precalcola_layout.js`, README del precalcolo, CHANGELOG, Word). Nessun dato, Excel o sorgente toccato.
