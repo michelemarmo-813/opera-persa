@@ -3,6 +3,13 @@
 Registro delle versioni del progetto (sito + dati RDF). Copre l'intero progetto; per lo storico delle sole modifiche
 allo schema dell'ontologia, vedi anche il commento "STORICO VERSIONI" in `grafo_eco/ontologia_eco.ttl`.
 
+## 2026-10-21 (76) — Tolto dal sito l'avviso «[dato ricostruito da Excel - da verificare]»
+
+Backup `20261021-1727` (suffisso `_senza_avviso_excel`: `genera_dati_sito.py`, `dati.js`, `query_esempio.js`, `grafo_completo_ttl.js`, `grafo_dati.json`, CHANGELOG, Word, `dati_rdf/`).
+- **Su richiesta**: l'avviso compariva nel tooltip di 36 articoli il cui numero o pagina era stato ricostruito da una data anomala di Excel. Ora non si mostra più.
+- **Come**: `genera_dati_sito.py` non aggiunge più la riga al tooltip (dati.js rigenerato, 0 occorrenze). Il dato resta marcato nel grafo (`eco:numeroRicostruitoDaData`, `eco:paginaRicostruitaDaData`) e nel campo `dato_ricostruito` di `dati.js`, per uso interno. Nodi 2780, archi 3183 invariati; `posizioni_iniziali.js` non toccato.
+- **Word**: paragrafo «Dati ricostruiti da un'anomalia di Excel» aggiornato (l'avviso non è più sul sito).
+
 ## 2026-10-21 (75) — «La struttura assente»: l'anno nella scheda segue l'edizione scelta
 
 Backup `20261021-1720` (suffisso `_anno_edizione`: `index.html`, CHANGELOG, Word).
