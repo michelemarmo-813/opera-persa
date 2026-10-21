@@ -3,6 +3,16 @@
 Registro delle versioni del progetto (sito + dati RDF). Copre l'intero progetto; per lo storico delle sole modifiche
 allo schema dell'ontologia, vedi anche il commento "STORICO VERSIONI" in `grafo_eco/ontologia_eco.ttl`.
 
+## 2026-10-21 (78) — Supplementi accorpati alla testata: Cacopedia → Alfabeta, supplemento a Media Forum → Media Forum
+
+Backup `20261021-2230` (suffisso `_supplementi`: `Articoli.xlsx` anche in `sorgenti/backup/`, i due CSV di `dati_estratti/tutto/` anche in `tutto/backup/`, `dati.js`, `query_esempio.js`, `grafo_completo_ttl.js`, `posizioni_iniziali.js`, `grafo_dati.json`, `istanze_espresso.ttl`, `indici_volumi.csv`, CHANGELOG, Word, `dati_rdf/`). mtime di `Articoli.xlsx` 15:08, nessuna modifica di altre sessioni.
+- **Su richiesta**, sul modello dei supplementi de L'Espresso (testata unificata, «(supplemento)» nel numero). Fonte `sorgenti/Articoli.xlsx`, foglio journal_article, 6 righe: i 5 articoli di *Cacopedia - Supplemento di Alfabeta, n. 38/39* (1982: «Come falsificare Eraclito», «Il novissimo Melzi d'Eril», «La mappa dell'impero uno a uno», «L'Anopticon», «Il teorema degli 800 colori») → Rivista «Alfabeta», Numero «38/39 (supplemento)»; l'articolo «Gli aspetti sociologici: la marmellata radiofonica…» (1981) da «supplemento a Media Forum» → Rivista «Media Forum», Numero «75 (supplemento)». ACNP: link invariati (Cacopedia aveva già quello di Alfabeta).
+- **Rigenerazione**: `aggiorna_da_articoli.py` (dry run: 12 MODIFICATO, 0 nuovi; poi `--applica`), poi catena completa. Alfabeta passa da 15 a 20 articoli, «Media Forum» è una testata con 1 articolo, la testata «Cacopedia» non esiste più (nodi 2780 → 2779, archi 3183). Nel sito: «Alfabeta, 1982, n. 38/39 (supplemento), p. 7».
+- **Layout**: gli ID dei nodi sono cambiati, quindi `posizioni_iniziali.js` ricalcolato nel cloud (57 s; 604 nodi vista «tutti», 189 «ristampe») e copiato sul Mac.
+- **Invariato**: in `indici_volumi.csv` (riga di «Il secondo diario minimo») la testata come indicata nell'indice stampato resta «Cacopedia – Supplemento di Alfabeta» (è la fonte dell'indice, non la testata normalizzata).
+- **Nota**: il registro `aggiornamento_da_articoli_20261021.csv` ha lo stesso nome di giorno e viene sovrascritto a ogni esecuzione: ora contiene solo queste 12 righe, non più le 1106 modifiche di rubrica della voce (73) (che restano documentate dal CHANGELOG e dai backup).
+- **Word**: paragrafo sulle varianti di testata (cap. dati) aggiornato.
+
 ## 2026-10-21 (77) — Indici: aggiornamento dal ritocco in `Indice.xlsx` («Opera aperta» 1962)
 
 Backup `20261021-2034` (suffisso `_aggiorna_indici`: `Indice.xlsx` e `Estratti.xlsx` anche in `sorgenti/backup/`, `dati.js`, `query_esempio.js`, `grafo_completo_ttl.js`, `posizioni_iniziali.js`, `grafo_dati.json`, `istanze_espresso.ttl`, `indici_volumi.csv`, CHANGELOG, Word, `dati_rdf/`). mtime di `Indice.xlsx` 20:32 (modificato da te dopo l'ultima mia sessione); `Articoli.xlsx` ed `Estratti.xlsx` invariati.

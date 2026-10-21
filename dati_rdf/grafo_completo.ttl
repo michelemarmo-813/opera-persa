@@ -8268,11 +8268,11 @@ res:articolo-ja0886 a fabio:JournalArticle ;
 
 res:articolo-ja0887 a fabio:JournalArticle ;
     rdfs:label "Gli aspetti sociologici: la marmellata radiofonica. Atti del convegno di Spoleto. Radio Forum 1981."@it ;
-    prism:number "75" ;
+    prism:number "75 (supplemento)" ;
     prism:publicationDate "1981"^^xsd:gYear ;
     dcterms:creator res:persona-umberto-eco ;
     dcterms:title "Gli aspetti sociologici: la marmellata radiofonica. Atti del convegno di Spoleto. Radio Forum 1981."@it ;
-    frbr:partOf res:rivista-supplemento-a-media-forum .
+    frbr:partOf res:rivista-media-forum .
 
 res:articolo-ja0888 a fabio:JournalArticle ;
     rdfs:label "Guessing: from Aristotle to Sherlock Holmes"@it ;
@@ -8307,52 +8307,52 @@ res:articolo-ja0890 a fabio:JournalArticle ;
 res:articolo-ja0891 a fabio:JournalArticle ;
     rdfs:label "Come falsificare Eraclito"@it ;
     prism:endingPage 7 ;
-    prism:number "38/39" ;
+    prism:number "38/39 (supplemento)" ;
     prism:publicationDate "1982"^^xsd:gYear ;
     prism:startingPage 7 ;
     dcterms:creator res:persona-umberto-eco ;
     dcterms:title "Come falsificare Eraclito"@it ;
-    frbr:partOf res:rivista-cacopedia-supplemento-di-alfabeta-n-38-39 .
+    frbr:partOf res:rivista-alfabeta .
 
 res:articolo-ja0892 a fabio:JournalArticle ;
     rdfs:label "Il novissimo Melzi d'Eril"@it ;
     prism:endingPage 11 ;
-    prism:number "38/39" ;
+    prism:number "38/39 (supplemento)" ;
     prism:publicationDate "1982"^^xsd:gYear ;
     prism:startingPage 11 ;
     dcterms:creator res:persona-umberto-eco ;
     dcterms:title "Il novissimo Melzi d'Eril"@it ;
-    frbr:partOf res:rivista-cacopedia-supplemento-di-alfabeta-n-38-39 .
+    frbr:partOf res:rivista-alfabeta .
 
 res:articolo-ja0893 a fabio:JournalArticle ;
     rdfs:label "La mappa dell'impero uno a uno"@it ;
     prism:endingPage 3 ;
-    prism:number "38/39" ;
+    prism:number "38/39 (supplemento)" ;
     prism:publicationDate "1982"^^xsd:gYear ;
     prism:startingPage 3 ;
     dcterms:creator res:persona-umberto-eco ;
     dcterms:title "La mappa dell'impero uno a uno"@it ;
-    frbr:partOf res:rivista-cacopedia-supplemento-di-alfabeta-n-38-39 .
+    frbr:partOf res:rivista-alfabeta .
 
 res:articolo-ja0894 a fabio:JournalArticle ;
     rdfs:label "L'Anopticon"@it ;
     prism:endingPage 4 ;
-    prism:number "38/39" ;
+    prism:number "38/39 (supplemento)" ;
     prism:publicationDate "1982"^^xsd:gYear ;
     prism:startingPage 4 ;
     dcterms:creator res:persona-umberto-eco ;
     dcterms:title "L'Anopticon"@it ;
-    frbr:partOf res:rivista-cacopedia-supplemento-di-alfabeta-n-38-39 .
+    frbr:partOf res:rivista-alfabeta .
 
 res:articolo-ja0895 a fabio:JournalArticle ;
     rdfs:label "Il teorema degli 800 colori"@it ;
     prism:endingPage 8 ;
-    prism:number "38/39" ;
+    prism:number "38/39 (supplemento)" ;
     prism:publicationDate "1982"^^xsd:gYear ;
     prism:startingPage 8 ;
     dcterms:creator res:persona-umberto-eco ;
     dcterms:title "Il teorema degli 800 colori"@it ;
-    frbr:partOf res:rivista-cacopedia-supplemento-di-alfabeta-n-38-39 .
+    frbr:partOf res:rivista-alfabeta .
 
 res:articolo-ja0896 a fabio:JournalArticle ;
     rdfs:label "Se ci sei fa' un segno"@it ;
@@ -35903,6 +35903,11 @@ res:rivista-malebolge-rivista-di-letteratura a fabio:Journal ;
     dcterms:title "Malebolge : rivista di letteratura"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/3400541> .
 
+res:rivista-media-forum a fabio:Journal ;
+    rdfs:label "Media Forum"@it ;
+    dcterms:title "Media Forum"@it ;
+    rdfs:seeAlso <https://acnpsearch.unibo.it/journal/53493> .
+
 res:rivista-mondo-operaio a fabio:Journal ;
     rdfs:label "Mondo Operaio"@it ;
     dcterms:title "Mondo Operaio"@it ;
@@ -36024,11 +36029,6 @@ res:rivista-studi-orientali-e-linguistici a fabio:Journal ;
     rdfs:label "Studi orientali e linguistici"@it ;
     dcterms:title "Studi orientali e linguistici"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/42838> .
-
-res:rivista-supplemento-a-media-forum a fabio:Journal ;
-    rdfs:label "supplemento a Media Forum"@it ;
-    dcterms:title "supplemento a Media Forum"@it ;
-    rdfs:seeAlso <https://acnpsearch.unibo.it/journal/53493> .
 
 res:rivista-techne-rivista-cultura-contemporanea a fabio:Journal ;
     rdfs:label "Tèchne : rivista cultura contemporanea"@it ;
@@ -36736,11 +36736,6 @@ res:rivista-artecasa a fabio:Journal ;
     dcterms:title "Artecasa"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/84803> .
 
-res:rivista-cacopedia-supplemento-di-alfabeta-n-38-39 a fabio:Journal ;
-    rdfs:label "Cacopedia - Supplemento di Alfabeta, n. 38/39"@it ;
-    dcterms:title "Cacopedia - Supplemento di Alfabeta, n. 38/39"@it ;
-    rdfs:seeAlso <https://acnpsearch.unibo.it/journal/43432> .
-
 res:rivista-in-la-metafora-nel-medioevo-special-issue-doctor-virtualis a fabio:Journal ;
     rdfs:label "in “La metafora nel Medioevo”, special issue, Doctor Virtualis"@it ;
     dcterms:title "in “La metafora nel Medioevo”, special issue, Doctor Virtualis"@it ;
@@ -36840,12 +36835,6 @@ res:libro-opera-aperta-1966 a eco:LibroRaccolta,
     rdfs:comment "Seconda edizione. Editore e città assunti invariati rispetto al 1962 (stesso editore Bompiani), non verificati singolarmente: da confermare sull'originale. Link OPAC rappresentativo dell'opera (8ª ed., 2009): SBN non permette di isolare facilmente le edizioni 1962/1966/1976 fra le 29 schede esistenti per il titolo."@it ;
     rdfs:seeAlso <https://opac.sbn.it/en/risultati-ricerca-avanzata/-/opac-adv/index/1/ITICCURMS2504980?fieldvalue%5B1%5D=opera+aperta+eco&fieldaccess%5B1%5D=Keywords%3A1016&fieldstruct%5B1%5D=ricerca.parole_tutte%3A4%3D6&struct%3A1001=ricerca.parole_almeno_una%3A%40or%40> .
 
-res:rivista-alfabeta a fabio:Journal ;
-    rdfs:label "Alfabeta"@it ;
-    dcterms:title "Alfabeta"@it ;
-    rdfs:seeAlso <http://www.wikidata.org/entity/Q3611031>,
-        <https://acnpsearch.unibo.it/journal/43432> .
-
 eco:LibroRaccolta a owl:Class ;
     rdfs:label "Libro (raccolta)"@it ;
     rdfs:comment "Raccolta di saggi/articoli propri di Eco i cui «capitoli» sono a tutti gli effetti articoli ripubblicati (collegati con prism:isVersionOf). Corrisponde a eco:tipoLibro \"raccolta\"."@it ;
@@ -36891,6 +36880,12 @@ res:rivista-marcatre a fabio:Journal ;
     dcterms:title "Marcatré"@it ;
     rdfs:seeAlso <http://www.wikidata.org/entity/Q3845432>,
         <https://acnpsearch.unibo.it/journal/7108> .
+
+res:rivista-alfabeta a fabio:Journal ;
+    rdfs:label "Alfabeta"@it ;
+    dcterms:title "Alfabeta"@it ;
+    rdfs:seeAlso <http://www.wikidata.org/entity/Q3611031>,
+        <https://acnpsearch.unibo.it/journal/43432> .
 
 res:rivista-vs-quaderni-di-studi-semiotici a fabio:Journal ;
     rdfs:label "VS : quaderni di studi semiotici"@it ;
