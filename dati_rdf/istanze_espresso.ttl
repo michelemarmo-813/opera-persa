@@ -26658,11 +26658,11 @@ res:indice-le-poetiche-di-joyce-003 a eco:VoceIndice ;
     rdfs:comment "Ristampa parziale"@it .
 
 res:indice-opera-aperta-1962-001 a eco:VoceIndice ;
-    rdfs:label "Introduzione alla I edizione"@it ;
+    rdfs:label "Introduzione"@it ;
     eco:nelIndiceDi res:libro-opera-aperta-1962 ;
     eco:posizioneInIndice 1 ;
     eco:statoVoce "introduzione" ;
-    eco:titoloInIndice "Introduzione alla I edizione"@it .
+    eco:titoloInIndice "Introduzione"@it .
 
 res:indice-opera-aperta-1962-002 a eco:VoceIndice ;
     rdfs:label "La poetica dell'opera aperta"@it ;

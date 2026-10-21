@@ -3,6 +3,13 @@
 Registro delle versioni del progetto (sito + dati RDF). Copre l'intero progetto; per lo storico delle sole modifiche
 allo schema dell'ontologia, vedi anche il commento "STORICO VERSIONI" in `grafo_eco/ontologia_eco.ttl`.
 
+## 2026-10-21 (77) — Indici: aggiornamento dal ritocco in `Indice.xlsx` («Opera aperta» 1962)
+
+Backup `20261021-2034` (suffisso `_aggiorna_indici`: `Indice.xlsx` e `Estratti.xlsx` anche in `sorgenti/backup/`, `dati.js`, `query_esempio.js`, `grafo_completo_ttl.js`, `posizioni_iniziali.js`, `grafo_dati.json`, `istanze_espresso.ttl`, `indici_volumi.csv`, CHANGELOG, Word, `dati_rdf/`). mtime di `Indice.xlsx` 20:32 (modificato da te dopo l'ultima mia sessione); `Articoli.xlsx` ed `Estratti.xlsx` invariati.
+- **Modifica rilevata** (confronto cella per cella con il backup delle 17:12): unica differenza di contenuto, foglio «Opera aperta (1962)», cella A3: «Introduzione alla I edizione» → «Introduzione». Le edizioni 1966 e 1976 conservano il loro titolo.
+- **Rigenerazione**: `importa_indici.py` → `genera_rdf.py` → `importa_indici.py` → `genera_rdf.py` → `genera_dati_sito.py`. `indici_volumi.csv`: una sola riga cambiata (Opera aperta 1962, posizione 1); 593 voci in 15 libri; nodi 2780 e archi 3183 invariati, `posizioni_iniziali.js` non ricalcolato.
+- **Correzione di un mio errore**: nella voce (74) rinominando i fogli «La bustina di Minerva» in `Indice.xlsx` ed `Estratti.xlsx` openpyxl li aveva chiamati «La bustina di minerva1» (il vecchio nome esisteva ancora, senza distinguere maiuscole). Ora i fogli si chiamano «La bustina di minerva». Nessun effetto sui dati (l'indice del libro è letto dal CSV).
+
 ## 2026-10-21 (76) — Tolto dal sito l'avviso «[dato ricostruito da Excel - da verificare]»
 
 Backup `20261021-1727` (suffisso `_senza_avviso_excel`: `genera_dati_sito.py`, `dati.js`, `query_esempio.js`, `grafo_completo_ttl.js`, `grafo_dati.json`, CHANGELOG, Word, `dati_rdf/`).
