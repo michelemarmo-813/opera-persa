@@ -289,7 +289,7 @@
      trascinamenti e zoom sul grafo (z-index sopra toolbar e pannello
      dettagli). In dissolvenza di uscita e a riposo non intercetta nulla,
      cosi' non puo' restare bloccato. Compare/sparisce con la classe
-     .visibile (vedi mostraAttesaGruppo in visualizzazione.html); la durata
+     .visibile (vedi mostraAttesaGruppo in index.html); la durata
      della transizione deve coincidere con DURATA_USCITA_INDICATORE_MS. */
   #network-loading.attesa-gruppo{ display:flex; z-index:30; gap:16px; pointer-events:none;
         background:color-mix(in srgb, var(--bg) 35%, transparent);

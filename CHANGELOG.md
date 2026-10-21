@@ -3,6 +3,15 @@
 Registro delle versioni del progetto (sito + dati RDF). Copre l'intero progetto; per lo storico delle sole modifiche
 allo schema dell'ontologia, vedi anche il commento "STORICO VERSIONI" in `grafo_eco/ontologia_eco.ttl`.
 
+## 2026-10-21 (68) — La pagina principale si chiama ora `index.html`
+
+Backup `20261021-1238` (suffisso `_rinomina_index`: pagina principale, `index.html` precedente, `genesi.html`, `stile.css`, `note_oscurate.md`, `genera_dati_sito.py`, `precalcola_layout.js`, README del precalcolo, CHANGELOG, Word). Nessun dato, Excel o sorgente toccato.
+- Rinominato con `git mv` il file della pagina principale in `index.html` (contenuto invariato, salvo 2 righe di riferimenti); il vecchio `index.html`, che era solo un reindirizzamento, è sostituito. La pagina si apre così direttamente all'indirizzo della cartella del sito, senza passaggi intermedi.
+- Riferimenti aggiornati: `genesi.html` (14 righe, forma unica `index.html` / `index.html?tab=…` / `index.html?articolo=…`), `stile.css` (1), `note_oscurate.md` (1), `genera_dati_sito.py` (3), `precalcola_layout.js` (4: ora apre `index.html`), README del precalcolo (10), Word (6 paragrafi).
+- Il file di reindirizzamento `visualizzazione.html` (poche righe, conservava `?tab=…#…`) è stato creato e poi eliminato, su richiesta, nello stesso giorno: il vecchio indirizzo `…/visualizzazione.html` ora non è più raggiungibile. Copia del vecchio contenuto in `backup/backup_visualizzazione_20261021-1238_rinomina_index.html`.
+- `posizioni_iniziali.js` non toccato: ricalcolato in prova, le coordinate risultano identiche (cambia solo la riga d'intestazione, che citerà `index.html` al prossimo precalcolo).
+- Verificato con Playwright (copia servita in locale e `file://`): apertura diretta, tutte le schede, `?tab=`, Indietro/refresh, link di `genesi.html`, vecchio indirizzo → nuovo (prova fatta prima di eliminare il reindirizzamento).
+
 ## 2026-10-21 (67) — Documentazione: nuova presentazione e frasi tolte
 
 Backup `backup_visualizzazione_20261021-1147.html` (e `backup_CHANGELOG_20261021-1147.md`). Solo testo della scheda «Documentazione» in `visualizzazione.html`.

@@ -19,13 +19,13 @@
 <body>
 
 <div id="tabs">
-  <a class="titolo-app" id="genesi-link-torna" href="visualizzazione.html" style="text-decoration:none">Opera Persa</a>
-  <a class="tab-btn" href="visualizzazione.html?tab=home">Home</a>
-  <a class="tab-btn" href="visualizzazione.html?tab=grafo">Vista a grafo</a>
-  <a class="tab-btn" href="visualizzazione.html?tab=elenco">Articoli</a>
-  <a class="tab-btn" href="visualizzazione.html?tab=ristampe">Raccolte</a>
-  <a class="tab-btn" href="visualizzazione.html?tab=timeline">Linea del tempo</a>
-  <a class="tab-btn" href="visualizzazione.html?tab=doc">Documentazione</a>
+  <a class="titolo-app" id="genesi-link-torna" href="index.html" style="text-decoration:none">Opera Persa</a>
+  <a class="tab-btn" href="index.html?tab=home">Home</a>
+  <a class="tab-btn" href="index.html?tab=grafo">Vista a grafo</a>
+  <a class="tab-btn" href="index.html?tab=elenco">Articoli</a>
+  <a class="tab-btn" href="index.html?tab=ristampe">Raccolte</a>
+  <a class="tab-btn" href="index.html?tab=timeline">Linea del tempo</a>
+  <a class="tab-btn" href="index.html?tab=doc">Documentazione</a>
 </div>
 
 <div id="corpo">
@@ -91,7 +91,7 @@
 // =====================================================================
 
 // "libro" e "arco" restano gli stessi della Vista a grafo principale (vedi
-// COLORI in visualizzazione.html), per coerenza fra le due viste su cio' che
+// COLORI in index.html), per coerenza fra le due viste su cio' che
 // e' strutturale (edizioni, linee neutre). Gli altri quattro colori
 // sono specifici di questa pagina e distinguono la PROVENIENZA dei
 // contenuti: un articolo uscito su una rivista/quotidiano (articolo + il suo
@@ -136,11 +136,11 @@ const operaCercata = parametri.get("opera") || "";
 // "Opera Persa" deve riportare l'utente li' e non alla Home.
 const libroDiProvenienza = parametri.get("libro") || "";
 document.getElementById("genesi-link-torna").href = libroDiProvenienza
-  ? ("visualizzazione.html?tab=ristampe&libro=" + encodeURIComponent(libroDiProvenienza))
-  : "visualizzazione.html";
+  ? ("index.html?tab=ristampe&libro=" + encodeURIComponent(libroDiProvenienza))
+  : "index.html";
 
 // Stessa convenzione di etichetta "Titolo (AAAA)" usata in tutto il sito
-// (vedi baseOperaLibro in visualizzazione.html) per riconoscere le edizioni
+// (vedi baseOperaLibro in index.html) per riconoscere le edizioni
 // di una stessa opera.
 function baseOperaLibro(label){
   const m = label && label.match(/^(.*?)\s*\(\d{4}\)\s*$/);
@@ -173,7 +173,7 @@ if(edizioni.length === 0){
 // del libro (il dataset registra solo l'estratto giornalistico, non un
 // indice di capitoli): titolo e sottotitolo della scheda riflettono quindi
 // cosa mostra davvero la pagina in quel caso, coerentemente con l'etichetta
-// del bottone che porta qui da Raccolte (vedi visualizzazione.html).
+// del bottone che porta qui da Raccolte (vedi index.html).
 function impostaTitoliSidebar(tipoLibro){
   const h1 = document.getElementById("genesi-titolo-h1");
   const sottotitolo = document.getElementById("genesi-sottotitolo");
@@ -716,12 +716,12 @@ function mostraDettaglioGenesi(raw){
     // Genesi.html e' una pagina a se': non puo' chiamare vaiAArticolo()
     // direttamente come fa la Vista a grafo, quindi apre la scheda completa
     // in una nuova scheda del browser tramite lo stesso indirizzo che
-    // legge visualizzazione.html in fondo al suo script (vedi li'). Si passa
+    // legge index.html in fondo al suo script (vedi li'). Si passa
     // anche il libro di provenienza (stesso usato dal link "Opera Persa" qui
     // sopra): senza, la nuova scheda parte con un'unica voce di cronologia
     // (quella dell'articolo) e il tasto/gesto "indietro" del browser
     // riporterebbe alla Home invece che al libro da cui si e' partiti.
-    html += "<div class='campo'><a class='btn btn-vai-scheda' href='visualizzazione.html?articolo=" +
+    html += "<div class='campo'><a class='btn btn-vai-scheda' href='index.html?articolo=" +
       encodeURIComponent(raw.id).replace(/'/g, "%27") +
       (libroDiProvenienza ? "&libro=" + encodeURIComponent(libroDiProvenienza).replace(/'/g, "%27") : "") +
       "' target='_blank' rel='noopener'>Vai alla scheda dell'articolo &rarr;</a></div>";
