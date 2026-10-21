@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Genesi dell'opera - Opera Persa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.6/standalone/umd/vis-network.min.js"></script>
+<link rel="stylesheet" href="stile.css">
+<!-- Le regole visive di questa pagina (legenda, link della barra tab, stato
+     vuoto) vivono ora in stile.css insieme a tutte le altre - vedi la
+     sezione "Genesi dell'opera" li' dentro. Il resto della pagina riusa
+     deliberatamente gli ID/classi reali del sito (#tabs, #corpo,
+     .schermata, #sidebar, .sezione, .legenda-voce, #dettagli, .campo...)
+     invece di ridefinirli, cosi' la scheda resta visivamente un'estensione
+     di Opera Persa e non una pagina "simile ma diversa a modo suo". -->
+</head>
+<body>
+
+<div id="tabs">
+  <a class="titolo-app" id="genesi-link-torna" href="visualizzazione.html" style="text-decoration:none">Opera Persa</a>
+  <a class="tab-btn" href="visualizzazione.html?tab=home">Home</a>
+  <a class="tab-btn" href="visualizzazione.html?tab=grafo">Vista a grafo</a>
+  <a class="tab-btn" href="visualizzazione.html?tab=elenco">Articoli</a>
+  <a class="tab-btn" href="visualizzazione.html?tab=ristampe">Raccolte</a>
+  <a class="tab-btn" href="visualizzazione.html?tab=timeline">Linea del tempo</a>
+  <a class="tab-btn" href="visualizzazione.html?tab=doc">Documentazione</a>
+</div>
+
+<div id="corpo">
+  <div class="schermata attiva">
+    <div id="sidebar">
+      <h1 id="genesi-titolo-h1">Genesi dell'opera</h1>
+      <div class="sottotitolo" id="genesi-sottotitolo">Come si e' formata, articolo per articolo</div>
+
+      <div class="sezione">
+        <h2>Come leggere questa vista</h2>
+        <div class="aiuto-campo">
+          Ogni edizione del libro ha il proprio diagramma, a imbuto: in alto gli articoli e i capitoli da cui e'
+          composta, dal piu' antico (in alto) al piu' recente: ogni riga contiene solo articoli dello stesso anno, anche affiancati (fino a tre colonne), e l'anno e' scritto a sinistra sulla prima riga;
+          in fondo il libro. Sotto il titolo di ogni articolo, in azzurro, la rivista e l'anno.
+        </div>
+      </div>
+
+      <div class="sezione">
+        <h2>Legenda</h2>
+        <div id="genesi-legenda"></div>
+      </div>
+    </div>
+
+    <div id="network-area">
+      <div id="network"></div>
+      <div id="genesi-vuoto">Nessuna opera trovata per questo indirizzo.</div>
+    </div>
+  </div>
+</div>
+
+<div id="dettagli" style="display:none;">
+  <span class="chiudi" id="genesi-dettaglio-chiudi" title="Chiudi">&times;</span>
+  <div id="dettagli-contenuto"></div>
+</div>
+
+<script src="dati.js"></script>
+<script>
+// =====================================================================
+// Genesi di un'opera: a differenza della Vista a grafo principale, qui la
+// disposizione dei nodi non e' affidata alla simulazione fisica di
+// vis-network ma calcolata a mano, per ottenere un vero asse del tempo:
+//   - le edizioni dell'opera stanno tutte sulla stessa riga orizzontale
+//     (y=0), alla x proporzionale al loro anno di pubblicazione, cosi'
+//     che leggerle da sinistra a destra racconti la cronologia reale;
+//   - ogni articolo/capitolo da cui e' stata composta un'edizione viene
+//     invece disposto in verticale, sotto la PRIMA edizione in cui e'
+//     comparso (un articolo confluito in piu' edizioni successive resta
+//     un unico nodo, con un arco verso ciascuna edizione che lo contiene:
+//     e' cosi' che si vede a colpo d'occhio quali capitoli sono stati
+//     mantenuti nelle edizioni successive e quali no);
+//
+// Tre categorie di libri nel dataset (eco:tipoLibro, dalla v1.6: "raccolta",
+// "romanzo", "non raccolta"; vedi classificazione_libri.csv e genera_rdf.py),
+// rese qui graficamente in due famiglie:
+//   - "raccolta": raccolte di saggi/articoli propri di Eco (Opera aperta,
+//     Diario minimo...) - i capitoli SONO articoli ripubblicati: arco
+//     pieno, colore libro.
+//   - "romanzo" e "non raccolta": romanzi e libri non raccolte (Il nome della
+//     rosa, Baudolino, Storia della bellezza...) di cui
+//     il dataset registra solo gli articoli collegati, non
+//     l'indice: non e' "un capitolo del libro", solo un articolo che ne
+//     e' un estratto e lo ha preceduto in libreria - arco tratteggiato, colore accento.
+// =====================================================================
+
+// "libro" e "arco" restano gli stessi della Vista a grafo principale (vedi
+// COLORI in visualizzazione.html), per coerenza fra le due viste su cio' che
+// e' strutturale (edizioni, linee neutre). Gli altri quattro colori
+// sono specifici di questa pagina e distinguono la PROVENIENZA dei
+// contenuti: un articolo uscito su una rivista/quotidiano (articolo + il suo
+// nodo-fonte "rivista") ha una coppia di colori diversa da un capitolo o
+// contributo noto solo da un volume (capitolo + il suo nodo-fonte "volume").
+const COLORI = {
+  libro: "#ff8a50",
+  articolo: "#2ec4b6", rivista: "#4f95d6",
+  capitolo: "#a374d5", volume: "#d9678a",
+  arco: "#8b96a3"
+};
+// Bordo di ciascun colore (versione piu' scura, stesso criterio gia' usato
+// per "libro": #ff8a50 -> bordo #c85f2e), usato per il contorno dei nodi e
+// per evidenziarli quando selezionati.
+const BORDI = {
+  libro: "#c85f2e", articolo: "#1f8a80", rivista: "#2f6fae",
+  capitolo: "#7a4fb0", volume: "#b8415f"
+};
+
+// Colori del diagramma a imbuto (vedi disegnaGenesiImbuto)
+const COL_IMB = { rist:"#ffcc4d", ristSfondo:"#3a3220", estr:"#d946ef", estrSfondo:"#3a2140",
+                  nc:"#8b96a3", ncSfondo:"#25272b", rivista:"#4fb3d9", libro:"#ff8a50", libroBordo:"#c85f2e",
+                  // (2026-10-21) capitoli senza articolo, due notazioni in palette terracotta (salmone chiaro vs rosso-mattone vivo, ben distinti):
+                  libroVia:"#2b1d12", ncVolume:"#f2b8a0", ncVolumeSfondo:"#40302a", ncSenza:"#e0451a", ncSenzaSfondo:"#3d140a" };
+// (2026-10-21) PASSAGGI VIA UN ALTRO VOLUME: regola di VISUALIZZAZIONE, non una relazione dei dati (gli articoli sono
+// collegati direttamente a entrambi i libri; nessun arco nuovo nel grafo). Chiave = id del libro di cui si disegna il
+// focus; valore = id del libro intermedio da cui, nel percorso, il volume riprende i capitoli. Il tassello compare solo
+// se almeno un articolo del diagramma e' collegato anche al libro intermedio. Per ora solo questo caso.
+const PASSAGGI_VIA_VOLUME = {
+  "http://example.org/eco-graph/id/libro-le-poetiche-di-joyce": {
+    via: "http://example.org/eco-graph/id/libro-opera-aperta-1962",
+    paragrafo: "<b>Un volume che riprende un altro libro.</b> Le poetiche di Joyce è un volume a parte, nato come capitolo di Opera aperta (1962): " +
+      "per questo i due articoli sono prima confluiti in Opera aperta (1962) e, da lì, nel volume. " +
+      "È una regola di visualizzazione: nei dati gli articoli sono collegati direttamente a entrambi i libri."
+  }
+};
+const parametri = new URLSearchParams(window.location.search);
+const operaCercata = parametri.get("opera") || "";
+
+// Il libro/edizione da cui si e' arrivati qui (bottone "Vedi la genesi
+// dell'opera" nella scheda di quel libro in Raccolte): se presente, il link
+// "Opera Persa" deve riportare l'utente li' e non alla Home.
+const libroDiProvenienza = parametri.get("libro") || "";
+document.getElementById("genesi-link-torna").href = libroDiProvenienza
+  ? ("visualizzazione.html?tab=ristampe&libro=" + encodeURIComponent(libroDiProvenienza))
+  : "visualizzazione.html";
+
+// Stessa convenzione di etichetta "Titolo (AAAA)" usata in tutto il sito
+// (vedi baseOperaLibro in visualizzazione.html) per riconoscere le edizioni
+// di una stessa opera.
+function baseOperaLibro(label){
+  const m = label && label.match(/^(.*?)\s*\(\d{4}\)\s*$/);
+  return m ? m[1] : null;
+}
+
+const TUTTI_LIBRI = DATI.nodes.filter(n => n.group === "libro");
+const nodiById = {};
+DATI.nodes.forEach(n => nodiById[n.id] = n);
+
+// (2026-10-20) UN SOLO DIAGRAMMA PER OGNI EDIZIONE: se l'indirizzo indica il libro
+// (parametro "libro", l'edizione da cui si e' arrivati da Raccolte) si disegna
+// soltanto quella edizione, anche quando l'opera ne ha altre. Le vecchie
+// edizioni riunite in un solo diagramma restano come ripiego solo se manca
+// il parametro "libro" (indirizzi vecchi).
+let edizioni = [];
+const edizioneScelta = libroDiProvenienza ? TUTTI_LIBRI.find(l => l.id === libroDiProvenienza) : null;
+if(edizioneScelta){
+  edizioni = [edizioneScelta];
+} else {
+  edizioni = TUTTI_LIBRI.filter(l => baseOperaLibro(l.label) === operaCercata)
+    .sort((a,b) => (parseInt(a.anno)||0) - (parseInt(b.anno)||0));
+}
+if(edizioni.length === 0){
+  const singolo = TUTTI_LIBRI.find(l => l.label === operaCercata);
+  if(singolo) edizioni = [singolo];
+}
+
+// Per i romanzi e i libri non raccolta non esiste un vero processo di "genesi"
+// del libro (il dataset registra solo l'estratto giornalistico, non un
+// indice di capitoli): titolo e sottotitolo della scheda riflettono quindi
+// cosa mostra davvero la pagina in quel caso, coerentemente con l'etichetta
+// del bottone che porta qui da Raccolte (vedi visualizzazione.html).
+function impostaTitoliSidebar(tipoLibro){
+  const h1 = document.getElementById("genesi-titolo-h1");
+  const sottotitolo = document.getElementById("genesi-sottotitolo");
+  if(tipoLibro !== "raccolta"){
+    h1.textContent = "Articoli collegati";
+    sottotitolo.textContent = "Gli articoli che ne sono un estratto";
+  } else {
+    h1.textContent = "Genesi dell'opera";
+    sottotitolo.textContent = "Come si e' formata, articolo per articolo";
+  }
+  // un solo diagramma per edizione: il sottotitolo dice di quale
+  if(edizioni.length === 1 && baseOperaLibro(edizioni[0].label)) sottotitolo.textContent = edizioni[0].label + " - " + sottotitolo.textContent;
+}
+
+if(edizioni.length === 0){
+  document.getElementById("genesi-vuoto").style.display = "block";
+} else {
+  impostaTitoliSidebar(edizioni[0].tipo_libro || "raccolta");
+  disegnaGenesi(edizioni);
+}
+
+function chiaveData(a){ return (a.anno||"0000") + "-" + (a.data_completa || (a.numero||"")); }
+function tronca(s, n){ return s && s.length > n ? s.slice(0, n-1) + "…" : (s||""); }
+
+// Stile dell'arco articolo/capitolo -> libro, a seconda del TIPO DELL'ARCO
+// (v1.3: eco:estrattoDi vs prism:isVersionOf), non del tipoLibro del libro -
+// cosi' l'eccezione nota ("Postille a Il nome della rosa", libro "non
+// raccolta" ma con una ristampa integrale: vedi CHANGELOG.md) resta
+// disegnata correttamente (arrows:"to") anche se il suo libro non e' una raccolta.
+// Gli archi di confluenza sono sempre { from: articolo, to: edizione }.
+// RISTAMPA (prism:isVersionOf): il capitolo E' un articolo ripubblicato, la
+// freccia punta verso il libro che lo contiene (arrows:"to").
+// ESTRATTO (eco:estrattoDi): il libro e' la fonte, l'articolo ne e' un estratto -
+// richiesta esplicita, la freccia va dal libro all'articolo, quindi la
+// punta va posta sul nodo "from" (arrows:"from").
+function stileArcoConfluenza(tipoArco){
+  if(tipoArco === "estrattoDi") return { color:{color:COLORI.arco, opacity:0.9}, width:2, dashes:[6,4], arrows:"from" };
+  return { color:{color:COLORI.libro, opacity:0.9}, width:2, dashes:false, arrows:"to" };
+}
+
+// =====================================================================
+// (2026-10-20) DIAGRAMMA A IMBUTO - una sola edizione per diagramma.
+// Gli articoli/capitoli stanno in alto, in ordine cronologico dall'alto verso
+// il basso (una riga per anno, o piu' righe dello stesso anno: mai due anni
+// diversi sulla stessa riga; fino a 3 colonne - vedi "RIGHE PER ANNO" sotto), dentro un imbuto che converge sul libro in basso. I capitoli
+// senza data (senza fonte periodica individuata) chiudono la serie, appena
+// sopra il libro. Per i libri di soli estratti (romanzi, libri non raccolta)
+// l'imbuto e' rovesciato: il libro e' in alto e gli articoli che ne derivano
+// scendono sotto di lui, sempre in ordine di data.
+// Colori coerenti con il resto del sito: libro arancione, ristampa gialla,
+// estratto fucsia, rivista (seconda riga di ogni voce) azzurra.
+// =====================================================================
+function disegnaGenesiImbuto(ed){
+  const COL_W = 250, ROW_H = 74, PAD = 40;
+  const archiPerArticolo = {};
+  DATI.edges.filter(e => e.to === ed.id && (e.type === "isVersionOf" || e.type === "estrattoDi"))
+    .forEach(e => { archiPerArticolo[e.from] = e.type; });
+  const articoli = Object.keys(archiPerArticolo).map(id => nodiById[id]).filter(Boolean)
+    .sort((a,b) => { const x = chiaveData(a), y = chiaveData(b); return x < y ? -1 : (x > y ? 1 : 0); });
+  const capitoliNC = (ed.capitoli_non_collegati || []).map((c, idx) => Object.assign({
+    id: "capitolo-nc-" + ed.id.split("/").pop() + "-" + idx, kind: "capitolo_nc" }, c));
+  const voci = articoli.map(a => ({ tipo:"articolo", nodo:a, arco:archiPerArticolo[a.id] }))
+    .concat(capitoliNC.map(c => ({ tipo:"capitolo_nc", nodo:c })));
+  const N = voci.length;
+  // (2026-10-21) RIGHE PER ANNO: in una stessa riga orizzontale stanno solo voci dello STESSO anno.
+  // Gli anni vanno in ordine cronologico dall'alto in basso, senza righe vuote per gli anni senza
+  // articoli; piu' voci dello stesso anno si affiancano (fino a "colonne") e, se sono di piu', vanno a
+  // capo su righe successive dello stesso anno, nell'ordine di chiaveData. I capitoli senza data
+  // chiudono la serie, in righe loro (mai condivise con voci datate).
+  // NUMERO DI COLONNE: come prima 1 (fino a 10 voci), 2 (fino a 30), 3 (oltre), ma mai piu' del
+  // massimo numero di voci di uno stesso gruppo-anno (o del gruppo dei capitoli senza data): colonne
+  // oltre quel numero resterebbero sempre vuote e allargherebbero il diagramma senza motivo.
+  // (2026-10-21) i capitoli noti solo da un volume si ordinano nel tempo insieme agli articoli, secondo l'anno del
+  // volume originale (anno_volume_originale); nello stesso anno vengono dopo gli articoli. Senza anno noto restano in
+  // coda con gli altri capitoli senza articolo.
+  const annoVoce = v => v.tipo === "articolo" ? (v.nodo.anno || "") : (/^\d{4}$/.test(String(v.nodo.anno_volume_originale || "")) && v.nodo.titolo_volume_originale ? String(v.nodo.anno_volume_originale) : null);
+  const datate = voci.filter(v => annoVoce(v) !== null)
+    .sort((x, y) => {
+      const ax = annoVoce(x), ay = annoVoce(y);
+      if(ax !== ay) return ax < ay ? -1 : 1;
+      if(x.tipo !== y.tipo) return x.tipo === "articolo" ? -1 : 1;
+      if(x.tipo !== "articolo") return 0;
+      const kx = chiaveData(x.nodo), ky = chiaveData(y.nodo);
+      return kx < ky ? -1 : (kx > ky ? 1 : 0);
+    });
+  const gruppi = [];
+  datate.forEach(v => {
+    const anno = annoVoce(v);
+    const g = gruppi[gruppi.length - 1];
+    if(g && g.anno === anno) g.voci.push(v); else gruppi.push({ anno: anno, voci: [v] });
+  });
+  // capitoli senza data in coda, in righe proprie, in quest'ordine: noti solo da un volume (anno ignoto), poi l'inedito,
+  // per ultimi - proprio alla fine dell'imbuto - quelli senza fonte individuata.
+  const tipoNCvoce = v => v.nodo.titolo_volume_originale ? 0 : (/^Testo inedito/i.test(v.nodo.nota || "") ? 1 : 2);
+  const senzaData = voci.filter(v => annoVoce(v) === null);
+  [0, 1, 2].forEach(t => {
+    const gr = senzaData.filter(v => tipoNCvoce(v) === t);
+    if(gr.length) gruppi.push({ anno: null, voci: gr });
+  });
+  const maxGruppo = Math.max(1, ...gruppi.map(g => g.voci.length));
+  const colonne = Math.max(1, Math.min(N <= 10 ? 1 : (N <= 30 ? 2 : 3), maxGruppo));
+  const posizioneVoce = new Map();
+  const anniRiga = [];  // anno mostrato sull'asse a sinistra: solo sulla PRIMA riga di ciascun anno
+  let righe = 0;
+  gruppi.forEach(g => {
+    for(let k = 0; k < g.voci.length; k += colonne){
+      const rigaVoci = g.voci.slice(k, k + colonne);
+      rigaVoci.forEach((v, c) => posizioneVoce.set(v, { riga: righe, col: c, nInRiga: rigaVoci.length }));
+      if(k === 0 && g.anno) anniRiga[righe] = g.anno;
+      righe++;
+    }
+  });
+  righe = Math.max(1, righe);
+  // (2026-10-21) PASSAGGIO VIA UN ALTRO LIBRO (PASSAGGI_VIA_VOLUME): riga a se' dopo le righe degli articoli
+  const cfgVia = PASSAGGI_VIA_VOLUME[ed.id];
+  const libroVia = cfgVia ? nodiById[cfgVia.via] : null;
+  const haVia = !!(libroVia && articoli.some(a => DATI.edges.some(e => e.from === a.id && e.to === libroVia.id && (e.type === "isVersionOf" || e.type === "estrattoDi"))));
+  const soloEstratti = articoli.length > 0 && articoli.every(a => archiPerArticolo[a.id] === "estrattoDi") && capitoliNC.length === 0;
+  const yPrima = soloEstratti ? 150 : 0;
+  const nodi = [], archi = [];
+  voci.forEach((v, i) => {
+    const pos = posizioneVoce.get(v);
+    // le righe con meno voci della griglia si centrano (imbuto simmetrico)
+    const x = (pos.col - (pos.nInRiga - 1) / 2) * COL_W, y = yPrima + pos.riga * ROW_H;
+    let bordo, sfondo, dash = false, titolo, seconda;
+    if(v.tipo === "articolo"){
+      const a = v.nodo, estr = v.arco === "estrattoDi";
+      bordo = estr ? COL_IMB.estr : COL_IMB.rist; sfondo = estr ? COL_IMB.estrSfondo : COL_IMB.ristSfondo;
+      titolo = a.titolo_capitolo ? ("«" + tronca(a.titolo_capitolo, 46) + "»") : tronca(a.label, 46);
+      seconda = [a.rivista, a.anno].filter(Boolean).join(", ");
+    } else {
+      const c = v.nodo;
+      // (2026-10-21) due casi distinti: "volume" = capitolo noto solo da un volume (e' noto il volume originale);
+      // "senza-fonte" = capitolo senza fonte individuata; "inedito" (testo scritto per la raccolta) resta nel grigio neutro.
+      const tipoNC = c.titolo_volume_originale ? "volume" : (/^Testo inedito/i.test(c.nota || "") ? "inedito" : "senza-fonte");
+      bordo = tipoNC === "volume" ? COL_IMB.ncVolume : (tipoNC === "senza-fonte" ? COL_IMB.ncSenza : COL_IMB.nc);
+      sfondo = tipoNC === "volume" ? COL_IMB.ncVolumeSfondo : (tipoNC === "senza-fonte" ? COL_IMB.ncSenzaSfondo : COL_IMB.ncSfondo);
+      dash = tipoNC === "senza-fonte" ? [2,4] : [5,4];
+      titolo = tronca(c.titolo, 46);
+      seconda = c.titolo_volume_originale ? ("da volume: " + tronca(c.titolo_volume_originale, 24)) : (tipoNC === "inedito" ? "inedito" : "senza fonte individuata");
+    }
+    const esc = t => String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+    nodi.push({
+      id: v.nodo.id, x, y, fixed: true, shape: "box", margin: 8,
+      label: "<b>" + esc(titolo) + "</b>\n<i>" + esc(seconda) + "</i>",
+      widthConstraint: { minimum: COL_W - 40, maximum: COL_W - 40 },
+      color: { background: sfondo, border: bordo, highlight: { background: sfondo, border: "#fff" }, hover: { background: sfondo, border: "#fff" } },
+      borderWidth: 2, shapeProperties: { borderRadius: 8, borderDashes: dash },
+      font: { multi: "html", color: "#e4e7eb", size: 13, bold: { color: "#f3f4f6", size: 13, face: "system-ui" }, ital: { color: COL_IMB.rivista, size: 12, face: "system-ui" } },
+      raw: v.nodo
+    });
+  });
+  const yUltimaArt = yPrima + (righe - 1) * ROW_H;           // ultima riga di articoli/capitoli
+  const yVia = yUltimaArt + 105;                             // riga del libro intermedio (se c'e')
+  const yUltima = haVia ? yVia : yUltimaArt;                 // ultima riga del diagramma prima del libro finale
+  if(haVia){
+    nodi.push({
+      id: libroVia.id, x: 0, y: yVia, fixed: true, shape: "box", margin: 8,
+      label: "<b>" + libroVia.label.replace(/\s*\(\d{4}\)\s*$/, "") + "</b>\n<i>" + (libroVia.anno || "") + "</i>",
+      widthConstraint: { minimum: COL_W - 40, maximum: COL_W - 40 },
+      color: { background: COL_IMB.libroVia, border: COL_IMB.libro, highlight: { background: COL_IMB.libroVia, border: "#fff" }, hover: { background: COL_IMB.libroVia, border: "#fff" } },
+      borderWidth: 3, shapeProperties: { borderRadius: 2 },
+      font: { multi: "html", color: "#f6e3d3", size: 13, bold: { color: "#ffb48a", size: 14, face: "system-ui" }, ital: { color: "#ffb48a", size: 12, face: "system-ui" } },
+      raw: libroVia
+    });
+    nodi.push({ id: "imbuto-ancora-via", x: 0, y: yUltimaArt + 38, fixed: true, shape: "dot", size: 1,
+                color: { background: "rgba(0,0,0,0)", border: "rgba(0,0,0,0)" }, label: "", raw: null });
+    archi.push({ from: "imbuto-ancora-via", to: libroVia.id, arrows: "to", width: 2.5, color: { color: COL_IMB.rist, opacity: 0.9 }, smooth: false });
+  }
+  const yLibro = soloEstratti ? 0 : yUltima + 150;
+  nodi.push({
+    id: ed.id, x: 0, y: yLibro, fixed: true, shape: "box", margin: 12, label: ed.label,
+    color: { background: COL_IMB.libro, border: COL_IMB.libroBordo, highlight: { background: COL_IMB.libro, border: "#fff" } },
+    borderWidth: 2, shapeProperties: { borderRadius: 8 },
+    font: { color: "#1a1208", size: 18, face: "system-ui", bold: true }, raw: ed
+  });
+  // Frecce: una sola, fra l'imbuto e il libro (non una per voce, per non
+  // incrociare i riquadri); la differenza ristampa/estratto la dicono colore e legenda.
+  const yFine = yUltima;
+  nodi.push({ id: "imbuto-ancora", x: 0, y: soloEstratti ? 55 : yFine + 105, fixed: true, shape: "dot", size: 1,
+              color: { background: "rgba(0,0,0,0)", border: "rgba(0,0,0,0)" }, label: "", raw: null });
+  archi.push(soloEstratti
+    ? { from: ed.id, to: "imbuto-ancora", arrows: "to", dashes: [6,4], width: 2, color: { color: "#f0abfc", opacity: 0.9 }, smooth: false }
+    : { from: "imbuto-ancora", to: ed.id, arrows: "to", width: 2.5, color: { color: COL_IMB.libro, opacity: 0.9 }, smooth: false });
+  const nodiCorrentiById = {};
+  nodi.forEach(n => { nodiCorrentiById[n.id] = n.raw; });
+
+  const rete = new vis.Network(document.getElementById("network"),
+    { nodes: new vis.DataSet(nodi), edges: new vis.DataSet(archi) },
+    { physics: false, interaction: { hover: true, dragNodes: false, zoomView: true, dragView: true }, layout: { randomSeed: 1 } });
+
+  // Sfondo a imbuto e asse degli anni, disegnati sul canvas sotto i nodi
+  const larghezzaAlta = colonne * COL_W + 2 * PAD, larghezzaStretta = COL_W + 2 * PAD - 20;
+  rete.on("beforeDrawing", ctx => {
+    const yAlto = yPrima - 50, yBasso = yUltima + 50;
+    const wMax = larghezzaAlta, wMid = larghezzaAlta * 0.9, wNeck = 100;
+    ctx.save();
+    ctx.beginPath();
+    if(soloEstratti){   // imbuto rovesciato: collo in alto (sotto il libro), allarga verso il basso
+      ctx.moveTo(-wNeck / 2, 55); ctx.lineTo(wNeck / 2, 55); ctx.lineTo(wMid / 2, yAlto); ctx.lineTo(wMax / 2, yBasso);
+      ctx.lineTo(-wMax / 2, yBasso); ctx.lineTo(-wMid / 2, yAlto);
+    } else {            // largo in alto, quasi dritto lungo le righe, poi collo verso il libro
+      ctx.moveTo(-wMax / 2, yAlto); ctx.lineTo(wMax / 2, yAlto); ctx.lineTo(wMid / 2, yBasso); ctx.lineTo(wNeck / 2, yBasso + 55);
+      ctx.lineTo(-wNeck / 2, yBasso + 55); ctx.lineTo(-wMid / 2, yBasso);
+    }
+    ctx.closePath();
+    ctx.fillStyle = soloEstratti ? "rgba(217,70,239,0.05)" : "rgba(255,204,77,0.05)";
+    ctx.fill();
+    ctx.setLineDash([6, 6]); ctx.strokeStyle = "rgba(139,150,163,0.45)"; ctx.lineWidth = 1.2; ctx.stroke();
+    ctx.setLineDash([]);
+    const xAsse = -(wMax / 2) - 30;
+    ctx.strokeStyle = "rgba(139,150,163,0.45)"; ctx.beginPath(); ctx.moveTo(xAsse, yAlto + 10); ctx.lineTo(xAsse, yBasso - 10); ctx.stroke();
+    ctx.fillStyle = "#9aa3b2"; ctx.font = "13px system-ui"; ctx.textAlign = "right"; ctx.textBaseline = "middle";
+    let ultimo = null;
+    anniRiga.forEach((anno, riga) => {
+      if(anno && anno !== ultimo){ ctx.fillText(anno, xAsse - 10, yPrima + riga * ROW_H); ultimo = anno; }
+    });
+    ctx.restore();
+  });
+  rete.once("afterDrawing", () => {
+    rete.fit({ animation: false });
+    const SOGLIA_MINIMA = 0.4;
+    if(rete.getScale() < SOGLIA_MINIMA){
+      rete.fit({ animation: false, minZoomLevel: SOGLIA_MINIMA });
+      const scala = rete.getScale();
+      const altezzaVisibile = document.getElementById("network").clientHeight / scala;
+      const yTop = Math.min(...nodi.map(n => n.y));
+      rete.moveTo({ position: { x: 0, y: yTop - 100 + altezzaVisibile / 2 }, scale: scala, animation: false });
+    }
+  });
+  rete.on("click", params => {
+    if(params.nodes.length === 0 || !nodiCorrentiById[params.nodes[0]]){ document.getElementById("dettagli").style.display = "none"; return; }
+    mostraDettaglioGenesi(nodiCorrentiById[params.nodes[0]]);
+  });
+
+  const aiuto = document.querySelector("#sidebar .aiuto-campo");
+  if(aiuto && soloEstratti) aiuto.textContent = "In alto il libro; sotto, a imbuto, gli articoli che ne sono un estratto, dal piu' antico (in alto) al piu' recente: ogni riga contiene solo articoli dello stesso anno (affiancati, fino a tre colonne). Sotto il titolo di ogni articolo, in azzurro, la rivista e l'anno.";
+  if(haVia && !document.getElementById("genesi-passaggio-via")){
+    const par = document.createElement("div");
+    par.id = "genesi-passaggio-via"; par.className = "aiuto-campo"; par.style.marginTop = "10px";
+    par.innerHTML = cfgVia.paragrafo;
+    document.querySelector("#sidebar .aiuto-campo").after(par);
+  }
+  const box = document.getElementById("genesi-legenda");
+  const haRist = articoli.some(a => archiPerArticolo[a.id] === "isVersionOf");
+  const haEstr = articoli.some(a => archiPerArticolo[a.id] === "estrattoDi");
+  let html = "<div class='legenda-voce'><span class='quadrato' style='background:" + COL_IMB.libro + "'></span> libro (questa edizione)</div>";
+  if(haRist) html += "<div class='legenda-voce'><span class='quadrato' style='background:" + COL_IMB.rist + "'></span> Fonte dell'articolo: intervento in testata periodica</div>";
+  if(haEstr) html += "<div class='legenda-voce'><span class='quadrato' style='background:" + COL_IMB.estr + "'></span> articolo estratto dal libro (da libro a rivista)</div>";
+  const nVol = capitoliNC.filter(c => c.titolo_volume_originale).length;
+  const nIned = capitoliNC.filter(c => !c.titolo_volume_originale && /^Testo inedito/i.test(c.nota || "")).length;
+  const nSenza = capitoliNC.length - nVol - nIned;
+  if(nVol) html += "<div class='legenda-voce'><span class='quadrato' style='background:" + COL_IMB.ncVolume + "'></span> Fonte dell'articolo: intervento in volume (bordo tratteggiato)</div>";
+  if(nSenza) html += "<div class='legenda-voce'><span class='quadrato' style='background:" + COL_IMB.ncSenza + "'></span> capitolo senza fonte individuata (bordo punteggiato)</div>";
+  if(nIned) html += "<div class='legenda-voce'><span class='quadrato' style='background:" + COL_IMB.nc + "'></span> capitolo inedito (scritto per la raccolta)</div>";
+  if(haVia) html += "<div class='legenda-voce'><span class='quadrato' style='background:" + COL_IMB.libroVia + ";border:2px solid " + COL_IMB.libro + ";border-radius:2px'></span> libro da cui il volume riprende i capitoli</div>";
+  html += "<div class='legenda-voce'><span style='color:" + COL_IMB.rivista + ";font-style:italic'>corsivo azzurro</span>&nbsp;rivista e anno di uscita</div>";
+  box.innerHTML = html;
+}
+
+function disegnaGenesi(edizioni){
+  if(edizioni.length === 1) return disegnaGenesiImbuto(edizioni[0]);
+  const PX_PER_ANNO = 55;
+  const GAP_MINIMO = 260;
+  const ROW_H = 95;
+  // Spaziatura orizzontale fra le voci (articoli/capitoli) di UNA
+  // stessa edizione: per ordine di uscita, non proporzionale al tempo come
+  // l'asse delle edizioni (molte voci condividono lo stesso anno o addirittura
+  // lo stesso mese - una spaziatura proporzionale le accalcherebbe di nuovo).
+  const COL_W = 210;
+  // Oltre questo numero di voci, la fila prosegue a capo su una nuova riga
+  // (come un testo) invece di allungarsi all'infinito verso destra: per un
+  // libro con decine di capitoli (es. "Dalla periferia dell'impero", 41
+  // voci, o "Il costume di casa", 50) una singola riga lunghissima o
+  // colonna altissima costringeva lo zoom-to-fit a rimpicciolire tutto fino
+  // a renderlo illeggibile. Una griglia compatta, quasi quadrata, resta
+  // leggibile a un livello di zoom normale qualunque sia il numero di voci.
+  const VOCI_PER_RIGA = 8;
+  const tipoLibro = edizioni[0].tipo_libro || "raccolta";
+
+  // --- per ciascuna edizione: articoli fonte (isVersionOf/estrattoDi) e
+  //     capitoli senza fonte periodica individuata ---
+  const perEdizione = edizioni.map(ed => {
+    // v1.3: gli articoli ESTRATTO sono collegati con eco:estrattoDi, non
+    // piu' con prism:isVersionOf (vedi ontologia_eco.ttl) - entrambi vanno
+    // presi qui, la differenza si gestisce arco per arco in stileArcoConfluenza.
+    const articoli = DATI.edges
+      .filter(e => e.to === ed.id && (e.type === "isVersionOf" || e.type === "estrattoDi"))
+      .map(e => nodiById[e.from]).filter(Boolean);
+    const capitoliNC = (ed.capitoli_non_collegati || []).map((c, idx) => Object.assign({
+      id: "capitolo-nc-" + ed.id.split("/").pop() + "-" + idx, kind: "capitolo_nc"
+    }, c));
+    return { edizione: ed, articoli, capitoliNC };
+  });
+
+  // --- deduplica gli articoli condivisi fra piu' edizioni: ciascuno viene
+  //     ancorato (per la posizione) alla PRIMA edizione in cui compare, ma
+  //     un arco viene creato verso OGNI edizione che lo contiene ---
+  const articoliVisti = new Map();
+  perEdizione.forEach((pe, idx) => {
+    pe.articoli.forEach(a => {
+      if(!articoliVisti.has(a.id)) articoliVisti.set(a.id, { nodo: a, anchorIdx: idx, edizioniIdx: [] });
+      articoliVisti.get(a.id).edizioniIdx.push(idx);
+    });
+  });
+
+  // --- riga ORIZZONTALE unificata di ciascuna edizione: articoli confluiti
+  //     (deduplicati), in ordine cronologico di uscita
+  //     da sinistra a destra; i capitoli senza fonte individuata (che quindi
+  //     non hanno una data certa) restano in coda, nell'ordine del CSV ---
+  const righe = edizioni.map(() => []);
+  articoliVisti.forEach(info => righe[info.anchorIdx].push({
+    tipo: "articolo", nodo: info.nodo, edizioniIdx: info.edizioniIdx, chiave: chiaveData(info.nodo)
+  }));
+  perEdizione.forEach((pe, idx) => {
+    pe.capitoliNC.forEach(c => righe[idx].push({ tipo: "capitolo_nc", nodo: c, chiave: null }));
+  });
+  righe.forEach(riga => riga.sort((a,b) => {
+    if(a.chiave === null && b.chiave === null) return 0;
+    if(a.chiave === null) return 1;
+    if(b.chiave === null) return -1;
+    return a.chiave < b.chiave ? -1 : (a.chiave > b.chiave ? 1 : 0);
+  }));
+
+  // --- posizione x di ciascuna edizione: proporzionale agli anni trascorsi,
+  //     ma con spazio sufficiente perche' la griglia di voci dell'edizione
+  //     precedente non finisca addosso a quella successiva. La griglia di
+  //     ciascuna edizione e' centrata sotto la sua edizione (non attaccata
+  //     al suo bordo sinistro): conta quindi la meta' larghezza di entrambe
+  //     le griglie coinvolte, non la larghezza intera. ---
+  const colonneUsate = righe.map(r => Math.min(r.length, VOCI_PER_RIGA));
+  const larghezzaGriglia = colonneUsate.map(n => Math.max(0, n - 1) * COL_W);
+  const posX = [0];
+  for(let i=1; i<edizioni.length; i++){
+    const anniDopo = (parseInt(edizioni[i].anno)||0) - (parseInt(edizioni[i-1].anno)||0);
+    const distanzaMinima = Math.max(
+      GAP_MINIMO, anniDopo * PX_PER_ANNO,
+      larghezzaGriglia[i-1] / 2 + larghezzaGriglia[i] / 2 + GAP_MINIMO
+    );
+    posX.push(posX[i-1] + distanzaMinima);
+  }
+
+  const nodi = [];
+  const archi = [];
+
+  edizioni.forEach((ed, i) => {
+    nodi.push({
+      id: ed.id, label: ed.label, x: posX[i], y: 0, fixed: false,
+      shape: "box", color: { background: COLORI.libro, border: "#c85f2e", highlight: { background: COLORI.libro, border: "#fff" } },
+      font: { color: "#1a1208", size: 16, face: "system-ui", bold: true }, margin: 10,
+      shapeProperties: { borderRadius: 6 }, raw: ed
+    });
+    if(i > 0){
+      const anniDopo = (parseInt(ed.anno)||0) - (parseInt(edizioni[i-1].anno)||0);
+      archi.push({
+        from: edizioni[i-1].id, to: ed.id, arrows: "to",
+        color: { color: COLORI.arco, opacity: 1 }, width: 3,
+        label: anniDopo > 0 ? (anniDopo + (anniDopo===1 ? " anno dopo" : " anni dopo")) : "",
+        font: { color: "#e4e7eb", size: 11, background: "#17140f", strokeWidth: 0 },
+        smooth: false
+      });
+    }
+  });
+
+  // Un nodo per ogni rivista/quotidiano o volume di provenienza, condiviso
+  // fra tutte le voci di una stessa edizione che ne derivano (es. quattro
+  // articoli tutti usciti su "L'Espresso" puntano a un unico nodo "rivista"):
+  // mostra a colpo d'occhio quali testate/volumi hanno alimentato di piu'
+  // quell'edizione, invece di ripetere l'informazione solo nel pannello
+  // dettagli. Contatore globale (non per-riga) solo per garantire id unici.
+  let contatoreFonte = 0;
+  let haFontiRivista = false, haFontiVolume = false;
+  function registraFonte(fonti, chiave, tipo, etichetta, itemId){
+    if(!etichetta) return;
+    if(!fonti.has(chiave)) fonti.set(chiave, { tipo, etichetta, id: "fonte-" + (contatoreFonte++), itemIds: [] });
+    fonti.get(chiave).itemIds.push(itemId);
+    if(tipo === "rivista") haFontiRivista = true; else haFontiVolume = true;
+  }
+  function coloreFonte(tipo){ return tipo === "rivista" ? COLORI.rivista : COLORI.volume; }
+  function bordoFonte(tipo){ return tipo === "rivista" ? BORDI.rivista : BORDI.volume; }
+
+  righe.forEach((riga, idx) => {
+    const xInizioGriglia = posX[idx] - larghezzaGriglia[idx] / 2;
+    const fonti = new Map(); // chiave (es. "riv:L'Espresso") -> {tipo, etichetta, id, itemIds}
+    riga.forEach((voce, posizione) => {
+      const colonna = posizione % VOCI_PER_RIGA;
+      const rigaGriglia = Math.floor(posizione / VOCI_PER_RIGA);
+      const x = xInizioGriglia + colonna * COL_W;
+      const y = ROW_H * (rigaGriglia + 1);
+      if(voce.tipo === "articolo"){
+        const a = voce.nodo;
+        nodi.push({
+          id: a.id, label: a.titolo_capitolo ? ("«" + tronca(a.titolo_capitolo, 34) + "»") : tronca(a.label, 34),
+          x, y, shape: "dot", size: 10,
+          color: { background: COLORI.articolo, border: BORDI.articolo, highlight: { background: COLORI.articolo, border: "#fff" } },
+          font: { color: "#d7dbe2", size: 12 }, raw: a
+        });
+        voce.edizioniIdx.forEach(edIdx => {
+          // Stile per ARCO, non per libro (v1.3): ogni articolo->edizione
+          // puo' essere una RISTAMPA (isVersionOf) o un ESTRATTO
+          // (estrattoDi) - vedi stileArcoConfluenza.
+          const arcoDati = DATI.edges.find(e => e.from === a.id && e.to === edizioni[edIdx].id);
+          archi.push(Object.assign({ from: a.id, to: edizioni[edIdx].id, arrows: "to",
+            smooth: false }, stileArcoConfluenza(arcoDati && arcoDati.type)));
+        });
+        if(a.rivista) registraFonte(fonti, "riv:" + a.rivista, "rivista", a.rivista, a.id);
+      } else if(voce.tipo === "capitolo_nc"){
+        const c = voce.nodo;
+        nodi.push({
+          id: c.id, label: tronca(c.titolo, 30), x, y, shape: "diamond", size: 13,
+          color: { background: COLORI.capitolo, border: BORDI.capitolo, highlight: { background: COLORI.capitolo, border: "#fff" } },
+          font: { color: "#d7dbe2", size: 11.5 }, raw: c
+        });
+        archi.push({ from: c.id, to: edizioni[idx].id, arrows: "to",
+          color: { color: COLORI.arco, opacity: 0.85 }, width: 2,
+          smooth: false });
+        if(c.titolo_volume_originale) registraFonte(fonti, "vol:" + c.titolo_volume_originale, "volume",
+          c.titolo_volume_originale + (c.anno_volume_originale ? " (" + c.anno_volume_originale + ")" : ""), c.id);
+      }
+    });
+
+    // Una riga ulteriore, appena sotto la griglia di voci di questa
+    // edizione, con un nodo per ciascuna rivista/volume di provenienza
+    // distinta (quasi sempre poche unita', anche quando le voci sono
+    // decine: molti articoli condividono la stessa testata). Ogni voce che
+    // ne deriva ha un arco tratteggiato verso il proprio nodo-fonte.
+    if(fonti.size > 0){
+      const numRigheGriglia = Math.max(1, Math.ceil(riga.length / VOCI_PER_RIGA));
+      const listaFonti = [...fonti.values()];
+      const colonneFonti = Math.min(listaFonti.length, VOCI_PER_RIGA);
+      const larghezzaFonti = Math.max(0, colonneFonti - 1) * COL_W;
+      const xInizioFonti = posX[idx] - larghezzaFonti / 2;
+      listaFonti.forEach((fonte, i) => {
+        const colonna = i % VOCI_PER_RIGA;
+        const rigaWrap = Math.floor(i / VOCI_PER_RIGA);
+        const fx = xInizioFonti + colonna * COL_W;
+        const fy = ROW_H * (numRigheGriglia + 1 + rigaWrap) + 25;
+        nodi.push({
+          id: fonte.id, label: tronca(fonte.etichetta, 32),
+          x: fx, y: fy, shape: fonte.tipo === "rivista" ? "triangle" : "hexagon", size: 12,
+          color: { background: coloreFonte(fonte.tipo), border: bordoFonte(fonte.tipo), highlight: { background: coloreFonte(fonte.tipo), border: "#fff" } },
+          font: { color: "#d7dbe2", size: 11.5 }, raw: { group: "fonte", tipo: fonte.tipo, label: fonte.etichetta }
+        });
+        fonte.itemIds.forEach(itemId => {
+          archi.push({ from: itemId, to: fonte.id, arrows: "to",
+            color: { color: coloreFonte(fonte.tipo), opacity: 0.55 }, width: 1.5, dashes: [2, 3],
+            smooth: false });
+        });
+      });
+    }
+  });
+
+  const nodiCorrentiById = {};
+  nodi.forEach(n => { nodiCorrentiById[n.id] = n.raw; });
+
+  const rete = new vis.Network(document.getElementById("network"), { nodes: new vis.DataSet(nodi), edges: new vis.DataSet(archi) }, {
+    physics: false,
+    interaction: { hover: true, dragNodes: true, zoomView: true, dragView: true },
+    nodes: { fixed: { x: false, y: false } },
+    layout: { randomSeed: 1 }
+  });
+  rete.once("afterDrawing", () => {
+    rete.fit({ animation: false });
+    const SOGLIA_MINIMA = 0.75;
+    if(rete.getScale() < SOGLIA_MINIMA){
+      // La griglia (vedi VOCI_PER_RIGA piu' sopra) tiene quasi sempre il
+      // grafo entro una zoomata leggibile, ma un'opera con moltissime
+      // edizioni o voci puo' comunque restare piu' grande dell'area
+      // visibile. In tal caso, invece di rimpicciolire tutto fino a
+      // renderlo illeggibile (il grafo "si vede" ma di fatto e' vuoto a
+      // occhio nudo), fissiamo uno zoom minimo leggibile e partiamo
+      // dall'angolo in alto a sinistra del grafo (la prima edizione)
+      // invece che dal suo centro di massa: il resto resta comunque
+      // raggiungibile scorrendo/zoomando a mano (dragView/zoomView sono
+      // gia' attivi). I grafi che entrano gia' per intero nell'area
+      // visibile non passano da questo ramo e restano centrati come prima.
+      rete.fit({ animation: false, minZoomLevel: SOGLIA_MINIMA });
+      const scala = rete.getScale();
+      const minX = Math.min(...nodi.map(n => n.x));
+      const minY = Math.min(...nodi.map(n => n.y));
+      const larghezzaVisibile = document.getElementById("network").clientWidth / scala;
+      const altezzaVisibile = document.getElementById("network").clientHeight / scala;
+      // Margine abbondante: i riquadri dei libri sono larghi quanto il loro
+      // titolo (possono superare i 200px) e vanno tenuti per intero
+      // nell'area visibile, non solo il loro punto x/y.
+      const margine = 160;
+      rete.moveTo({
+        position: { x: minX - margine + larghezzaVisibile / 2, y: minY - margine + altezzaVisibile / 2 },
+        scale: scala, animation: false
+      });
+    }
+  });
+  rete.on("click", params => {
+    if(params.nodes.length === 0){ document.getElementById("dettagli").style.display = "none"; return; }
+    mostraDettaglioGenesi(nodiCorrentiById[params.nodes[0]]);
+  });
+
+  disegnaLegenda(edizioni.length > 1, tipoLibro, haFontiRivista, haFontiVolume);
+}
+
+function disegnaLegenda(conCatena, tipoLibro, haFontiRivista, haFontiVolume){
+  const box = document.getElementById("genesi-legenda");
+  let html = "";
+  if(conCatena) html += "<div class='legenda-voce'><span class='legenda-linea-piena' style='border-color:" + COLORI.arco + "'></span> successione cronologica fra edizioni</div>";
+  html += "<div class='legenda-voce'><span class='pallino' style='background:" + COLORI.libro + "'></span> edizione del libro</div>";
+  html += "<div class='legenda-voce'><span class='pallino' style='background:" + COLORI.articolo + "'></span> articolo uscito su rivista/quotidiano</div>";
+  if(tipoLibro !== "raccolta"){
+    html += "<div class='legenda-voce'><span class='legenda-linea-tratteggiata' style='border-color:" + COLORI.arco + "'></span> articolo estratto dal libro (non è un capitolo dell'indice)</div>";
+  } else {
+    html += "<div class='legenda-voce'><span class='legenda-linea-piena' style='border-color:" + COLORI.libro + "'></span> articolo ripubblicato come capitolo</div>";
+  }
+  html += "<div class='legenda-voce'><span class='rombo' style='background:" + COLORI.capitolo + "'></span> capitolo/contributo noto solo da un volume, o senza fonte individuata</div>";
+  if(haFontiRivista) html += "<div class='legenda-voce'><span class='triangolo' style='border-bottom-color:" + COLORI.rivista + "'></span> rivista/quotidiano di provenienza</div>";
+  if(haFontiVolume) html += "<div class='legenda-voce'><span class='esagono' style='background:" + COLORI.volume + "'></span> volume di provenienza</div>";
+  if(haFontiRivista || haFontiVolume) html += "<div class='legenda-voce'><span class='legenda-linea-tratteggiata' style='border-color:" + COLORI.arco + "'></span> collegamento alla fonte di provenienza</div>";
+  box.innerHTML = html;
+}
+
+function mostraDettaglioGenesi(raw){
+  const pannello = document.getElementById("dettagli");
+  const corpo = document.getElementById("dettagli-contenuto");
+  if(!raw){ pannello.style.display = "none"; return; }
+  let html = "<h3>" + (raw.label || raw.titolo || "") + "</h3>";
+  if(raw.group === "libro"){
+    html += "<div class='campo'><b>Tipo:</b> " + (raw.tipo_libro === "romanzo" ? "Romanzo" : raw.tipo_libro === "non raccolta" ? "Libro (non raccolta)" : "Libro (raccolta di Eco)") + "</div>";
+    if(raw.editore) html += "<div class='campo'><b>Editore:</b> " + raw.editore + "</div>";
+    if(raw.anno) html += "<div class='campo'><b>Anno:</b> " + raw.anno + "</div>";
+    if(raw.link) html += "<div class='campo'><a href='" + raw.link + "' target='_blank'>Scheda OPAC SBN</a></div>";
+    // libro intermedio di un PASSAGGI_VIA_VOLUME: stesso indirizzo del bottone «Vedi la genesi dell'opera» di Raccolte
+    if(Object.values(PASSAGGI_VIA_VOLUME).some(c => c.via === raw.id)){
+      const base = baseOperaLibro(raw.label) || raw.label;
+      html += "<div class='campo'><a class='btn btn-vai-scheda' href='genesi.html?opera=" + encodeURIComponent(base).replace(/'/g, "%27") +
+        "&libro=" + encodeURIComponent(raw.id).replace(/'/g, "%27") + "'>Vedi la genesi di questo libro &rarr;</a></div>";
+    }
+  } else if(raw.group === "articolo"){
+    if(raw.titolo_capitolo) html += "<div class='campo'><b>Titolo nel libro:</b> «" + raw.titolo_capitolo + "»</div>";
+    html += "<div class='campo'><b>Articolo originale:</b> " + raw.label + "</div>";
+    if(raw.rivista) html += "<div class='campo'><b>Rivista:</b> " + raw.rivista + (raw.anno ? " (" + raw.anno + ")" : "") + "</div>";
+    if(raw.numero) html += "<div class='campo'><b>Numero:</b> " + raw.numero + "</div>";
+    // Genesi.html e' una pagina a se': non puo' chiamare vaiAArticolo()
+    // direttamente come fa la Vista a grafo, quindi apre la scheda completa
+    // in una nuova scheda del browser tramite lo stesso indirizzo che
+    // legge visualizzazione.html in fondo al suo script (vedi li'). Si passa
+    // anche il libro di provenienza (stesso usato dal link "Opera Persa" qui
+    // sopra): senza, la nuova scheda parte con un'unica voce di cronologia
+    // (quella dell'articolo) e il tasto/gesto "indietro" del browser
+    // riporterebbe alla Home invece che al libro da cui si e' partiti.
+    html += "<div class='campo'><a class='btn btn-vai-scheda' href='visualizzazione.html?articolo=" +
+      encodeURIComponent(raw.id).replace(/'/g, "%27") +
+      (libroDiProvenienza ? "&libro=" + encodeURIComponent(libroDiProvenienza).replace(/'/g, "%27") : "") +
+      "' target='_blank' rel='noopener'>Vai alla scheda dell'articolo &rarr;</a></div>";
+  } else if(raw.kind === "capitolo_nc"){
+    html += "<div class='campo'><b>Tipo:</b> Capitolo senza fonte periodica individuata</div>";
+    if(raw.titolo_volume_originale) html += "<div class='campo'><b>Tratto da:</b> «" + raw.titolo_volume_originale + "»" + (raw.anno_volume_originale ? " (" + raw.anno_volume_originale + ")" : "") + "</div>";
+    if(raw.curatori_volume_originale) html += "<div class='campo'><b>Curatori/autori:</b> " + raw.curatori_volume_originale + "</div>";
+    if(raw.nota) html += "<div class='campo'>" + raw.nota + "</div>";
+  } else if(raw.group === "fonte"){
+    html += "<div class='campo'><b>Tipo:</b> " + (raw.tipo === "rivista" ? "Rivista/quotidiano di provenienza" : "Volume di provenienza") + "</div>";
+    html += "<div class='campo'>Le voci collegate a questo nodo (linea tratteggiata) sono tutte tratte da qui.</div>";
+  }
+  corpo.innerHTML = html;
+  pannello.style.display = "block";
+}
+document.getElementById("genesi-dettaglio-chiudi").addEventListener("click", () => {
+  document.getElementById("dettagli").style.display = "none";
+});
+</script>
+</body>
+</html>

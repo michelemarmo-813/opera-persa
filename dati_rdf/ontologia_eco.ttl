@@ -1,0 +1,710 @@
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix fabio:  <http://purl.org/spar/fabio/> .
+@prefix prism:  <http://prismstandard.org/namespaces/basic/2.0/> .
+@prefix frbr:   <http://purl.org/vocab/frbr/core#> .
+@prefix foaf:   <http://xmlns.com/foaf/0.1/> .
+@prefix eco:    <http://example.org/eco-graph/schema#> .
+@prefix void:   <http://rdfs.org/ns/void#> .
+@prefix dcat:   <http://www.w3.org/ns/dcat#> .
+
+#################################################################
+# ONTOLOGIA "eco-graph" - schema di estensione
+#
+# Non ridefiniamo classi/proprieta' bibliografiche standard: le
+# riusiamo cosi' come sono da vocabolari esistenti (vedi tabella
+# nei commenti sotto). Definiamo SOLO le poche proprieta' che non
+# hanno un equivalente pulito in nessuno dei vocabolari riusati,
+# e le colleghiamo con rdfs:subPropertyOf al concetto piu' vicino,
+# cosi' restano interrogabili anche da chi conosce solo lo standard.
+#
+# NOTA: <http://example.org/eco-graph/schema#> e' un namespace
+# segnaposto. Se il progetto verra' pubblicato online (es. su
+# GitHub Pages), va sostituito con un URI reale e stabile.
+#################################################################
+
+<http://example.org/eco-graph/schema#> a owl:Ontology ;
+    rdfs:label "Ontologia per la bibliografia di Umberto Eco (eco-graph)"@it ;
+    rdfs:comment "Estensione minima di Dublin Core, FaBiO, PRISM, FRBR e FOAF per modellare gli articoli di Umberto Eco, le riviste su cui sono usciti, e i libri in cui sono stati ripubblicati. Non usa owl:imports (vedi nota sotto): le classi/proprieta' riusate sono referenziate per URI, non reimportate."@it ;
+    owl:versionInfo "1.9" ;
+    dcterms:modified "2026-10-14"^^xsd:date .
+
+#################################################################
+# STORICO VERSIONI
+#
+# 1.0 - versione iniziale (data di creazione non tracciata: questa e' la
+#       prima revisione con versionInfo/dcterms:modified espliciti, quindi
+#       non e' possibile datare retroattivamente le versioni precedenti).
+# 1.1 - 2026-09-15 - revisione a seguito di una peer-review (OWL/RDF, FRBR,
+#       FAIR/LOD, sostenibilita'): aggiunge owl:versionInfo/dcterms:modified;
+#       dichiara come stub frbr:Work e frbr:Expression (gia' usate nei dati
+#       ma prima assenti da questo file); dichiara formalmente eco:tipoLibro
+#       e aggiunge le sottoclassi eco:LibroRaccolta/eco:LibroEstratto (quest'ultima sostituita nella 1.6);
+#       allarga il dominio di eco:notaRistampa (era dichiarato solo su
+#       fabio:JournalArticle mentre in produzione e' usata anche su
+#       fabio:Book); dichiara frbr:part owl:inverseOf frbr:partOf.
+# 1.2 - 2026-09-24 - Fasi 1-3 della revisione per solidita' scientifica
+#       (vedi CHANGELOG.md nella cartella del sito per il dettaglio
+#       completo, che copre l'intero progetto, non solo questo file):
+#       la generazione dei dati del sito passa da lettura diretta del
+#       grafo a query SPARQL vere e proprie (cartella queries/); il
+#       sito offre un'interfaccia per interrogare il grafo con SPARQL
+#       direttamente nel browser; aggiunti metadati di dataset in
+#       VoID/DCAT (vedi sezione dedicata piu' sotto in questo file).
+# 1.3 - 2026-10-06 - separazione RISTAMPA/ESTRATTO (richiesta esplicita).
+#       Aggiunte eco:estrattoDi (object property) ed eco:notaEstratto
+#       (datatype property): fino a questa versione un articolo che e'
+#       un'anticipazione giornalistica di un romanzo/saggio (es. un
+#       capitolo di "Baudolino" uscito in anteprima su L'Espresso) era
+#       collegato al libro con lo stesso prism:isVersionOf usato per una
+#       vera ristampa in volume - semanticamente improprio, perche'
+#       isVersionOf dichiara l'ARTICOLO come versione del libro, mentre
+#       qui e' il LIBRO la fonte e l'articolo la sua anticipazione (vedi
+#       i commenti sulle due nuove proprieta' piu' sotto). prism:isVersionOf
+#       resta riservato alle ristampe vere (articolo ripubblicato
+#       integralmente in un libro); eco:notaRistampa segue la stessa
+#       distinzione. Rimossa anche l'eccezione "articolo -> articolo" di
+#       prism:isVersionOf (ristampa dello stesso articolo su due numeri
+#       della stessa testata): il solo caso che la usava ("Che bell'errore!"
+#       1985/2016) non e' piu' nel dataset (vedi CHANGELOG.md). Nessuna
+#       classe nuova: i 12 eco:LibroEstratto esistenti bastano a sapere
+#       quali libri possono avere un arco eco:estrattoDi (non e' una
+#       condizione sufficiente di per se' - un eco:LibroEstratto puo'
+#       restare collegato con prism:isVersionOf quando il caso e' in
+#       realta' una ristampa integrale: vedi "Postille a Il nome della
+#       rosa" in CHANGELOG.md - l'elenco dei 10 articoli estratto e'
+#       quindi esplicito in genera_rdf.py, non derivato da eco:tipoLibro).
+# 1.4 - 2026-10-13 - MODELLO A DUE RELAZIONI di riuso del testo fra
+#       pubblicazioni diverse (richiesta esplicita), piu' l'appartenenza:
+#         - appartenenza articolo -> rivista/quotidiano: frbr:partOf (e
+#           articolo -> rubrica: eco:rubrica). INVARIATA.
+#         - RISTAMPA = prism:isVersionOf: un articolo uscito in una
+#           rivista/quotidiano e' stato ripubblicato in un volume
+#           (articolo -> libro) oppure in un'altra rivista (articolo ->
+#           articolo). Il secondo caso e' previsto dal modello (la
+#           proprieta' prism:isVersionOf non ha dominio/codominio dichiarati
+#           in questo file, quindi non serve alcuna modifica formale) ma
+#           nei dati attuali NON ci sono istanze: nessuna e' stata creata.
+#         - ESTRATTO = eco:estrattoDi: un articolo in rivista e' un estratto
+#           di un volume (articolo -> libro); il volume e' la fonte.
+#       Lessico: il vecchio lessico e' sostituito ovunque con "estratto"
+#       (commenti e rdfs:comment; la voce 1.3 qui sopra resta
+#       com'e', e' storia).
+#       eco:LibroEstratto ridefinito a parole come "libro di cui il dataset
+#       registra solo l'estratto giornalistico". Nessun cambiamento di
+#       classi/proprieta' ne' di dati. eco:pubblicatoIntegralmenteSu e
+#       frbr:part fra due libri (appendice) RESTANO nel grafo RDF, ma non
+#       fanno parte del modello a due relazioni: non sono piu' disegnati
+#       come archi nella Vista a grafo (la prima resta nella scheda
+#       dell'articolo) e la loro sorte e' in attesa di decisione.
+# 1.5 - 2026-10-13 - tolte le ultime due relazioni fuori modello e aggiunto
+#       l'INDICE DEI VOLUMI (richiesta esplicita).
+#         - RIMOSSA eco:pubblicatoIntegralmenteSu (articolo -> rivista dove
+#           il testo integrale e' uscito): aveva una sola istanza, basata su
+#           un'informazione errata, ora cancellata alla fonte; senza istanze
+#           ne' ragione d'essere nel modello a due relazioni.
+#         - RIMOSSA la relazione "Appendice" (frbr:part fra due libri): frbr:part
+#           resta SOLO per libro -> eco:CapitoloNonCollegato. La 6a edizione
+#           del romanzo (1985), che ripubblica il saggio in appendice, e'
+#           ora collegata come tutte le ristampe: l'articolo del saggio ha
+#           due prism:isVersionOf, uno verso il volume autonomo e uno verso
+#           il romanzo 1985. Le relazioni di riuso fra pubblicazioni restano
+#           le due della v1.4 (RISTAMPA e ESTRATTO).
+#         - NUOVA classe eco:VoceIndice: una voce dell'indice di un volume
+#           (non e' una relazione di riuso del testo ma l'APPARTENENZA di un
+#           capitolo all'indice di un libro). Nove nuove proprieta':
+#           eco:nelIndiceDi, eco:posizioneInIndice, eco:titoloInIndice,
+#           eco:numeroCapitolo, eco:pagineNelVolume, eco:statoVoce,
+#           eco:articoloCorrispondente, eco:coautore, eco:pseudonimo (la nota
+#           della voce e' un rdfs:comment). Le voci d'indice NON sono nodi o
+#           archi della Vista a grafo. Dati: dati_estratti/indici_volumi.csv,
+#           generato da importa_indici.py a partire dall'Excel degli indici.
+# 1.6 - 2026-10-13 (sera, seconda modifica) - TRE categorie di libri e voce
+#       d'indice "inedito" (richiesta esplicita).
+#         - eco:LibroEstratto SOSTITUITA da due sottoclassi di fabio:Book:
+#           eco:Romanzo e eco:LibroNonRaccolta (saggi, curatele, testi
+#           autonomi); eco:LibroRaccolta resta. La categoria di ogni libro
+#           sta in un solo punto: dati_estratti/classificazione_libri.csv.
+#         - eco:tipoLibro assume i valori "romanzo", "non raccolta",
+#           "raccolta" (genera_rdf.py si ferma se il valore non e' ammesso).
+#           "estratto" non e' piu' un valore valido. Nessun libro cambia
+#           nodo, arco, colore o posizione nel grafo.
+#         - eco:statoVoce: nuovo valore «inedito» (capitolo inedito, senza
+#           dubbio sulla fonte), distinto da «inedito-nd» (inedito oppure di
+#           fonte non determinata). Le voci aggiunte a mano (ad es. «Nota
+#           all'edizione 1975») stanno in dati_estratti/indici_voci_aggiunte.csv.
+# 1.7 - 2026-10-13 (sera, terza modifica) - eco:pseudonimo anche sugli articoli
+#       (richiesta esplicita).
+#         - eco:pseudonimo: il dominio passa da eco:VoceIndice a
+#           eco:VoceIndice OPPURE fabio:JournalArticle (e quindi, per
+#           sottoclasse, fabio:NewspaperArticle); rdfs:comment aggiornato.
+#           Nessuna nuova proprieta' o classe.
+#         - Primo uso sugli articoli: JA0570 «Siamo tutti registi» (L'Espresso,
+#           19, 9 maggio 1971), il cui titolo conteneva per errore
+#           «[con lo pseudonimo Lia Quilici]»: il titolo (dcterms:title,
+#           rdfs:label) e' ora «Siamo tutti registi» e lo pseudonimo e'
+#           eco:pseudonimo "Lia Quilici". Le correzioni di questo tipo si
+#           scrivono caso per caso in dati_estratti/articoli_titolo_pseudonimo.csv
+#           (nessuna regola automatica sulle parentesi quadre).
+# 1.8 - 2026-10-14 - indice della «Bustina di Minerva» e dati bibliografici
+#       indicati dall'indice (richiesta esplicita).
+#         - Cinque nuove proprieta' datatype con dominio eco:VoceIndice:
+#           eco:titoloOriginaleIndicato, eco:testataIndicata,
+#           eco:numeroIndicato, eco:dataIndicata, eco:paginaIndicata. Sono i
+#           dati dell'articolo originale cosi' come li indica la fonte
+#           dell'indice, per le voci che NON hanno un articolo nel dataset
+#           (valore "N.D." quando la fonte non lo dice). Non sono nodi o
+#           archi del grafo. Le voci con articolo continuano a usare i dati
+#           dell'articolo (eco:articoloCorrispondente).
+#         - Nessuna nuova classe. Dati: dati_estratti/indici_volumi.csv
+#           (importa_indici.py), ora anche da
+#           sorgenti/Indice_La_bustina_di_Minerva_ordine_libro.csv.
+#         - Un collegamento prism:isVersionOf in piu' (articolo JA2219
+#           «Sofri e l'onere della prova», MicroMega 1997 -> La bustina di
+#           Minerva), scritto in dati_estratti/ristampe_aggiunte.csv.
+# 1.9 - 2026-10-14 - indice de «Il costume di casa» e dati dei contributi in
+#       volume indicati dall'indice (richiesta esplicita).
+#         - Sei nuove proprieta' datatype con dominio eco:VoceIndice:
+#           eco:titoloVolumeIndicato, eco:curatoreVolumeIndicato,
+#           eco:editoreVolumeIndicato, eco:luogoVolumeIndicato,
+#           eco:annoVolumeIndicato, eco:paginaVolumeIndicato. Sono i dati del
+#           volume in cui il capitolo e' uscito per la prima volta, cosi' come
+#           li indica la fonte dell'indice, per le voci SENZA articolo nel
+#           dataset, o anche con articolo quando il capitolo e' una ristampa in
+#           comune (testo semplice: nessun nodo, arco o libro nuovo).
+#           Il titolo del capitolo originale usa eco:titoloOriginaleIndicato
+#           (1.8), il co-autore eco:coautore, la nota rdfs:comment.
+#         - Nessuna nuova classe. Dati: dati_estratti/indici_volumi.csv
+#           (importa_indici.py, che ora legge anche
+#           sorgenti/Il_costume_di_casa_indice.csv: codifica Windows-1252, due
+#           gruppi di colonne letti per posizione, senza colonna N.).
+#         - Due pseudonimi «Dedalus» in piu' (eco:pseudonimo, articoli NA0016
+#           e NA0015), in dati_estratti/articoli_titolo_pseudonimo.csv.
+#################################################################
+
+#################################################################
+# NOTA SU owl:imports: deliberatamente ASSENTE.
+# Formalmente dovremmo importare FaBiO/PRISM/FRBR/FOAF con owl:imports,
+# ma diversi di questi namespace non pubblicano un documento OWL
+# scaricabile a quell'URI: un reasoner/editor (es. Protégé) che prova a
+# risolvere l'import puo' bloccarsi o mostrare errori di rete a vuoto.
+# Per un uso pratico dei dati (Protégé, rdflib, un triplestore) non serve:
+# le classi/proprieta' esterne funzionano comunque, sono solo URI.
+#
+# CLASSI RIUSATE - dichiarate qui come "stub" locali (owl:Class), giusto
+# per far comparire una gerarchia minima negli editor come Protégé, SENZA
+# ridefinirne la semantica completa (quella resta nei vocabolari originali):
+#
+#   fabio:JournalArticle    -> un articolo di rivista/periodico
+#   fabio:Journal           -> una rivista
+#   fabio:NewspaperArticle  -> un articolo di quotidiano
+#   fabio:Newspaper         -> un quotidiano
+#   fabio:Book              -> un libro (le raccolte di Eco)
+#   foaf:Person             -> una persona (Umberto Eco)
+#   frbr:Work               -> un'opera astratta, indipendente dalla
+#                               composizione delle singole edizioni
+#   frbr:Expression         -> una singola edizione di un'opera con piu'
+#                               edizioni a composizione diversa
+#
+# NOTA (aggiunta in v1.1): frbr:Work e frbr:Expression erano gia' usate da
+# genera_rdf.py (sezioni 5bis e 7) per raggruppare le edizioni di opere come
+# "Diario minimo" o "Il nome della rosa", ma non comparivano qui: un vero
+# disallineamento fra la pipeline e questo file, non solo una dimenticanza
+# di stile. Una risorsa che ha gia' rdf:type fabio:Book riceve ANCHE
+# rdf:type frbr:Expression quando appartiene a un'opera con piu' edizioni
+# (le due classi non sono in conflitto: fabio:Book descrive COSA e' dal
+# punto di vista editoriale, frbr:Expression la sua posizione nella
+# gerarchia opera/edizione). Si ferma al livello Expression: non si
+# modellano frbr:Manifestation/frbr:Item (nessun dato del progetto arriva a
+# quel livello di dettaglio, es. ISBN o copia fisica).
+#################################################################
+
+fabio:JournalArticle a owl:Class ;
+    rdfs:label "Articolo di rivista"@it ;
+    rdfs:comment "Classe definita da FaBiO (http://purl.org/spar/fabio/JournalArticle). Dichiarata qui come riferimento minimo, senza reimportare l'intera ontologia FaBiO."@it .
+
+fabio:Journal a owl:Class ;
+    rdfs:label "Rivista"@it ;
+    rdfs:comment "Classe definita da FaBiO (http://purl.org/spar/fabio/Journal)."@it .
+
+fabio:NewspaperArticle a owl:Class ;
+    rdfs:subClassOf fabio:JournalArticle ;
+    rdfs:label "Articolo di quotidiano"@it ;
+    rdfs:comment "Classe definita da FaBiO (http://purl.org/spar/fabio/NewspaperArticle), sottoclasse di fabio:JournalArticle: usata per gli articoli usciti su un quotidiano invece che su una rivista periodica."@it .
+
+fabio:Newspaper a owl:Class ;
+    rdfs:subClassOf fabio:Journal ;
+    rdfs:label "Quotidiano"@it ;
+    rdfs:comment "Classe definita da FaBiO (http://purl.org/spar/fabio/Newspaper)."@it .
+
+fabio:Book a owl:Class ;
+    rdfs:label "Libro"@it ;
+    rdfs:comment "Classe definita da FaBiO (http://purl.org/spar/fabio/Book)."@it .
+
+foaf:Person a owl:Class ;
+    rdfs:label "Persona"@it ;
+    rdfs:comment "Classe definita da FOAF (http://xmlns.com/foaf/0.1/Person)."@it .
+
+frbr:Work a owl:Class ;
+    rdfs:label "Opera"@it ;
+    rdfs:comment "Classe definita da FRBR (http://purl.org/vocab/frbr/core#Work). Usata solo per le opere di cui il dataset registra piu' edizioni a composizione diversa (vedi frbr:Expression e frbr:realizationOf piu' sotto); le altre opere restano semplici fabio:Book senza frbr:Work associata - applicazione intenzionalmente parziale, non sistematica su tutto il corpus."@it .
+
+frbr:Expression a owl:Class ;
+    rdfs:label "Espressione"@it ;
+    rdfs:comment "Classe definita da FRBR (http://purl.org/vocab/frbr/core#Expression). Assegnata in aggiunta a fabio:Book (non al suo posto) a ogni edizione di un'opera con piu' edizioni note; collegata alla frbr:Work corrispondente con frbr:realizationOf."@it .
+
+#################################################################
+# CLASSE CUSTOM: eco:Rubrica
+#
+# A differenza delle classi sopra, questa NON e' lo stub di un vocabolario
+# esterno: e' una classe originale del progetto. Prima le rubriche (es. "La
+# bustina di Minerva") erano un semplice letterale stringa su eco:rubrica;
+# promosse a risorse con un URI proprio si possono collegare esplicitamente
+# nel grafo tutti gli articoli che condividono la stessa rubrica (non solo
+# per uguaglianza di stringa), e in futuro attaccarci altri metadati (es. il
+# periodo in cui e' stata attiva) - stesso principio gia' seguito per
+# riviste, quotidiani e libri, che hanno anch'essi un URI proprio invece di
+# restare semplici stringhe.
+#################################################################
+
+eco:Rubrica a owl:Class ;
+    rdfs:label "Rubrica"@it ;
+    rdfs:comment "Sezione/rubrica fissa di un periodico (es. «La bustina di Minerva» su L'Espresso). Classe originale del progetto: nessun vocabolario riusato tratta le rubriche giornalistiche come entità a sé stanti."@it .
+
+#################################################################
+# CLASSE CUSTOM: eco:CapitoloNonCollegato
+#
+# Alcuni indici di raccolte proprie di Eco elencano capitoli per cui la
+# fonte originale (l'articolo di rivista/quotidiano da cui il capitolo e'
+# tratto) non e' presente nel dataset - o perche' cita una testata non
+# ancora censita (es. MicroMega, La Repubblica), o perche' l'indice stesso
+# non riporta alcuna fonte ("N.D."). Invece di ometterli, restano comunque
+# elencati nella scheda del libro: si collegano al libro con frbr:part
+# (l'inverso di frbr:partOf, gia' riusato per articolo -> rivista) invece
+# che con prism:isVersionOf (che richiede un vero fabio:JournalArticle
+# dall'altra parte), e portano in rdfs:comment una nota che spiega perche'
+# manca il collegamento.
+#################################################################
+
+eco:CapitoloNonCollegato a owl:Class ;
+    rdfs:label "Capitolo non collegato"@it ;
+    rdfs:comment "Capitolo di una raccolta propria di Eco elencato nell'indice del volume, per cui il dataset non contiene (ancora) l'articolo di rivista/quotidiano da cui è tratto. Classe originale del progetto."@it .
+
+#################################################################
+# CLASSI CUSTOM (aggiunte in v1.1; dalla v1.6 sono tre: eco:LibroRaccolta,
+# eco:Romanzo, eco:LibroNonRaccolta - eco:LibroEstratto non esiste piu')
+#
+# Fino alla v1.0 la distinzione fra i due tipi di fabio:Book del progetto
+# viveva SOLO nel letterale eco:tipoLibro ("raccolta"/"estratto", vedi sotto):
+# invisibile a chi interroga il grafo senza conoscere quella convenzione, e
+# senza alcun controllo formale sui valori ammessi. Qui si promuove la
+# stessa distinzione a due sottoclassi dichiarate di fabio:Book - lo stesso
+# principio gia' usato per eco:Rubrica ed eco:CapitoloNonCollegato sopra,
+# solo applicato con un anno di ritardo a questo caso.
+#
+# Il letterale eco:tipoLibro NON viene rimosso: resta scritto da
+# genera_rdf.py accanto al nuovo rdf:type, perche' il frontend
+# (genera_visualizzazione.py / genesi.html) lo legge direttamente e non c'e'
+# motivo di romperlo per una migrazione che le sottoclassi rendono comunque
+# possibile in modo incrementale.
+#################################################################
+
+eco:LibroRaccolta a owl:Class ;
+    rdfs:subClassOf fabio:Book ;
+    rdfs:label "Libro (raccolta)"@it ;
+    rdfs:comment "Raccolta di saggi/articoli propri di Eco i cui «capitoli» sono a tutti gli effetti articoli ripubblicati (collegati con prism:isVersionOf). Corrisponde a eco:tipoLibro \"raccolta\"."@it .
+
+eco:Romanzo a owl:Class ;
+    rdfs:subClassOf fabio:Book ;
+    rdfs:label "Romanzo"@it ;
+    rdfs:comment "Romanzo di Eco: opera a sé, non una raccolta di saggi o articoli. Il dataset registra solo gli articoli collegati (estratti o ristampe), non l'indice completo. Corrisponde a eco:tipoLibro \"romanzo\"."@it .
+
+eco:LibroNonRaccolta a owl:Class ;
+    rdfs:subClassOf fabio:Book ;
+    rdfs:label "Libro (non raccolta)"@it ;
+    rdfs:comment "Libro di Eco che non è né un romanzo né una raccolta di suoi saggi o articoli (un saggio, una curatela, un testo autonomo). Il dataset registra solo gli articoli collegati (estratti o ristampe), non l'indice completo. Corrisponde a eco:tipoLibro \"non raccolta\"."@it .
+
+#################################################################
+# PROPRIETA' RIUSATE (nessuna ridefinizione, solo promemoria d'uso)
+#
+#   dcterms:title           titolo (di articolo, rivista o libro)
+#   dcterms:creator          autore -> foaf:Person
+#   dcterms:publisher        casa editrice di un libro
+#   prism:publicationDate    anno di pubblicazione (xsd:gYear)
+#   prism:coverDate          data completa (giorno/mese/anno, xsd:date) del
+#                             numero/fascicolo in cui l'articolo e' uscito,
+#                             quando nota - PRISM la definisce esattamente
+#                             per questo ("the date of the cover of an
+#                             issue"), quindi non serve una proprieta' custom
+#   prism:number             numero di fascicolo di una rivista
+#   prism:startingPage       pagina iniziale (xsd:integer)
+#   prism:endingPage         pagina finale (xsd:integer)
+#   prism:isVersionOf        RISTAMPA: articolo -> libro (l'articolo e'
+#                             stato ripubblicato in un volume, il volume e'
+#                             il contenitore) oppure articolo -> articolo
+#                             (ripubblicato in un'altra rivista; modello
+#                             v1.4, nei dati attuali nessuna istanza). Per
+#                             il caso opposto - ESTRATTO, il libro e' la
+#                             fonte e l'articolo ne e' un estratto - vedi
+#                             la proprieta' custom eco:estrattoDi piu' sotto,
+#                             NON questa (v1.3).
+#   frbr:partOf              articolo -> rivista/quotidiano: appartenenza
+#   frbr:part                libro -> eco:CapitoloNonCollegato (v1.5: e'
+#                             l'unico uso; la vecchia relazione fra due
+#                             libri "appendice" e' stata tolta; vedi
+#                             genera_rdf.py, sezione 3bis).
+#                             Dichiarato sotto come owl:inverseOf frbr:partOf
+#                             (v1.1: prima erano trattati come inversi solo
+#                             per convenzione/commento, mai come tripla)
+#   foaf:name                nome leggibile di una persona
+#   rdfs:seeAlso             link esterno di approfondimento (es. ACNP)
+#   rdfs:label               etichetta leggibile per ogni risorsa
+#   rdfs:comment             nota libera (qui: perché manca il collegamento)
+#################################################################
+
+#################################################################
+# PROPRIETA' CUSTOM (le 6 che non trovano posto altrove)
+#################################################################
+
+frbr:part owl:inverseOf frbr:partOf .
+
+eco:rubrica a owl:ObjectProperty ;
+    rdfs:subPropertyOf dcterms:subject ;
+    rdfs:label "rubrica"@it ;
+    rdfs:comment "Sezione/rubrica del periodico in cui è apparso l'articolo (es. «La bustina di Minerva»). Punta a una risorsa eco:Rubrica (il nome leggibile è nel suo rdfs:label), non più a un semplice letterale stringa: così gli articoli che condividono la stessa rubrica sono collegati esplicitamente nel grafo. Nessun vocabolario riusato ha un termine specifico per le rubriche giornalistiche; la trattiamo come sotto-proprietà di dcterms:subject."@it ;
+    rdfs:domain fabio:JournalArticle ;
+    rdfs:range eco:Rubrica .
+
+eco:cittaDiPubblicazione a owl:DatatypeProperty ;
+    rdfs:subPropertyOf dcterms:spatial ;
+    rdfs:label "città di pubblicazione"@it ;
+    rdfs:comment "Città in cui un libro è stato pubblicato. Dublin Core/FaBiO/PRISM non hanno una proprietà dedicata al luogo di pubblicazione (a differenza di MARC/BIBFRAME); la trattiamo come sotto-proprietà di dcterms:spatial."@it ;
+    rdfs:domain fabio:Book ;
+    rdfs:range xsd:string .
+
+eco:notaRistampa a owl:DatatypeProperty ;
+    rdfs:subPropertyOf rdfs:comment ;
+    rdfs:label "nota sulla ristampa"@it ;
+    rdfs:comment "Testo originale, non ancora strutturato, di una segnalazione di RISTAMPA (prism:isVersionOf) troppo complessa per essere ridotta a un semplice collegamento (es. cita più fonti, traduzioni, rielaborazioni). Va rivista manualmente e, se possibile, scomposta in relazioni esplicite. USATA SIA su fabio:JournalArticle (nota di ristampa su un articolo) SIA su fabio:Book (nota bibliografica sul libro stesso, quando una ristampa integrale non ha un articolo collegato - vedi genera_rdf.py, sezione 7): nessun rdfs:domain dichiarato di proposito (v1.1 - prima era erroneamente ristretto al solo fabio:JournalArticle, in contraddizione con l'uso reale). Per il caso ESTRATTO (eco:estrattoDi) la nota equivalente e' eco:notaEstratto, non questa (v1.3)."@it ;
+    rdfs:range xsd:string .
+
+eco:numeroRicostruitoDaData a owl:DatatypeProperty ;
+    rdfs:label "numero di fascicolo ricostruito da data spuria di Excel"@it ;
+    rdfs:comment "Flag booleano: true se prism:number non era leggibile direttamente nel file sorgente perché Excel lo aveva interpretato come una data, ed è stato ricostruito automaticamente. Va verificato manualmente sull'originale."@it ;
+    rdfs:domain fabio:JournalArticle ;
+    rdfs:range xsd:boolean .
+
+eco:paginaRicostruitaDaData a owl:DatatypeProperty ;
+    rdfs:label "pagina ricostruita da data spuria di Excel"@it ;
+    rdfs:comment "Flag booleano: true se prism:startingPage/prism:endingPage non erano leggibili direttamente nel file sorgente perché Excel li aveva interpretati come una data, e sono stati ricostruiti automaticamente. Va verificato manualmente sull'originale."@it ;
+    rdfs:domain fabio:JournalArticle ;
+    rdfs:range xsd:boolean .
+
+eco:titoloCapitolo a owl:DatatypeProperty ;
+    rdfs:subPropertyOf dcterms:title ;
+    rdfs:label "titolo del capitolo di ristampa"@it ;
+    rdfs:comment "Titolo con cui un articolo è stato ripubblicato all'interno di un libro, quando diverso dal titolo originale dell'articolo (es. un articolo uscito con un titolo su rivista e ristampato in volume con un titolo diverso). Nessun vocabolario riusato distingue esplicitamente 'titolo originale' da 'titolo nella ristampa'; la trattiamo come sotto-proprietà di dcterms:title applicata all'articolo originale (non al libro, che ha il proprio dcterms:title)."@it ;
+    rdfs:domain fabio:JournalArticle ;
+    rdfs:range xsd:string .
+
+#################################################################
+# PROPRIETA' CUSTOM - dati bibliografici del VOLUME COLLETTIVO
+# originale (antologia curata da altri) da cui e' tratto un capitolo
+# di una raccolta propria di Eco, quando quel volume collettivo non e'
+# esso stesso modellato come fabio:Book (per non creare nuovi nodi nel
+# grafo - vedi eco:CapitoloNonCollegato). Si usano su eco:CapitoloNonCollegato
+# o, nei rari casi in cui il capitolo e' comunque collegato a un
+# fabio:JournalArticle gia' esistente (perche' anche ristampato su
+# rivista/quotidiano), direttamente su quell'articolo.
+#################################################################
+
+eco:titoloVolumeOriginale a owl:DatatypeProperty ;
+    rdfs:subPropertyOf dcterms:source ;
+    rdfs:label "titolo del volume originale"@it ;
+    rdfs:comment "Titolo del volume collettivo (antologia curata da altri, atti di convegno, ecc.) in cui questo capitolo/articolo è apparso per la prima volta, prima di essere ripubblicato in una raccolta propria di Eco."@it ;
+    rdfs:range xsd:string .
+
+eco:curatoriVolumeOriginale a owl:DatatypeProperty ;
+    rdfs:label "curatori/autori del volume originale"@it ;
+    rdfs:comment "Curatori o autori del volume collettivo indicato in eco:titoloVolumeOriginale."@it ;
+    rdfs:range xsd:string .
+
+eco:cittaVolumeOriginale a owl:DatatypeProperty ;
+    rdfs:subPropertyOf dcterms:spatial ;
+    rdfs:label "città di pubblicazione del volume originale"@it ;
+    rdfs:range xsd:string .
+
+eco:editoreVolumeOriginale a owl:DatatypeProperty ;
+    rdfs:subPropertyOf dcterms:publisher ;
+    rdfs:label "casa editrice del volume originale"@it ;
+    rdfs:range xsd:string .
+
+eco:annoVolumeOriginale a owl:DatatypeProperty ;
+    rdfs:subPropertyOf prism:publicationDate ;
+    rdfs:label "anno di pubblicazione del volume originale"@it ;
+    rdfs:comment "Range xsd:string invece di xsd:gYear perché in alcuni casi la fonte riporta 'N.D.' invece di un anno certo."@it ;
+    rdfs:range xsd:string .
+
+eco:pagineVolumeOriginale a owl:DatatypeProperty ;
+    rdfs:label "pagine nel volume originale"@it ;
+    rdfs:range xsd:string .
+
+eco:notaVolumeOriginale a owl:DatatypeProperty ;
+    rdfs:subPropertyOf rdfs:comment ;
+    rdfs:label "nota bibliografica sul volume originale"@it ;
+    rdfs:comment "Nota di contesto/attribuzione sul volume originale (es. chi ha firmato una voce di dizionario, se una ristampa è parziale). Distinta da rdfs:comment su eco:CapitoloNonCollegato, che spiega invece perché il capitolo non è collegato a un fabio:JournalArticle."@it ;
+    rdfs:range xsd:string .
+
+#################################################################
+# PROPRIETA' CUSTOM - opera recensita/schedata in un articolo il cui
+# titolo originale e' un segnaposto generico (es. "[recensione senza
+# titolo]", "[scheda bibliografica senza titolo]"): titolo e autore del
+# libro che ne e' effettivamente oggetto, cosi' l'informazione compare
+# nella scheda di dettaglio dell'articolo senza dover alterare il
+# titolo dell'articolo stesso.
+#################################################################
+
+eco:operaRecensitaTitolo a owl:DatatypeProperty ;
+    rdfs:subPropertyOf dcterms:references ;
+    rdfs:label "titolo dell'opera recensita/schedata"@it ;
+    rdfs:comment "Titolo del libro che è oggetto di una recensione o scheda bibliografica di Eco, quando il titolo dell'articolo stesso è un segnaposto generico."@it ;
+    rdfs:domain fabio:JournalArticle ;
+    rdfs:range xsd:string .
+
+eco:operaRecensitaAutore a owl:DatatypeProperty ;
+    rdfs:label "autore dell'opera recensita/schedata"@it ;
+    rdfs:comment "Autore del libro indicato in eco:operaRecensitaTitolo."@it ;
+    rdfs:domain fabio:JournalArticle ;
+    rdfs:range xsd:string .
+
+#################################################################
+# CLASSE E PROPRIETA' CUSTOM (aggiunte in v1.5): l'INDICE DI UN VOLUME
+#
+# eco:VoceIndice e' una voce dell'indice di un libro: un capitolo, nell'ordine
+# in cui compare nell'indice, con il titolo che ha li'. NON e' una relazione
+# di riuso del testo (quelle restano due: RISTAMPA, prism:isVersionOf, ed
+# ESTRATTO, eco:estrattoDi): e' l'appartenenza di un capitolo all'indice di
+# un libro, come eco:CapitoloNonCollegato lo e' per i capitoli senza fonte.
+# Una voce "ristampa" rimanda all'articolo del dataset (eco:articoloCorrispondente);
+# una voce "inedito-nd" (inedito oppure fonte non determinata: i due casi
+# non sono distinguibili) non ha articolo. I numeri di capitolo e le pagine
+# nel volume sono previsti ma per ora vuoti (si compilano in
+# dati_estratti/indici_volumi.csv). Le voci non sono nodi o archi della
+# Vista a grafo: vanno solo in DATI.indici (dati.js).
+#################################################################
+
+eco:VoceIndice a owl:Class ;
+    rdfs:label "voce d'indice"@it ;
+    rdfs:comment "Una voce dell'indice di un libro: un capitolo, nella posizione in cui compare nell'indice, con il titolo che ha nell'indice. Non è una relazione di riuso del testo: è l'appartenenza del capitolo all'indice del volume."@it .
+
+eco:nelIndiceDi a owl:ObjectProperty ;
+    rdfs:label "nell'indice di"@it ;
+    rdfs:comment "Il libro nel cui indice compare questa voce."@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range fabio:Book .
+
+eco:posizioneInIndice a owl:DatatypeProperty ;
+    rdfs:label "posizione nell'indice"@it ;
+    rdfs:comment "Posizione della voce nell'indice del volume (1 = prima voce). Non è il numero stampato del capitolo (vedi eco:numeroCapitolo)."@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range xsd:integer .
+
+eco:titoloInIndice a owl:DatatypeProperty ;
+    rdfs:subPropertyOf dcterms:title ;
+    rdfs:label "titolo in indice"@it ;
+    rdfs:comment "Titolo del capitolo così come compare nell'indice del volume (può differire dal titolo dell'articolo originale)."@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range xsd:string .
+
+eco:numeroCapitolo a owl:DatatypeProperty ;
+    rdfs:label "numero del capitolo"@it ;
+    rdfs:comment "Numero del capitolo nel volume. Previsto ma per ora non compilato: si compila in indici_volumi.csv, mai calcolato dalla posizione."@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range xsd:string .
+
+eco:pagineNelVolume a owl:DatatypeProperty ;
+    rdfs:label "pagine nel volume"@it ;
+    rdfs:comment "Pagine del capitolo nel volume (non quelle dell'articolo originale in rivista). Previsto ma per ora non compilato."@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range xsd:string .
+
+eco:titoloOriginaleIndicato a owl:DatatypeProperty ;
+    rdfs:label "titolo originale indicato"@it ;
+    rdfs:comment "Titolo dell'articolo originale come lo indica la fonte dell'indice (voci senza articolo nel dataset); «N.D.» se non indicato."@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range xsd:string .
+
+eco:testataIndicata a owl:DatatypeProperty ;
+    rdfs:label "testata indicata"@it ;
+    rdfs:comment "Rivista o testata dell'articolo originale come la indica la fonte dell'indice (voci senza articolo nel dataset); «N.D.» se non indicata."@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range xsd:string .
+
+eco:numeroIndicato a owl:DatatypeProperty ;
+    rdfs:label "numero indicato"@it ;
+    rdfs:comment "Numero del fascicolo dell'articolo originale come lo indica la fonte dell'indice (voci senza articolo nel dataset); «N.D.» se non indicato."@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range xsd:string .
+
+eco:dataIndicata a owl:DatatypeProperty ;
+    rdfs:label "data indicata"@it ;
+    rdfs:comment "Data dell'articolo originale come la indica la fonte dell'indice (voci senza articolo nel dataset); «N.D.» se non indicata."@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range xsd:string .
+
+eco:paginaIndicata a owl:DatatypeProperty ;
+    rdfs:label "pagina indicata"@it ;
+    rdfs:comment "Pagina dell'articolo originale come la indica la fonte dell'indice (voci senza articolo nel dataset); «N.D.» se non indicata."@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range xsd:string .
+
+eco:titoloVolumeIndicato a owl:DatatypeProperty ;
+    rdfs:label "titolo del volume indicato"@it ;
+    rdfs:comment "Titolo del volume in cui il capitolo e' uscito per la prima volta, come lo indica la fonte dell'indice (contributi in volume); «N.D.» se non indicato."@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range xsd:string .
+
+eco:curatoreVolumeIndicato a owl:DatatypeProperty ;
+    rdfs:label "autore o curatore del volume indicato"@it ;
+    rdfs:comment "Autore o curatore del volume in cui il capitolo e' uscito per la prima volta, come lo indica la fonte dell'indice (contributi in volume); «N.D.» se non indicato."@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range xsd:string .
+
+eco:editoreVolumeIndicato a owl:DatatypeProperty ;
+    rdfs:label "editore del volume indicato"@it ;
+    rdfs:comment "Editore del volume in cui il capitolo e' uscito per la prima volta, come lo indica la fonte dell'indice (contributi in volume); «N.D.» se non indicato."@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range xsd:string .
+
+eco:luogoVolumeIndicato a owl:DatatypeProperty ;
+    rdfs:label "luogo del volume indicato"@it ;
+    rdfs:comment "Luogo di edizione del volume in cui il capitolo e' uscito per la prima volta, come lo indica la fonte dell'indice (contributi in volume); «N.D.» se non indicato."@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range xsd:string .
+
+eco:annoVolumeIndicato a owl:DatatypeProperty ;
+    rdfs:label "anno del volume indicato"@it ;
+    rdfs:comment "Anno del volume in cui il capitolo e' uscito per la prima volta, come lo indica la fonte dell'indice (contributi in volume); «N.D.» se non indicato."@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range xsd:string .
+
+eco:paginaVolumeIndicato a owl:DatatypeProperty ;
+    rdfs:label "pagine del volume indicate"@it ;
+    rdfs:comment "Pagine del capitolo nel volume in cui e' uscito per la prima volta, come lo indica la fonte dell'indice (contributi in volume); «N.D.» se non indicato."@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range xsd:string .
+
+eco:statoVoce a owl:DatatypeProperty ;
+    rdfs:label "stato della voce"@it ;
+    rdfs:comment "«ristampa» se il capitolo riprende un testo già uscito altrove; «inedito» se è un capitolo inedito (nessun dubbio sulla fonte); «inedito-nd» se è inedito oppure di fonte non determinata (i due casi non sono distinguibili); «introduzione» se la voce è un'introduzione, una prefazione o simile (tipologia «Introduzione» dell'indice: nessuna fonte da indicare)."@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range xsd:string .
+
+eco:articoloCorrispondente a owl:ObjectProperty ;
+    rdfs:label "articolo corrispondente"@it ;
+    rdfs:comment "L'articolo del dataset che questa voce d'indice ripubblica (solo per le voci di stato «ristampa» abbinate a un articolo)."@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range fabio:JournalArticle .
+
+eco:coautore a owl:DatatypeProperty ;
+    rdfs:label "co-autore"@it ;
+    rdfs:comment "Co-autore del capitolo indicato nella fonte degli indici, dove presente."@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range xsd:string .
+
+eco:pseudonimo a owl:DatatypeProperty ;
+    rdfs:label "pseudonimo"@it ;
+    rdfs:comment "Pseudonimo con cui l'articolo, o il capitolo, è uscito."@it ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( eco:VoceIndice fabio:JournalArticle ) ] ;
+    rdfs:range xsd:string .
+
+#################################################################
+# PROPRIETA' CUSTOM (aggiunta in v1.1): eco:tipoLibro
+#
+# Dichiarata formalmente per la prima volta in questa versione: esisteva
+# gia' nei dati (scritta da genera_rdf.py) ma non era mai stata messa per
+# iscritto qui. Da v1.1 la stessa distinzione e' anche interrogabile in
+# modo standard tramite le classi eco:LibroRaccolta/eco:Romanzo/eco:LibroNonRaccolta
+# dichiarate sopra (rdf:type, non un letterale) - le due rappresentazioni
+# convivono deliberatamente, vedi il commento su quelle classi.
+#################################################################
+
+eco:tipoLibro a owl:DatatypeProperty ;
+    rdfs:label "tipo di libro"@it ;
+    rdfs:comment "Valori ammessi (dalla v1.6): \"romanzo\", \"non raccolta\", \"raccolta\" (letterali @it, nessun altro valore e' valido - genera_rdf.py si ferma con un errore se il dato sorgente ne produce uno diverso). La categoria di ogni libro sta in dati_estratti/classificazione_libri.csv. Vedi eco:Romanzo, eco:LibroNonRaccolta, eco:LibroRaccolta per l'equivalente come classe."@it ;
+    rdfs:domain fabio:Book ;
+    rdfs:range xsd:string .
+
+#################################################################
+# PROPRIETA' CUSTOM (aggiunte in v1.3): eco:estrattoDi / eco:notaEstratto
+#
+# Caso ESTRATTO: un romanzo/saggio/curatela di Eco (es. "Baudolino") di cui
+# il dataset registra solo l'articolo che ne e' un estratto
+# giornalistico (es. un'anteprima su L'Espresso uscita poco prima del
+# libro) - il libro e' la FONTE, l'articolo ne e' solo un estratto, non
+# una ristampa. Semanticamente l'opposto del caso RISTAMPA (dove l'articolo
+# e' la versione originale, poi ripubblicata nel libro): riusare
+# prism:isVersionOf anche qui (fatto fino alla v1.2) dichiarerebbe
+# l'articolo come "versione" del libro, il che e' falso in questo verso.
+# Stessa direzione sintattica articolo -> libro di prism:isVersionOf (per
+# coerenza con il resto del grafo: eco:estrattoDi e' interrogabile insieme
+# a prism:isVersionOf con una semplice UNION), ma predicato diverso perche'
+# la relazione semantica e' diversa, non solo il grado di certezza.
+#
+# Quali articoli usano eco:estrattoDi invece di prism:isVersionOf non e'
+# derivato dalla categoria del libro (un libro non raccolta o un romanzo
+# puo' comunque avere un collegamento prism:isVersionOf: vedi "Postille a
+# Il nome della rosa" in CHANGELOG.md, una ristampa integrale di un libro
+# "non raccolta") - e' un elenco esplicito di 10
+# articoli, curato a mano in genera_rdf.py (Parte 7).
+#################################################################
+
+eco:estrattoDi a owl:ObjectProperty ;
+    rdfs:subPropertyOf dcterms:relation ;
+    rdfs:label "estratto di"@it ;
+    rdfs:comment "Collega un articolo (estratto giornalistico) al libro di cui e' un estratto, da volume a rivista: il libro e' la fonte, l'articolo ne e' un estratto. Semanticamente l'opposto di prism:isVersionOf (vedi il commento sopra), pur avendo lo stesso verso articolo -> libro. Non dipende dalla categoria del libro (eco:tipoLibro): vedi il commento sopra per l'eccezione nota."@it ;
+    rdfs:domain fabio:JournalArticle ;
+    rdfs:range fabio:Book .
+
+eco:notaEstratto a owl:DatatypeProperty ;
+    rdfs:subPropertyOf rdfs:comment ;
+    rdfs:label "nota sull'estratto"@it ;
+    rdfs:comment "Nota bibliografica libera su un collegamento eco:estrattoDi (es. quale capitolo o quante pagine estrae l'articolo, quando uscito rispetto al libro). Equivalente di eco:notaRistampa per il caso ESTRATTO invece che RISTAMPA; USATA SIA su fabio:JournalArticle SIA su fabio:Book (nota bibliografica sul libro stesso, quando l'edizione non ha un articolo estratto collegato nel dataset - vedi genera_rdf.py, Parte 7), stessa ragione per cui non ha rdfs:domain dichiarato."@it ;
+    rdfs:range xsd:string .
+
+#################################################################
+# METADATI DEL DATASET (VoID + DCAT)
+#
+# Descrivono il DATASET nel suo insieme (schema + dati, cioe' il grafo
+# ottenuto unendo questo file e istanze_espresso.ttl, esportato come
+# dati_rdf/grafo_completo.*), non solo lo schema come le sezioni sopra.
+# Non includiamo qui conteggi (void:triples, void:entities): cambiano ad
+# ogni rigenerazione dei dati e un numero scritto a mano in questo file
+# andrebbe fuori sincrono - esattamente il tipo di "ontology drift" che
+# il progetto cerca di evitare. I conteggi aggiornati si leggono
+# dall'output di grafo_eco/genera_dati_sito.py ad ogni esecuzione.
+#
+# dcterms:license: deliberatamente ASSENTE. La licenza verra' scelta e
+# dichiarata qui (e nella sezione "Come citare" del sito) solo al momento
+# della pubblicazione effettiva del progetto - per ora il dataset non va
+# considerato riusabile liberamente.
+#
+# dcterms:creator: nome da confermare con l'autore prima della
+# pubblicazione (vedi CHANGELOG.md).
+#################################################################
+
+<http://example.org/eco-graph/dataset> a void:Dataset, dcat:Dataset ;
+    dcterms:title "Opera Persa - grafo RDF dell'attività pubblicistica di Umberto Eco"@it ;
+    dcterms:description "Grafo di conoscenza RDF che modella semanticamente gli articoli di Umberto Eco su riviste e quotidiani, e le loro ristampe nelle raccolte curate dallo stesso Eco, con riuso di vocabolari standard (Dublin Core Terms, FaBiO, PRISM, FRBR, FOAF) e un'estensione minima (eco:) per i soli concetti privi di equivalente."@it ;
+    dcterms:creator "Michele Marmo"@it ;
+    dcterms:modified "2026-09-24"^^xsd:date ;
+    owl:versionInfo "1.2" ;
+    void:vocabulary dcterms: , fabio: , prism: , frbr: , foaf: , eco: ;
+    dcat:theme "digital humanities"@en, "storia della cultura italiana"@it, "linked open data" ;
+    void:feature <http://www.w3.org/ns/formats/Turtle> ,
+                 <http://www.w3.org/ns/formats/RDF_XML> ,
+                 <http://www.w3.org/ns/formats/JSON-LD> ,
+                 <http://www.w3.org/ns/formats/N-Triples> .

@@ -1,0 +1,12 @@
+# File di lavoro: non servono al sito pubblicato
+backup/
+sorgenti/
+grafo_eco/
+archivio_documentazione/
+archivio_backup_prima_della_pulizia_20261013.zip
+*.docx
+note_oscurate.md
+
+# File di sistema e temporanei
+.DS_Store
+~$*

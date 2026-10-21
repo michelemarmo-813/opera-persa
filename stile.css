@@ -1,0 +1,791 @@
+:root{
+    /* Palette "Opera Aperta": nero/antracite caldo da lavagna e crema, come
+       la copertina Nave di Teseo di Umberto Eco - solo i colori "di
+       interfaccia" (sfondo, pannelli, testo, bordo, accento) seguono la
+       copertina. I colori "funzionali" del grafo (rivista/quotidiano/
+       libro/articolo/evidenziazioni) restano quelli di prima: servono a
+       distinguere i tipi di nodo a colpo d'occhio e cambiarli avrebbe reso
+       il grafo meno leggibile, non piu' coerente con la copertina - vedi
+       il blocco "Colori funzionali del grafo" piu' sotto. */
+    --bg:#17140f; --pannello:#221e18; --pannello-2:#2b2620;
+    /* --bordo era #3d372c (rapporto di contrasto ~1,3:1 contro i pannelli:
+       praticamente invisibile) - schiarito qui a un marrone caldo piu'
+       deciso, ~2,8-3:1 contro i pannelli, cosi' i confini di riquadri,
+       pulsanti e righe si vedono davvero invece di doversi intuire. */
+    --bordo:#6b6256;
+    /* Linee di separazione fra righe, sezioni e colonne: volutamente quiete
+       (~1,5-1,7:1 sui pannelli), distinte da --bordo, che resta piu' deciso
+       perche' contorna pulsanti, campi e schede (elementi da riconoscere
+       come cliccabili). Entrambi sono marroni neutri, senza la dominante
+       ocra/oro del precedente #766a4f. */
+    --separatore:#443c33;
+    --testo:#f2ede2; --testo-sec:#a9a095;
+    /* Un solo accento in tutto il sito (sostituisce la distinzione blu di
+       Articoli / verde-acqua del resto, e le tre tonalita' di blu che
+       distinguevano i tre pulsanti "Modalita'"): stessa identita' di
+       prima (il verde-acqua della copertina), usato pero' ora allo stesso
+       modo su ogni schermata per ogni stato selezionato/attivo/hover.
+       Due varianti, non per sfumatura ma per leggibilita':
+       --accento resta il valore "pieno" di sempre, usato per riempimenti
+       (con testo bianco sopra, gia' a contrasto 5,5:1), bordi e tocchi
+       decorativi; --accento-testo e' una variante piu' chiara, pensata
+       SOLO per quando l'accento serve da colore del testo o di un link su
+       sfondo scuro (link, voci attive, etichette) - l'originale, usato
+       cosi', stava a un contrasto di ~3,3:1 contro lo sfondo (sotto la
+       soglia 4,5:1 richiesta per il testo normale); la variante chiara
+       sta invece a 5-6:1 su tutti gli sfondi del sito (verificato con
+       contrasto.py). */
+    --accento:#a8502d; --accento-testo:#ec9a76;
+    /* Stessa tripletta RGB di --accento, per i punti dove serve un
+       riempimento "tenue" (rgba con alpha basso) invece del colore pieno -
+       le funzioni CSS rgba() non possono leggere il canale alpha da dentro
+       una var() esadecimale, quindi serve un secondo custom property con
+       gia' i tre numeri separati. */
+    --accento-rgb:168,80,45;
+    /* Colore di avviso/nota (box "avviso" nelle schede di dettaglio):
+       stessa tinta arancione del nodo "libro" nel grafo, ma come variabile
+       propria invece di riusare --libro per l'interfaccia - cosi' le due
+       cose restano separate anche se oggi coincidono (se in futuro uno dei
+       due colori cambiasse, l'altro non si sposterebbe con lui per
+       sbaglio). */
+    --avviso:#ff8a50;
+    /* Stesso serif elegante gia' usato nel titolo della Home (vedi
+       #home-titolo), reso disponibile come variabile per estenderlo anche
+       ai titoli di sezione, al titolo del libro in Raccolte, ecc. - un
+       tocco piu' editoriale, coerente con un progetto su Umberto Eco,
+       senza sostituire il sans-serif nel resto del testo (dati, tabelle,
+       paragrafi), dove la leggibilita' conta piu' dell'eleganza. */
+    --font-serif:"Cormorant Garamond", Georgia, "Times New Roman", serif;
+
+    /* --- Scala tipografica ridotta: pochi livelli, riusati ovunque invece
+       di una taglia diversa per ogni titolo. I casi gia' a posto (il
+       titolo Home, il grande numero dell'anno in Linea del tempo, ecc.)
+       restano fuori scala di proposito: sono un solo elemento ciascuno,
+       non una famiglia di componenti da uniformare. --- */
+    --fs-titolo-grande:22px;   /* titoli di sezione/pagina: Documentazione, SPARQL, Raccolte, Linea del tempo */
+    --fs-titolo-medio:17px;    /* titoli di componente: sidebar, scheda di dettaglio, card rivista */
+    --fs-corpo-grande:14.5px;  /* voce di elenco enfatizzata (libro, articolo in timeline) */
+    --fs-corpo:13.5px;         /* testo normale di interfaccia (pulsanti, campi, righe) */
+    --fs-elenco-capitoli:15px;   /* elenco dei capitoli nella sezione Raccolte (indice del volume e tabella degli articoli) e relative schede */
+    --fs-titolo-indice:18.5px; /* titoletto «Indice» sopra l'elenco dei capitoli (Raccolte) */
+    --fs-piccolo:12.5px;       /* testo secondario (meta-dati, didascalie) */
+    --fs-minuscolo:11px;       /* etichette maiuscole, eyebrow, intestazioni di tabella */
+
+    /* --- Scala di spaziature, in pulsanti/pillole/schede/voci di elenco --- */
+    --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:20px; --sp-6:24px;
+
+    /* --- Scala di raggi dei bordi: compatto (campi, pulsanti), medio
+       (pannelli e schede), pillola (filtri/tag a forma di capsula). --- */
+    --radius-sm:6px; --radius-md:10px; --radius-pill:20px;
+
+    /* --- Colori funzionali del grafo: INVARIATI. Identificano il tipo di
+       nodo/arco a colpo d'occhio nella Vista a grafo (e in Genesi, che
+       riusa --libro e --accento per lo stesso motivo) - options/fisica/
+       disposizione/forme restano quelle di sempre, qui cambiano zero
+       valori. --- */
+    --rivista:#4fb3d9; --libro:#ff8a50; --articolo:#5c6b82; --articolo-rist:#ffcc4d; --articolo-estratto:#d946ef; --arco-estratto:#f0abfc;
+    /* Segno "ripubblicato" nelle righe di elenco/tabella (solo interfaccia): lo
+       stesso giallo di --articolo-rist, ma sottile e a meta' opacita', cosi'
+       non domina la riga. Il colore pieno resta nella legenda del grafo. */
+    --ristampa-segno:rgba(255,204,77,.45);
+    /* Terne RGB degli stessi due colori (per usarli con trasparenza): devono
+       restare uguali a --articolo-rist e --articolo-estratto qui sopra. */
+    --articolo-rist-rgb:255,204,77; --articolo-estratto-rgb:217,70,239;
+    /* Fasce colorate dell'elenco articoli (sezione Articoli): UN SOLO PUNTO
+       di regolazione. Intensita' = opacita' del riempimento (0 = nessun
+       colore, .20 = tenue ma visibile); larghezza = banda piena a sinistra. */
+    --intensita-fascia-articolo:.20;
+    --larghezza-banda-articolo:3px;
+    /* Colore della riga di meta (rivista, data, rubrica) sulle righe colorate o selezionate: piu' chiaro di --testo-sec,
+       che sul giallo (specie in hover) scendeva sotto il 4,5:1 di WCAG AA. Se si aumenta l'intensita', ricontrollare. */
+    --testo-sec-fascia:#d6cfc2;
+    --cluster:#7c93c9; --evidenzia:#ff5c8a; --evidenzia-indiretto-libro:#d9a566; --quotidiano:#8fd694;
+  }
+  * { box-sizing:border-box; }
+  body{ margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+        background:var(--bg); color:var(--testo); }
+  a{ color:var(--accento-testo); }
+
+  #tabs{ display:flex; align-items:center; gap:2px; background:var(--pannello); border-bottom:1px solid var(--separatore);
+         padding:0 16px; height:46px; }
+  #tabs .titolo-app{ font-size:13px; font-weight:700; color:var(--testo); margin-right:18px; cursor:pointer;
+                     letter-spacing:.01em; }
+  #tabs .titolo-app:hover{ color:var(--accento-testo); }
+  .tab-btn{ background:none; border:none; color:var(--testo); font-size:var(--fs-corpo); padding:12px 16px;
+            cursor:pointer; border-bottom:2px solid transparent; }
+  .tab-btn:hover{ color:var(--accento-testo); }
+  .tab-btn.attivo{ color:var(--testo); border-bottom-color:var(--accento); }
+
+  #corpo{ height:calc(100vh - 46px); position:relative; }
+  .schermata{ display:none; height:100%; }
+  .schermata.attiva{ display:flex; }
+
+  /* --- Home --- */
+  #schermata-home{ align-items:center; justify-content:center;
+        background:radial-gradient(circle at 50% 32%, #2c1f17 0%, var(--bg) 62%); }
+  #home-centro{ text-align:center; max-width:680px; padding:0 24px; }
+  #home-puntini{ display:flex; justify-content:center; gap:10px; margin-bottom:26px; }
+  .puntino-home{ width:9px; height:9px; border-radius:50%; display:inline-block; opacity:.9; }
+  /* Stesso linguaggio dei puntini della Home, in scala ridotta: un piccolo
+     pallino colorato accanto al titolo di Articoli/Raccolte/Linea del
+     tempo, l'unico segnale cromatico rimasto per riconoscere a colpo
+     d'occhio in quale sezione ci si trova - i pulsanti di quelle pagine
+     sono tornati tutti dello stesso colore (vedi il commento sul tema
+     colore piu' sotto). Vista a grafo non ne ha uno: mostra tutti i tipi
+     di nodo insieme, non ha un singolo colore "suo" da rappresentare. */
+  .puntino-sezione{ width:8px; height:8px; border-radius:50%; display:inline-block;
+        margin-right:8px; vertical-align:middle; margin-top:-2px; }
+  /* Titolo in stile copertina "Opera Aperta" (Nave di Teseo): maiuscolo,
+     spaziato, su una riga sola; il font e' tornato quello di prima
+     (Cormorant Garamond, nel suo peso piu' pesante disponibile). */
+  #home-titolo{ font-family:"Cormorant Garamond", Georgia, "Times New Roman", serif; font-size:68px; font-weight:700;
+        font-style:normal; text-transform:uppercase; letter-spacing:.05em; margin:0; color:var(--testo); line-height:1;
+        white-space:nowrap; }
+  #home-sottotitolo{ font-size:16.5px; color:var(--testo-sec); margin:22px 0 0; letter-spacing:.01em; }
+  #home-riga{ width:64px; height:1px; background:var(--accento); opacity:.6; margin:26px auto 40px; }
+  #home-bottoni{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+  .btn-hero{ padding:13px 26px; border-radius:var(--radius-md); font-size:var(--fs-corpo); font-weight:600; cursor:pointer; border:1px solid transparent; }
+  .btn-hero-primario{ background:var(--accento); color:#fff; }
+  .btn-hero-primario:hover{ filter:brightness(1.1); }
+  .btn-hero-secondario{ background:transparent; color:var(--testo); border-color:var(--bordo); }
+  .btn-hero-secondario:hover{ border-color:var(--accento); color:var(--accento-testo); }
+  .btn-hero:focus-visible, .btn:focus-visible, .btn-edizione:focus-visible, .sparql-esempio-btn:focus-visible,
+  .anno-tick:focus-visible, .freccia-timeline:focus-visible, .link-acnp-periodico:focus-visible,
+  .tab-btn:focus-visible, #tabs .titolo-app:focus-visible{
+        outline:2px solid var(--accento-testo); outline-offset:2px; }
+  #home-stats{ margin-top:38px; font-size:12px; color:var(--testo-sec); letter-spacing:.02em; }
+
+  #sidebar, #elenco-sidebar{ width:300px; min-width:300px; background:var(--pannello); border-right:1px solid var(--separatore);
+             padding:18px; overflow-y:auto; }
+  /* Titoli di sezione (uno per schermata: "Grafo bibliografico",
+     "Naviga gli articoli", "Raccolte", "Linea del tempo") in serif invece
+     del sans-serif di default: un tocco piu' editoriale rispetto a prima,
+     quando questo font viveva solo nel titolo della Home. Prima erano
+     stilizzati con uno style="" ripetuto uguale in ogni schermata (stessa
+     dimensione, stesso margine): unificato qui in una sola regola condivisa
+     (#elenco-sidebar e' l'id usato sia da Articoli sia da Raccolte). */
+  #sidebar h1, #elenco-sidebar h1{ font-size:var(--fs-titolo-medio); margin:0 0 6px; font-family:var(--font-serif); font-weight:700; }
+  .sottotitolo{ font-size:var(--fs-piccolo); color:var(--testo-sec); margin-bottom:16px; }
+  /* .sezione--senza-bordo sostituisce lo style="border-bottom:none" ripetuto
+     in riga nell'ultima .sezione di ogni barra laterale (Vista a grafo,
+     Articoli, Raccolte, Linea del tempo). */
+  .sezione{ margin-bottom:18px; padding-bottom:16px; border-bottom:1px solid var(--separatore); }
+  .sezione--senza-bordo{ border-bottom:none; }
+  .sezione h2{ font-size:var(--fs-minuscolo); text-transform:uppercase; letter-spacing:.05em; color:var(--testo); margin:0 0 10px; }
+  .sezione h2 .conteggio-sezione{ text-transform:none; letter-spacing:0; font-weight:400; }
+  /* liste lunghe (riviste, quotidiani, libri, categorie) partono chiuse: si
+     vede solo il titolo come un pulsante, e si aprono al click per rivelare
+     la tendina scorrevole - meno ingombro in una barra laterale gia' densa. */
+  .titolo-collassa{ display:flex; align-items:center; justify-content:space-between; cursor:pointer;
+        user-select:none; margin-bottom:0 !important; padding:4px 0; }
+  .titolo-collassa:hover{ color:var(--accento-testo); }
+  .freccia-collassa{ font-size:9px; color:var(--testo-sec); transition:transform .15s ease; flex:0 0 auto; margin-left:8px; }
+  /* selettori "> " (figlio diretto), non discendente generico: da quando
+     "Ricerca piu' approfondita" contiene Rivista/Quotidiano/Libro annidate
+     al suo interno, un selettore discendente (".aperta .contenuto-collassabile"
+     senza ">") avrebbe reso visibili anche le liste interne semplicemente
+     aprendo il pannello esterno, anche se quelle singole sezioni non erano
+     "aperta" - bug segnalato: si vedeva subito lo scorrimento di riviste/
+     quotidiani/libri invece di doverci cliccare sopra. */
+  .sezione-collassabile.aperta > .titolo-collassa .freccia-collassa{ transform:rotate(180deg); }
+  .contenuto-collassabile{ display:none; margin-top:10px; }
+  .sezione-collassabile.aperta > .contenuto-collassabile{ display:block; }
+  .sezione label{ display:flex; align-items:center; gap:6px; font-size:var(--fs-corpo); margin:7px 0; cursor:pointer; color:var(--testo); }
+  .lista-scroll{ max-height:180px; overflow-y:auto; padding-right:4px; }
+  .filtro-cerca-lista{ width:100%; padding:6px 8px; margin-bottom:6px; border:1px solid var(--bordo); border-radius:var(--radius-sm);
+        font-size:var(--fs-piccolo); background:var(--pannello-2); color:var(--testo); }
+  .azioni-lista{ font-size:var(--fs-minuscolo); color:var(--testo-sec); margin-bottom:6px; }
+  .azione-lista{ cursor:pointer; text-decoration:underline; }
+  .azione-lista:hover{ color:var(--accento-testo); }
+  .azione-lista.attivo{ color:var(--accento-testo); text-decoration:none; font-weight:600; }
+  .aiuto-campo{ font-size:var(--fs-minuscolo); color:var(--testo-sec); line-height:1.5; margin-top:8px; }
+  /* .riga-intervallo-anni/.separatore-intervallo sostituiscono lo
+     style="display:flex; align-items:center; gap:8px" (e il trattino fra i
+     due campi) ripetuti in riga identici sia in Vista a grafo sia in
+     Articoli (vedi "Anno" in entrambe le barre laterali). */
+  .riga-intervallo-anni{ display:flex; align-items:center; gap:var(--sp-2); }
+  .separatore-intervallo{ color:var(--testo-sec); font-size:var(--fs-piccolo); }
+  input[type=text], input[type=search]{ width:100%; padding:8px 10px; border:1px solid var(--bordo); border-radius:var(--radius-sm);
+        font-size:var(--fs-corpo); background:var(--pannello-2); color:var(--testo); }
+  input[type=text]::placeholder{ color:var(--testo-sec); }
+  input[type=text]:focus, input[type=search]:focus, input[type=number]:focus{
+        outline:none; border-color:var(--accento); }
+  /* Ricerca (per titolo/periodico/rubrica a seconda della modalita') e Anno,
+     in "Naviga gli articoli": gli unici due filtri che restano in sidebar
+     dopo che l'elenco periodici/rubriche si e' spostato nella colonna
+     centrale (vedi #sezione-categorie) - resi piu' evidenti con un campo
+     piu' grande invece dei normali input[type=text]/number di default. */
+  .sezione-filtro-evidente input[type=text]{ font-size:var(--fs-corpo-grande); padding:11px 12px; }
+  .sezione-filtro-evidente input[type=number]{ font-size:var(--fs-corpo-grande); padding:10px 10px; width:72px; }
+  /* menu a tendina di suggerimenti sotto il campo "Ricerca" nella vista a
+     grafo: mentre si digita, propone le riviste/quotidiani/libri il cui
+     nome corrisponde, cosi' si sceglie esattamente quello cercato invece
+     di doverne scrivere il nome per intero (es. "L'Espresso" vs
+     "L'Espresso Colore"). */
+  .ricerca-wrapper{ position:relative; }
+  #ricerca-suggerimenti{ display:none; position:absolute; left:0; right:0; top:calc(100% + 4px); z-index:30;
+        background:var(--pannello-2); border:1px solid var(--bordo); border-radius:var(--radius-sm); max-height:220px;
+        overflow-y:auto; box-shadow:0 10px 30px rgba(0,0,0,.5); }
+  #ricerca-suggerimenti.visibile{ display:block; }
+  .suggerimento{ padding:8px 10px; font-size:var(--fs-piccolo); cursor:pointer; display:flex; justify-content:space-between;
+        align-items:center; gap:8px; color:var(--testo); border-bottom:1px solid var(--separatore); }
+  .suggerimento:last-child{ border-bottom:none; }
+  .suggerimento:hover, .suggerimento.evidenziato{ background:var(--accento); color:#fff; }
+  .suggerimento .tipo-suggerimento{ font-size:10.5px; color:var(--testo-sec); text-transform:uppercase; letter-spacing:.03em; flex-shrink:0; }
+  .suggerimento:hover .tipo-suggerimento, .suggerimento.evidenziato .tipo-suggerimento{ color:#fff; opacity:.85; }
+  .suggerimento-vuoto{ padding:8px 10px; font-size:var(--fs-piccolo); color:var(--testo-sec); }
+  /* Chip dei nodi di ricerca gia' scelti (vedi selezionaSuggerimentoRicerca):
+     ogni click su un suggerimento aggiunge un chip invece di sostituire il
+     testo cercato, cosi' si possono evidenziare piu' nodi insieme nel grafo. */
+  .ricerca-chip-contenitore{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:6px; }
+  .ricerca-chip-contenitore:empty{ display:none; margin-bottom:0; }
+  .chip-ricerca{ display:inline-flex; align-items:center; gap:5px; padding:4px 6px 4px 10px; border-radius:14px;
+        background:var(--accento); color:#fff; font-size:var(--fs-piccolo); line-height:1.4; }
+  .chip-ricerca .chip-rimuovi{ cursor:pointer; font-size:14px; line-height:1; padding:0 2px; opacity:.85; }
+  .chip-ricerca .chip-rimuovi:hover{ opacity:1; }
+  /* --- Pulsante "voce di filtro" (.btn): il componente piu' riusato del
+     sito - blocco a tutta larghezza nella barra laterale, riempimento
+     pieno quando attivo. Stesso linguaggio ovunque compaia: sidebar del
+     grafo, Modalita' di Articoli (vedi #schermata-elenco piu' sotto),
+     bottone "vai alla scheda" nei pannelli di dettaglio. */
+  .btn{ display:block; width:100%; padding:9px 10px; margin-top:6px; border:1px solid var(--bordo); border-radius:var(--radius-sm);
+        background:var(--pannello-2); color:var(--testo); cursor:pointer; font-size:var(--fs-corpo); text-align:left; }
+  .btn.attivo{ background:var(--accento); color:#fff; border-color:var(--accento); }
+  .btn:hover{ filter:brightness(1.15); }
+  .btn:hover:not(.attivo){ border-color:var(--accento); }
+  .legenda-voce{ display:flex; align-items:center; gap:8px; font-size:var(--fs-piccolo); margin:6px 0; color:var(--testo); }
+  .pallino{ width:11px; height:11px; border-radius:50%; flex-shrink:0; }
+  .quadrato{ width:11px; height:11px; flex-shrink:0; }
+  .linea-tratteggiata{ width:16px; height:0; border-top:2px dashed var(--arco-estratto); flex-shrink:0; }
+  .linea-piena-libro{ width:16px; height:0; border-top:2px solid var(--libro); flex-shrink:0; }
+  input[type=checkbox]{ accent-color:var(--accento); }
+  #anno-label, #anno-range-label{ font-size:var(--fs-piccolo); color:var(--testo-sec); margin-top:4px; }
+  #stats{ font-size:12px; color:var(--testo-sec); line-height:1.7; }
+
+  /* mentre il grafo si sta riassestando (cambio filtro/vista) resta
+     invisibile invece di mostrare lo stato transitorio "tutti i nodi
+     ammucchiati al centro poi caotici" prima di spargersi per bene: al suo
+     posto un piccolo indicatore di caricamento, cosi' l'utente vede subito
+     un segnale chiaro ("sto lavorando") invece di un buio senza spiegazione
+     o - peggio - il grafo ancora in disordine. Quando e' davvero pronto
+     (vedi costruisciVista()/cambiaVista() in JS) riappare gia' composto e
+     fermo, mai a meta' lavoro - e da quel momento non sparisce mai piu': la
+     disposizione e' calcolata una volta sola, non ad ogni cambio di vista. */
+  #network-area{ flex:1; position:relative; }
+  #network{ position:absolute; inset:0; background:var(--bg); transition:opacity .15s ease; }
+  #network.assestamento-in-corso{ opacity:0; pointer-events:none; }
+  #network-loading{ position:absolute; inset:0; display:none; align-items:center; justify-content:center;
+        flex-direction:column; gap:14px; background:var(--bg); color:var(--testo-sec); font-size:12.5px;
+        letter-spacing:.02em; }
+  #network-loading.visibile{ display:flex; }
+  .spinner{ width:32px; height:32px; border-radius:50%; border:2.5px solid var(--bordo);
+        border-top-color:var(--accento); animation:ruota-spinner .8s linear infinite; }
+  @keyframes ruota-spinner{ to{ transform:rotate(360deg); } }
+
+  /* Indicatore di attesa per l'apertura di un gruppo per anno (doppio click
+     su un riquadro): lo STESSO overlay #network-loading, ma con un velo
+     leggero semitrasparente (nodi e archi sotto restano visibili) e
+     pointer-events ATTIVI mentre e' visibile: blocca click, doppi click,
+     trascinamenti e zoom sul grafo (z-index sopra toolbar e pannello
+     dettagli). In dissolvenza di uscita e a riposo non intercetta nulla,
+     cosi' non puo' restare bloccato. Compare/sparisce con la classe
+     .visibile (vedi mostraAttesaGruppo in visualizzazione.html); la durata
+     della transizione deve coincidere con DURATA_USCITA_INDICATORE_MS. */
+  #network-loading.attesa-gruppo{ display:flex; z-index:30; gap:16px; pointer-events:none;
+        background:color-mix(in srgb, var(--bg) 35%, transparent);
+        opacity:0; visibility:hidden; transition:opacity .22s ease, visibility 0s linear .22s; }
+  #network-loading.attesa-gruppo.visibile{ opacity:1; visibility:visible; pointer-events:auto; cursor:wait;
+        transition:opacity .22s ease; }
+  #network-loading.attesa-gruppo .spinner{ width:68px; height:68px; border-width:6px;
+        border-color:var(--bordo); border-top-color:var(--articolo-rist); }  /* (2026-10-21) giallo degli articoli ripubblicati, solo per l'attesa dei gruppi */
+  #network-loading.attesa-gruppo #network-loading-testo{ background:color-mix(in srgb, var(--pannello) 88%, transparent);
+        border:1px solid var(--bordo); border-radius:var(--radius-md); padding:8px 16px;
+        font-size:15px; font-weight:600; color:var(--testo); letter-spacing:.01em; }
+  /* movimento ridotto: niente rotazione, resta un arco fisso sopra la
+     scritta (che gia' termina con "attendi un momento") */
+  @media (prefers-reduced-motion: reduce){
+    #network-loading.attesa-gruppo .spinner{ animation:none; }
+    #network-loading.attesa-gruppo{ transition:none; }
+  }
+
+  /* "Ripristina disposizione" / "Centra": due tasti minimi sovrapposti
+     all'angolo del grafo, non nella sidebar - riguardano solo come si
+     guarda il grafo gia' disposto, non i filtri. */
+  #grafo-toolbar{ position:absolute; left:16px; bottom:16px; z-index:15; display:flex; gap:8px; }
+  #grafo-toolbar button{ background:var(--pannello); border:1px solid var(--bordo); color:var(--testo);
+        font-size:var(--fs-piccolo); padding:7px 12px; border-radius:var(--radius-sm); cursor:pointer;
+        box-shadow:0 4px 14px rgba(0,0,0,.35); font-family:inherit; }
+  #grafo-toolbar button:hover{ border-color:var(--accento); color:var(--accento-testo); }
+
+  #dettagli{ position:absolute; right:16px; top:16px; width:320px; background:var(--pannello); border:1px solid var(--bordo);
+             border-radius:var(--radius-md); padding:16px; box-shadow:0 10px 30px rgba(0,0,0,.5); display:none; max-height:82vh;
+             overflow-y:auto; z-index:20; }
+  #dettagli h3{ margin:0 0 10px; font-size:var(--fs-titolo-medio); padding-right:16px; font-family:var(--font-serif); font-weight:700; }
+  #dettagli .chiudi{ position:absolute; top:12px; right:14px; cursor:pointer; color:var(--testo-sec); font-size:16px; }
+  #dettagli .chiudi:hover{ color:var(--testo); }
+  /* campi bibliografici: usati sia nel pannello #dettagli (grafo) sia negli
+     inline-expand di Ricerca articoli / Ristampe / Linea del tempo */
+  .campo{ font-size:var(--fs-piccolo); margin:6px 0; color:var(--testo-sec); line-height:1.5; }
+  .campo b{ color:var(--testo); font-weight:600; }
+  .link-articolo{ color:var(--accento-testo); cursor:pointer; text-decoration:underline; }
+  .link-articolo:hover{ color:var(--accento-testo); text-decoration:none; }
+  /* bottone "vai alla scheda" in fondo al pannello di dettaglio del grafo
+     (rivista/libro/articolo): stesso stile dei tasti della sidebar (.btn),
+     solo un po' piu' staccato dal testo sopra visto che chiude il pannello. */
+  .btn-vai-scheda{ margin-top:12px; }
+  /* --avviso e' una variabile d'interfaccia propria (vedi :root), non il
+     --libro del grafo: stesso colore di oggi, ma le due cose restano
+     separate anche se oggi coincidono. */
+  .avviso{ color:var(--avviso); background:rgba(255,138,80,.1); border:1px solid rgba(255,138,80,.3);
+                      border-radius:var(--radius-sm); padding:8px; margin-top:8px; }
+  .riga-inline-dettagli td{ background:var(--pannello-2); padding:14px 20px !important; border-bottom:1px solid var(--separatore); }
+  .riga-inline-dettagli .campo, .timeline-dettagli-articolo .campo{ display:inline-block; width:48%; vertical-align:top; }
+  table.tabella-dati tbody tr.espansa td{ background:var(--pannello-2); box-shadow:inset 2px 0 0 var(--accento); }
+  .timeline-dettagli-articolo{ background:var(--pannello-2); padding:14px 16px; border-bottom:1px solid var(--separatore); }
+  .timeline-articolo-voce.espansa{ color:var(--accento-testo); box-shadow:inset 2px 0 0 var(--accento); }
+  /* stessa banda laterale usata nella tabella "Articoli" (vedi
+     table.tabella-dati tbody tr.ripubblicato) per segnalare un articolo
+     ripubblicato in volume; qui va dopo la regola ".espansa" cosi', se un
+     articolo ripubblicato viene anche espanso, la banda del ripubblicato
+     resta visibile (stessa priorita' che ha nella tabella). */
+  /* (le fasce colorate giallo/fucsia delle voci sono piu' sotto, dopo le regole
+     di hover/attivo, che hanno la stessa specificita' e altrimenti le coprirebbero) */
+
+  /* --- Elenco articoli ---
+     Tre colonne: #elenco-sidebar (modalita'/anno/categorie, invariata,
+     condivisa con Raccolte) | #elenco-main (elenco articoli, larghezza
+     regolabile dall'utente, vedi #elenco-resize e lo script piu' in basso
+     "ridimensionamento colonna elenco") | #elenco-dettaglio (scheda
+     bibliografica completa dell'articolo scelto, nuova - prima questi
+     stessi dati comparivano in un'espansione a fisarmonica dentro la riga/
+     tabella, vedi mostraDettaglioArticoloElenco() in JS). La larghezza qui
+     sotto (620px) e' solo il valore di partenza prima che lo script la
+     corregga in base allo spazio davvero disponibile: di default l'elenco
+     occupa gia' la gran parte della sezione centrale, non solo questo
+     minimo. */
+  #elenco-main{ flex:0 0 620px; width:620px; display:flex; flex-direction:column; overflow:hidden; min-width:360px; }
+  #elenco-resize{ flex:0 0 7px; width:7px; cursor:col-resize; position:relative; }
+  #elenco-resize::after{ content:""; position:absolute; top:0; bottom:0; left:3px; width:1px; background:var(--bordo); }
+  #elenco-resize:hover::after, #elenco-resize.trascina::after{ left:2px; width:3px; background:var(--accento); }
+  #elenco-intestazione{ padding:14px 20px; border-bottom:1px solid var(--separatore); display:flex; align-items:center;
+                         justify-content:space-between; flex:0 0 auto; }
+  #elenco-intestazione .conteggio{ font-size:var(--fs-piccolo); color:var(--testo-sec); }
+  #elenco-titolo-corrente{ font-size:var(--fs-titolo-medio); font-weight:600; }
+  /* Legenda delle fasce colorate: i campioni usano le stesse variabili delle righe (.riga-art.ripubblicato / .estratto) */
+  .legenda-fascia{ display:flex; align-items:center; gap:8px; font-size:var(--fs-piccolo); margin:6px 0; color:var(--testo); }
+  .campione-fascia{ width:26px; height:14px; border-radius:2px; flex-shrink:0; }
+  .campione-fascia.ripubblicato{ background:rgba(var(--articolo-rist-rgb),var(--intensita-fascia-articolo));
+                                 box-shadow:inset var(--larghezza-banda-articolo) 0 0 var(--articolo-rist); }
+  .campione-fascia.estratto{ background:rgba(var(--articolo-estratto-rgb),var(--intensita-fascia-articolo));
+                             box-shadow:inset var(--larghezza-banda-articolo) 0 0 var(--articolo-estratto); }
+  #elenco-ordina{ padding:9px 20px; font-size:11px; color:var(--testo-sec); border-bottom:1px solid var(--separatore);
+                   flex:0 0 auto; }
+  #elenco-ordina .azione-lista{ margin:0 1px; }
+  .elenco-lista-scroll{ flex:1; overflow-y:auto; }
+  .elenco-lista-vuota{ color:var(--testo-sec); font-size:var(--fs-corpo); padding:18px 20px; line-height:1.55; }
+  .riga-art{ padding:11px 20px; border-bottom:1px solid var(--separatore); cursor:pointer; }
+  .riga-art:hover{ background:var(--pannello-2); }
+  /* Fasce colorate (solo elenco della sezione Articoli): giallo = raccolto in
+     volume (.ripubblicato), fucsia = estratto (.estratto). Riempimento tenue
+     (--intensita-fascia-articolo) + banda piena a sinistra; l'hover lo rende
+     una volta e mezza piu' intenso. Il colore e' in background-color, cosi' i
+     due stati (hover/selezionata) si sovrappongono senza cancellarlo. */
+  .riga-art.ripubblicato{ background-color:rgba(var(--articolo-rist-rgb),var(--intensita-fascia-articolo));
+                          box-shadow:inset var(--larghezza-banda-articolo) 0 0 var(--articolo-rist); }
+  .riga-art.estratto{ background-color:rgba(var(--articolo-estratto-rgb),var(--intensita-fascia-articolo));
+                      box-shadow:inset var(--larghezza-banda-articolo) 0 0 var(--articolo-estratto); }
+  .riga-art.ripubblicato:hover{ background-color:rgba(var(--articolo-rist-rgb),calc(var(--intensita-fascia-articolo) * 1.5)); }
+  .riga-art.estratto:hover{ background-color:rgba(var(--articolo-estratto-rgb),calc(var(--intensita-fascia-articolo) * 1.5)); }
+  /* Riga selezionata (scheda aperta a destra): velo terracotta sopra l'eventuale
+     fascia + contorno terracotta; la banda di sinistra resta del colore del
+     tipo (giallo/fucsia) o, sulle righe normali, terracotta chiaro. */
+  .riga-art.riga-evidenziata{ background-image:linear-gradient(rgba(var(--accento-rgb),.30),rgba(var(--accento-rgb),.30));
+                              outline:1px solid var(--accento-testo); outline-offset:-1px;
+                              box-shadow:inset var(--larghezza-banda-articolo) 0 0 var(--accento-testo); }
+  .riga-art.riga-evidenziata:hover{ background-image:linear-gradient(rgba(var(--accento-rgb),.36),rgba(var(--accento-rgb),.36)); }
+  .riga-art.ripubblicato.riga-evidenziata{ box-shadow:inset var(--larghezza-banda-articolo) 0 0 var(--articolo-rist); }
+  .riga-art.estratto.riga-evidenziata{ box-shadow:inset var(--larghezza-banda-articolo) 0 0 var(--articolo-estratto); }
+  .riga-art-titolo{ font-size:var(--fs-corpo); color:var(--testo); margin-bottom:3px; line-height:1.4; }
+  .riga-art-meta{ font-size:var(--fs-piccolo); color:var(--testo-sec); }
+  .riga-art.ripubblicato .riga-art-meta, .riga-art.estratto .riga-art-meta, .riga-art.riga-evidenziata .riga-art-meta{ color:var(--testo-sec-fascia); }
+
+  #elenco-dettaglio{ flex:1; overflow-y:auto; padding:26px 30px; min-width:300px; }
+  .placeholder-dettaglio{ color:var(--testo-sec); font-size:var(--fs-corpo); font-style:italic; max-width:420px; line-height:1.6; }
+  /* L'eyebrow sopra il titolo del dettaglio (e l'intestazione/elenco
+     periodici-rubriche piu' sotto) usavano una tonalita' di blu diversa per
+     ciascuna Modalita' (Tutti/Per periodico/Per rubrica): un solo accento
+     in tutto il sito, quindi una sola regola invece di tre - vedi anche il
+     blocco "Modalita'" piu' sotto, stessa semplificazione. */
+  .elenco-dettaglio-eyebrow{ font-size:var(--fs-minuscolo); letter-spacing:.06em; text-transform:uppercase;
+        color:var(--accento-testo); margin-bottom:8px; }
+  #elenco-dettaglio-contenuto h3{ margin:0 0 14px; font-size:var(--fs-titolo-grande); font-family:var(--font-serif); font-weight:700;
+        color:var(--testo); max-width:520px; }
+  #elenco-dettaglio-contenuto .campo{ max-width:520px; }
+  /* link alla scheda di catalogo ACNP del periodico in vista "Per
+     periodico" (vedi disegnaTabella): sta di fianco al nome, non sotto,
+     per non allungare la barra del titolo su una seconda riga. Stesso
+     linguaggio delle altre "pillole" del sito (.btn-edizione,
+     .sparql-esempio-btn): bordo e testo in accento chiaro da spenta,
+     riempimento pieno con testo bianco al passaggio del mouse - prima
+     riusava --rivista (il colore del nodo-rivista nel grafo) per
+     l'interfaccia, qui separato nel'unico accento d'interfaccia. */
+  .link-acnp-periodico{ margin-left:10px; display:inline-flex; align-items:center; gap:4px;
+        padding:5px 14px; border-radius:var(--radius-pill); border:1px solid var(--accento); color:var(--accento-testo);
+        font-size:var(--fs-corpo); font-weight:600; text-decoration:none; white-space:nowrap; vertical-align:middle;
+        transition:background .15s, color .15s; }
+  .link-acnp-periodico:hover{ background:var(--accento); color:#fff; }
+  input[type=number]{ width:64px; padding:7px 8px; border:1px solid var(--bordo); border-radius:var(--radius-sm);
+        font-size:var(--fs-corpo); background:var(--pannello-2); color:var(--testo); }
+  /* #sezione-categorie (elenco periodici/rubriche) vive ora nella colonna
+     centrale #elenco-main, non piu' in fondo alla sidebar: stessa logica di
+     conteggio/ordine/ricerca (vedi disegnaCategorie in JS), ma geometria a
+     tutta colonna - scorre dove prima scorreva #elenco-lista - invece dei
+     margini negativi pensati per stare dentro i 18px di padding laterale
+     della sidebar. */
+  #sezione-categorie{ flex:1; overflow-y:auto; padding:0; margin:0; border-radius:0; display:flex; flex-direction:column; }
+  #elenco-categorie{ overflow-y:auto; flex:1; }
+  #elenco-categorie .cat{ display:flex; justify-content:space-between; padding:11px 20px;
+                          cursor:pointer; font-size:var(--fs-corpo-grande); margin:0; border-bottom:1px solid var(--separatore); }
+  #elenco-categorie .cat:last-child{ border-bottom:none; }
+  #elenco-categorie .cat:hover{ background:var(--pannello-2); }
+  #elenco-categorie .cat.attivo{ background:var(--accento); color:#fff; }
+  #elenco-categorie .cat .n{ color:var(--testo-sec); font-size:var(--fs-piccolo); }
+  #elenco-categorie .cat.attivo .n{ color:#fff; }
+  #ordina-categorie{ padding:9px 20px; margin:0; border-bottom:1px solid var(--separatore); }
+
+  /* Fascia «Ospitata su» sotto il titolo di una rubrica (Articoli > Per rubrica) */
+  #elenco-ospitata{ padding:9px 20px; font-size:var(--fs-piccolo); line-height:1.5; color:var(--testo-sec);
+                    background:rgba(var(--accento-rgb),.04); border-bottom:1px solid var(--separatore); }
+  #elenco-ospitata .osp-etichetta{ color:var(--testo-sec); }
+  #elenco-ospitata .osp-link{ color:var(--accento-testo); text-decoration:underline; cursor:pointer; }
+  #elenco-ospitata .osp-link:hover{ text-decoration:none; }
+  #elenco-ospitata .osp-link:focus-visible{ outline:2px solid var(--accento-testo); outline-offset:2px; border-radius:2px; }
+  #elenco-torna{ padding:10px 20px; font-size:var(--fs-piccolo); color:var(--accento-testo); cursor:pointer;
+        text-decoration:underline; border-bottom:1px solid var(--separatore); flex:0 0 auto; }
+  #elenco-torna:hover{ color:var(--accento-testo); text-decoration:none; }
+
+  /* --- Modalita' (Tutti gli articoli / Per periodico / Per rubrica) ---
+     In passato i tre pulsanti avevano ciascuno una propria tonalita' di
+     blu (per distinguersi fra loro) diversa dal verde-acqua usato in tutto
+     il resto del sito: la stessa cosa che oggi si vuole eliminare. Un solo
+     accento anche qui, come ovunque: i tre pulsanti si riconoscono dal
+     testo ("Tutti gli articoli"/"Per periodico"/"Per rubrica"), non dal
+     colore - lo stesso vale per l'intestazione dell'elenco e il riquadro
+     periodici/rubriche, che non hanno piu' bisogno di una regola per
+     modalita' dato che il colore e' sempre lo stesso: tre regole diventano
+     una. [data-modo] seleziona tutti e tre i pulsanti in un colpo solo,
+     senza toccare i pulsanti "Tutti gli articoli"/"Solo ristampe" della
+     Vista a grafo (un componente diverso, nessun attributo data-modo). */
+  #schermata-elenco .btn.attivo[data-modo]{ background:var(--accento); border-color:var(--accento); }
+  #schermata-elenco .btn[data-modo]:hover{ border-color:var(--accento); }
+  #elenco-intestazione{ background:rgba(var(--accento-rgb),.08); }
+  #schermata-elenco.modo-rivista #sezione-categorie, #schermata-elenco.modo-rubrica #sezione-categorie{
+        background:rgba(var(--accento-rgb),.06); }
+
+  table.tabella-dati{ width:100%; border-collapse:collapse; font-size:var(--fs-corpo); }
+  table.tabella-dati thead th{ position:sticky; top:0; background:var(--pannello); text-align:left; padding:9px 14px;
+        border-bottom:1px solid var(--separatore); color:var(--testo-sec); font-weight:600; cursor:pointer; user-select:none;
+        white-space:nowrap; }
+  table.tabella-dati thead th:hover{ color:var(--testo); }
+  table.tabella-dati tbody td{ padding:8px 14px; border-bottom:1px solid var(--separatore); color:var(--testo); }
+  table.tabella-dati tbody tr{ cursor:pointer; }
+  table.tabella-dati tbody tr:hover{ background:var(--pannello-2); }
+  table.tabella-dati tbody tr.ripubblicato td:first-child{ box-shadow:inset 2px 0 0 var(--ristampa-segno); }
+  .tabella-scroll{ flex:1; overflow-y:auto; }
+  .col-anno{ width:110px; }
+  .col-numero{ width:70px; }
+  .col-rivista{ width:150px; }
+  .col-pagine{ width:80px; }
+  .col-rubrica{ width:170px; }
+  .col-titolo-capitolo{ width:200px; }
+
+  /* --- Un solo accento per tutte le schermate ---
+     Qui in passato Raccolte/Articoli/Linea del tempo avevano ciascuna un
+     "colore di pagina" diverso (arancione/azzurro/oro) sui propri
+     pulsanti/voci selezionabili. Alla prova dei fatti quattro tinte
+     scollegate fra loro (e per di piu' prese in prestito dai colori
+     "funzionali" del grafo: --rivista, --libro, --articolo-rist - che li'
+     significano gia' altro) rendevano il sito meno coerente, non piu'
+     riconoscibile: si e' quindi tornati a un solo colore ovunque, lo
+     stesso --accento/--accento-testo definito in :root (niente piu' una
+     variabile --accento-pagina a parte: era gia' un alias identico,
+     toglierla toglie un livello di indirezione senza cambiare nulla a
+     schermo). L'orientamento fra sezioni passa dal pallino colorato
+     accanto al titolo di ciascuna schermata (vedi .puntino-sezione piu'
+     sopra), non piu' dal colore dei pulsanti. */
+
+  /* --- Ristampe --- */
+  #elenco-libri{ display:flex; flex-direction:column; }
+  .libro-voce{ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; font-size:var(--fs-corpo-grande); font-weight:600; color:var(--testo);
+        padding:12px 4px; border-bottom:1px solid var(--separatore); cursor:pointer; border-left:2px solid transparent;
+        padding-left:10px; transition:border-color .15s, color .15s, padding-left .15s; }
+  .libro-voce:hover{ color:var(--accento-testo); padding-left:14px; background:rgba(var(--accento-rgb),.08); }
+  /* riempimento pieno (non solo testo/bordo colorati) sulla voce
+     selezionata: stesso trattamento gia' usato per le categorie attive in
+     Articoli (#elenco-categorie .cat.attivo). Testo bianco: un testo
+     scuro sopra l'accento attuale avrebbe un contrasto scarso, il bianco
+     resta leggibile (vedi contrasto.py: bianco su --accento = 5,5:1). */
+  .libro-voce.attivo{ color:#fff; background:var(--accento); border-left-color:var(--accento);
+        padding-left:14px; font-weight:700; }
+  /* [ANNO-LIBRI] anno a sinistra del titolo nell'elenco dei libri (Raccolte): colonna
+     di larghezza fissa, cifre tabulari, tono sommesso, cosi' i titoli restano allineati. */
+  .libro-voce{ display:flex; align-items:baseline; gap:12px; }
+  .libro-voce .libro-anno{ flex:0 0 2.5em; font-size:var(--fs-piccolo); font-weight:400; color:var(--testo-sec);
+        font-variant-numeric:tabular-nums; letter-spacing:.02em; }
+  .libro-voce .libro-titolo{ flex:1; min-width:0; }
+  .libro-voce:hover .libro-anno{ color:var(--accento-testo); }
+  .libro-voce.attivo .libro-anno{ color:rgba(255,255,255,.78); font-weight:400; }
+  #ristampe-main{ flex:1; display:flex; flex-direction:column; overflow:hidden; }
+  #ristampe-intestazione{ padding:18px 22px; border-bottom:1px solid var(--separatore); }
+  #ristampe-intestazione .placeholder{ color:var(--testo-sec); font-size:var(--fs-corpo); padding:6px 0; }
+  #ristampe-libro-titolo{ font-family:var(--font-serif); font-size:var(--fs-titolo-grande); font-weight:700; margin:0 0 10px; color:var(--testo); }
+  /* Pulsanti di scelta dell'edizione, dentro la scheda di un libro con piu'
+     edizioni (es. Diario minimo, Opera aperta): un pulsante per edizione,
+     quello dell'edizione mostrata al momento resta evidenziato pieno.
+     Sostituiscono il vecchio sotto-elenco a tendina nella sidebar (vedi
+     disegnaDettaglioLibro in JS). Stessa pillola di .sparql-esempio-btn
+     (vedi "Interroga" piu' sotto): stesso componente, due schermate. */
+  #ristampe-libro-edizioni{ display:none; gap:8px; margin:-2px 0 12px; flex-wrap:wrap; }
+  .btn-edizione, .sparql-esempio-btn{ padding:8px 14px; border:1px solid var(--bordo); border-radius:var(--radius-pill);
+        background:var(--pannello-2); color:var(--testo); font-size:var(--fs-corpo); cursor:pointer; text-align:left; }
+  .btn-edizione:hover, .sparql-esempio-btn:hover{ border-color:var(--accento); color:var(--accento-testo); }
+  .btn-edizione:disabled{ opacity:.4; cursor:not-allowed; border-color:var(--bordo); color:var(--testo-sec); background:transparent; }
+  .btn-edizione.attivo, .sparql-esempio-btn.attivo{ background:var(--accento); border-color:var(--accento); color:#fff; font-weight:700; }
+  #tabella-ristampe .col-titolo-capitolo{ color:var(--accento-testo); }
+  #ristampe-libro-meta{ font-size:var(--fs-corpo); color:var(--testo-sec); line-height:1.7; }
+  #ristampe-libro-meta b{ color:var(--testo); }
+  #ristampe-libro-nota{ margin-top:8px; font-size:var(--fs-piccolo); color:var(--testo-sec); background:var(--pannello-2);
+        border:1px solid var(--bordo); border-radius:var(--radius-md); padding:8px 12px; max-width:640px; }
+  #ristampe-sotto-tabella{ padding:18px 22px 12px; font-size:var(--fs-titolo-indice); font-weight:600; line-height:1.3; color:var(--testo); border-bottom:1px solid var(--separatore); }
+  .riga-capitolo-non-collegato td{ color:var(--testo-sec); font-style:italic; }
+  /* Notazioni dei capitoli senza articolo (Raccolte): due segni nella palette terracotta, diversi per colore
+     E per forma (cerchio chiaro = noto solo da un volume; quadratino mattone = senza fonte individuata). */
+  .marca-cap{ display:inline-block; width:.62em; height:.62em; margin-left:.6em; vertical-align:baseline; flex:none; }
+  .marca-cap-volume{ background:var(--accento-testo); border-radius:50%; }
+  .marca-cap-senza-fonte{ background:var(--accento); border-radius:2px; }
+  #legenda-capitoli{ padding:10px 22px 10px; font-size:var(--fs-piccolo); color:var(--testo-sec); display:flex; gap:6px 22px; flex-wrap:wrap; }
+  #legenda-capitoli .marca-cap{ margin:0 .35em 0 0; }
+
+  /* Indice del volume (v1.5): tabella a tre colonne (N., titolo, Pagine) usata al
+     posto di #tabella-ristampe per i libri con DATI.indici. Niente ordinamento
+     per colonna: le intestazioni non sono cliccabili. */
+  #tabella-indice thead th{ cursor:default; }
+  #tabella-indice thead th:hover{ color:var(--testo-sec); }
+  #tabella-indice .col-pagine-indice{ width:80px; color:var(--testo-sec); }
+  #tabella-indice .col-titolo-capitolo{ width:auto; color:var(--accento-testo); }
+  .campo-stato-voce{ width:100% !important; }
+
+  .scheda-colonne{ display:flex; gap:8px 28px; flex-wrap:wrap; }
+  .scheda-colonne > .col{ flex:1 1 300px; min-width:0; }
+  .riga-inline-dettagli .scheda-colonne .campo{ display:block; width:auto; }
+  .riga-inline-dettagli .campo.campo-largo{ width:100%; }
+  .divisore-articoli{ border:0; border-top:1px solid var(--separatore); margin:16px 0 12px; }
+
+  /* Leggibilita' dell'elenco dei capitoli nella sezione Raccolte (v1.6):
+     testo da 13,5px a 15px (--fs-elenco-capitoli), padding verticale delle
+     celle da 8px a 11px, interlinea 1.45; intestazioni di colonna in
+     proporzione (da 11px a 12.5px). Vale per ENTRAMBE le viste (indice del
+     volume e tabella degli altri libri) e per le schede dei capitoli che si
+     aprono sotto le righe, che non sono piu' piccole dell'elenco. */
+  #tabella-indice, #tabella-ristampe{ font-size:var(--fs-elenco-capitoli); line-height:1.45; }
+  #tabella-indice thead th, #tabella-ristampe thead th{ font-size:var(--fs-piccolo); padding:11px 14px; }
+  #tabella-indice tbody td, #tabella-ristampe tbody td{ padding:11px 14px; overflow-wrap:anywhere; }
+  /* [INTRODUZIONE] voce d'indice con tipologia «Introduzione»: stesso effetto al passaggio del mouse
+     delle altre righe (vedi table.tabella-dati tbody tr:hover) ma non si apre: cursore normale, non la manina. */
+  #tabella-indice tbody tr.voce-non-apribile{ cursor:default; }
+  #tabella-indice .col-pagine-indice{ width:76px; }
+  #tabella-indice .col-titolo-capitolo, #tabella-ristampe .col-titolo-capitolo{ overflow-wrap:break-word; word-break:normal; }
+  #tabella-indice .riga-inline-dettagli .campo, #tabella-ristampe .riga-inline-dettagli .campo,
+  #tabella-indice .riga-inline-dettagli .avviso, #tabella-ristampe .riga-inline-dettagli .avviso{
+        font-size:var(--fs-elenco-capitoli); line-height:1.5; }
+  @media (max-width:700px){
+    #tabella-indice .riga-inline-dettagli .campo, #tabella-ristampe .riga-inline-dettagli .campo{ width:100%; }
+  }
+
+  /* --- Linea del tempo --- */
+  #timeline-main{ flex:1; display:flex; flex-direction:column; overflow:hidden; min-height:0; }
+  #timeline-intestazione{ padding:20px 26px 16px; }
+  #timeline-anni-fascia{ display:flex; align-items:center; gap:12px; padding:18px 26px; border-top:1px solid var(--separatore);
+        border-bottom:1px solid var(--separatore); }
+  .freccia-timeline{ flex:0 0 auto; width:38px; height:38px; border-radius:50%; border:1px solid var(--bordo);
+        background:var(--pannello-2); color:var(--testo); font-size:20px; line-height:1; cursor:pointer;
+        display:flex; align-items:center; justify-content:center; }
+  .freccia-timeline:hover{ border-color:var(--accento); color:var(--accento-testo); }
+  /* padding-bottom piu' ampio del solito: crea uno stacco visivo tra i
+     tasti degli anni e la barra di scorrimento orizzontale, che altrimenti
+     tocca quasi i tasti e risulta poco leggibile/usabile. */
+  #timeline-anni{ flex:1; display:flex; flex-wrap:nowrap; overflow-x:auto; gap:10px; scroll-behavior:smooth;
+        scrollbar-width:thin; padding:4px 2px 16px; }
+  .anno-tick{ flex:0 0 auto; display:flex; flex-direction:column; align-items:center; gap:3px; min-width:74px;
+        padding:14px 14px; border-radius:var(--radius-md); border:1px solid var(--bordo); background:var(--pannello-2);
+        color:var(--testo-sec); cursor:pointer; }
+  .anno-tick .anno-num{ font-size:18px; font-weight:700; color:inherit; }
+  .anno-tick:hover:not(:disabled){ border-color:var(--accento); color:var(--testo); }
+  /* testo bianco sul riempimento pieno: un testo scuro sopra l'accento
+     attuale avrebbe un contrasto scarso, il bianco resta leggibile (vedi
+     contrasto.py: bianco su --accento = 5,5:1). */
+  .anno-tick.attivo{ background:var(--accento); color:#fff; border-color:var(--accento); font-weight:700; }
+  .anno-tick:disabled{ opacity:.25; cursor:default; }
+
+  /* flex:1 + overflow:hidden qui sotto, in una colonna flex, non basta da
+     solo a far scorrere i figli: senza min-height:0 un figlio flex non si
+     restringe mai sotto la sua altezza "naturale", quindi il contenuto puo'
+     spingere fuori dallo schermo la lista articoli invece di farla scorrere
+     al suo interno (il tipico bug per cui, con tante riviste o tanti
+     articoli in un anno, lo spazio finiva tutto occupato e la lista restava
+     inaccessibile). Da qui in poi la catena flex ha min-height:0 ovunque. */
+  /* Una sola area di scorrimento continua sotto la fascia degli anni (che
+     resta fissa in cima, fuori da questo contenitore): biografia, riviste
+     e - appena se ne sceglie una - l'elenco articoli si accumulano uno
+     sotto l'altro nello stesso flusso normale della pagina, e l'utente
+     scorre tutto insieme con la rotellina, invece di ritrovarsi tante
+     mini-liste ognuna con il proprio scroll interno incastrato in uno
+     spazio fisso (poco usabile, specie con riviste che hanno molti
+     articoli). */
+  #timeline-corpo{ flex:1; overflow-y:auto; padding:30px 34px 48px; min-height:0; }
+  #timeline-corpo .placeholder{ min-height:50vh; display:flex; align-items:center; justify-content:center; text-align:center;
+        color:var(--testo-sec); font-size:15px; max-width:520px; margin:0 auto; line-height:1.6; }
+  #timeline-riviste{ margin-bottom:28px; }
+  #timeline-biografia{ margin-bottom:26px; padding:14px 18px; border-left:4px solid var(--accento);
+        background:var(--pannello-2); border-radius:0 var(--radius-md) var(--radius-md) 0; }
+  #timeline-biografia .anno-biografia{ font-size:var(--fs-minuscolo); text-transform:uppercase; letter-spacing:.05em;
+        color:var(--accento-testo); font-weight:700; margin-bottom:6px; }
+  #timeline-biografia .testo-biografia{ font-size:var(--fs-corpo-grande); line-height:1.65; color:var(--testo); }
+  #timeline-riviste h2{ font-size:var(--fs-titolo-grande); margin:0 0 16px; color:var(--testo); font-weight:700; font-family:var(--font-serif); }
+  .timeline-riviste-lista{ display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:14px; margin-bottom:6px; }
+  .rivista-card{ padding:20px 22px; border:1px solid var(--bordo); border-radius:var(--radius-md); background:var(--pannello-2); cursor:pointer; }
+  .rivista-card:hover{ border-color:var(--accento); }
+  .rivista-card.attivo{ border-color:var(--accento); background:rgba(var(--accento-rgb),.18); }
+  .rivista-card span{ display:block; }
+  .rivista-card span:first-child{ font-size:var(--fs-titolo-medio); color:var(--testo); margin-bottom:6px; font-weight:700; font-family:var(--font-serif); }
+  .rivista-card .n{ font-size:var(--fs-corpo); color:var(--accento-testo); font-weight:600; }
+
+  /* niente piu' flex/overflow/min-height qui: l'elenco articoli si apre
+     "spingendo giu'" il resto della pagina, che e' esattamente l'effetto
+     richiesto (la pagina si allunga e si scorre fino in fondo). */
+  #timeline-articoli{ margin-top:28px; }
+  #timeline-articoli-titolo{ font-size:var(--fs-piccolo); text-transform:uppercase; letter-spacing:.04em; color:var(--testo-sec);
+        margin-bottom:12px; }
+  #timeline-articoli-lista{ border:1px solid var(--bordo); border-radius:var(--radius-md); }
+  .timeline-articolo-voce{ padding:13px 16px; border-bottom:1px solid var(--separatore); font-size:var(--fs-corpo-grande);
+        color:var(--testo); cursor:pointer; }
+  .timeline-articolo-voce:last-child{ border-bottom:none; }
+  .timeline-articolo-voce:hover{ color:var(--accento-testo); background:var(--pannello-2); }
+  .timeline-articolo-voce.attivo{ color:var(--accento-testo); background:rgba(var(--accento-rgb),.16); }
+  /* Fasce colorate come nell'elenco della sezione Articoli (stesse variabili:
+     --intensita-fascia-articolo, --larghezza-banda-articolo): giallo = raccolto
+     in volume, fucsia = estratto. Riempimento tenue + banda piena a sinistra;
+     hover una volta e mezza piu' intenso; voce attiva = velo terracotta sopra la
+     fascia, con la banda che resta del colore del tipo. */
+  .timeline-articolo-voce.ripubblicato{ background-color:rgba(var(--articolo-rist-rgb),var(--intensita-fascia-articolo));
+                                        box-shadow:inset var(--larghezza-banda-articolo) 0 0 var(--articolo-rist); }
+  .timeline-articolo-voce.estratto{ background-color:rgba(var(--articolo-estratto-rgb),var(--intensita-fascia-articolo));
+                                    box-shadow:inset var(--larghezza-banda-articolo) 0 0 var(--articolo-estratto); }
+  .timeline-articolo-voce.ripubblicato:hover{ background-color:rgba(var(--articolo-rist-rgb),calc(var(--intensita-fascia-articolo) * 1.5)); }
+  .timeline-articolo-voce.estratto:hover{ background-color:rgba(var(--articolo-estratto-rgb),calc(var(--intensita-fascia-articolo) * 1.5)); }
+  .timeline-articolo-voce.ripubblicato.attivo, .timeline-articolo-voce.estratto.attivo{
+        background-image:linear-gradient(rgba(var(--accento-rgb),.30),rgba(var(--accento-rgb),.30)); }
+  .timeline-articolo-voce.ripubblicato.espansa{ box-shadow:inset var(--larghezza-banda-articolo) 0 0 var(--articolo-rist); }
+  .timeline-articolo-voce.estratto.espansa{ box-shadow:inset var(--larghezza-banda-articolo) 0 0 var(--articolo-estratto); }
+  .timeline-legenda{ display:flex; flex-wrap:wrap; gap:6px 20px; margin:-4px 0 12px; }
+  .timeline-legenda .legenda-fascia{ margin:0; }
+  table.tabella-dati tbody tr.riga-evidenziata{ background:rgba(var(--accento-rgb),.22); }
+  table.tabella-dati tbody tr.riga-evidenziata:hover{ background:rgba(var(--accento-rgb),.28); }
+
+  /* --- Documentazione --- */
+  #doc-scroll{ flex:1; overflow-y:auto; padding:36px 40px 80px; }
+  #doc-contenuto{ max-width:820px; margin:0 auto; }
+  #doc-contenuto h2{ font-size:var(--fs-titolo-grande); margin:38px 0 6px; padding-top:16px; border-top:1px solid var(--separatore); font-family:var(--font-serif); font-weight:700; }
+  #doc-contenuto h2:first-child{ margin-top:0; padding-top:0; border-top:none; }
+  #doc-contenuto h3{ font-size:var(--fs-corpo-grande); margin:22px 0 8px; color:var(--testo); }
+  #doc-contenuto p, #doc-contenuto li{ font-size:var(--fs-corpo); line-height:1.7; color:var(--testo-sec); }
+  #doc-contenuto strong{ color:var(--testo); }
+  #doc-contenuto ul, #doc-contenuto ol{ padding-left:20px; }
+  #doc-contenuto table{ width:100%; border-collapse:collapse; margin:12px 0 22px; font-size:var(--fs-corpo); }
+  #doc-contenuto th, #doc-contenuto td{ text-align:left; padding:8px 10px; border-bottom:1px solid var(--separatore); vertical-align:top; }
+  #doc-contenuto th{ color:var(--testo-sec); font-weight:600; font-size:var(--fs-minuscolo); text-transform:uppercase; letter-spacing:.03em; }
+  #doc-contenuto td{ color:var(--testo); }
+  #doc-contenuto td.sec{ color:var(--testo-sec); }
+  #doc-contenuto pre{ background:var(--pannello-2); border:1px solid var(--bordo); border-radius:var(--radius-md); padding:14px 16px;
+        overflow-x:auto; font-size:var(--fs-piccolo); line-height:1.6; color:var(--testo); }
+  #doc-contenuto code{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  #doc-contenuto code.inline{ background:var(--pannello-2); padding:1px 5px; border-radius:4px; font-size:var(--fs-piccolo); }
+  /* (2026-10-21) sezioni a comparsa e glossario della scheda Documentazione: solo variabili gia' esistenti */
+  #doc-contenuto details.approfondimento{ border:1px solid var(--bordo); border-radius:var(--radius-md); background:var(--pannello); margin:12px 0; }
+  #doc-contenuto details.approfondimento > summary{ cursor:pointer; padding:11px 14px; font-weight:600; color:var(--testo); font-size:var(--fs-corpo); }
+  #doc-contenuto details.approfondimento > summary:hover{ color:var(--accento-testo); }
+  #doc-contenuto details.approfondimento[open] > summary{ border-bottom:1px solid var(--separatore); }
+  #doc-contenuto details.approfondimento > ul{ margin:10px 0; padding:0 18px 0 34px; }
+  #doc-contenuto td{ overflow-wrap:anywhere; }
+  @media (max-width:640px){ #doc-scroll{ padding:24px 16px 60px; } }
+  #doc-contenuto dl.glossario{ margin:12px 0; }
+  #doc-contenuto dl.glossario dt{ font-weight:600; color:var(--testo); margin-top:10px; font-size:var(--fs-corpo); }
+  #doc-contenuto dl.glossario dd{ margin:2px 0 0 0; color:var(--testo-sec); font-size:var(--fs-corpo); line-height:1.6; }
+  .download-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:10px; margin:14px 0 8px; }
+  .download-card{ display:block; padding:12px 14px; border:1px solid var(--bordo); border-radius:var(--radius-md);
+        background:var(--pannello-2); text-decoration:none; color:var(--testo); }
+  .download-card:hover{ border-color:var(--accento); }
+  .download-card .fmt{ font-size:var(--fs-minuscolo); text-transform:uppercase; color:var(--testo-sec); letter-spacing:.04em; }
+  .download-card .nome{ font-size:var(--fs-corpo); margin-top:3px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  .download-card .peso{ font-size:var(--fs-minuscolo); color:var(--testo-sec); margin-top:4px; }
+  .nota-cartella{ font-size:var(--fs-piccolo); color:var(--testo-sec); background:var(--pannello-2); border:1px solid var(--bordo);
+        border-radius:var(--radius-md); padding:10px 14px; margin-top:4px; }
+
+  /* --- Interroga (SPARQL) --- */
+  #sparql-scroll{ flex:1; overflow-y:auto; padding:36px 40px 80px; }
+  #sparql-contenuto{ max-width:900px; margin:0 auto; }
+  #sparql-contenuto h2{ font-size:var(--fs-titolo-grande); margin:0 0 6px; font-family:var(--font-serif); font-weight:700; }
+  #sparql-contenuto h3{ font-size:var(--fs-corpo-grande); margin:26px 0 10px; color:var(--testo); }
+  #sparql-contenuto p{ font-size:var(--fs-corpo); line-height:1.7; color:var(--testo-sec); }
+  #sparql-contenuto strong{ color:var(--testo); }
+  #sparql-contenuto code.inline{ background:var(--pannello-2); padding:1px 5px; border-radius:4px; font-size:var(--fs-piccolo);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  #sparql-contenuto a{ color:var(--accento-testo); }
+
+  /* .sparql-esempio-btn condivide il componente "pillola" con .btn-edizione
+     di Raccolte (vedi quella regola piu' sopra): stesso bordo/riempimento/
+     stato attivo, qui restano solo le proprieta' specifiche a questa
+     schermata (disposizione a capo della lista d'esempi). */
+  .sparql-esempi-gruppo{ margin-bottom:16px; }
+  .sparql-esempi-titolo{ font-size:var(--fs-minuscolo); text-transform:uppercase; letter-spacing:.05em; color:var(--testo-sec); margin-bottom:8px; }
+  .sparql-esempi-lista{ display:flex; flex-wrap:wrap; gap:8px; }
+
+  #sparql-editor{ width:100%; min-height:180px; box-sizing:border-box; background:var(--pannello-2); color:var(--testo);
+        border:1px solid var(--bordo); border-radius:var(--radius-md); padding:14px 16px; font-size:var(--fs-corpo); line-height:1.6;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; resize:vertical; }
+  #sparql-editor:focus{ outline:none; border-color:var(--accento); }
+
+  #sparql-comandi{ display:flex; align-items:center; gap:12px; margin:14px 0 22px; flex-wrap:wrap; }
+  #sparql-comandi .btn-hero{ padding:10px 20px; font-size:var(--fs-corpo); }
+  #sparql-comandi .btn-hero:disabled{ opacity:.45; cursor:not-allowed; }
+  #sparql-stato{ font-size:var(--fs-piccolo); color:var(--testo-sec); }
+  #sparql-stato.errore{ color:#d97a6c; }
+
+  /* Stessa tabella di dati di #doc-contenuto table / table.tabella-dati:
+     intestazione fissa in alto, testo secondario nell'header, bordo fra le
+     righe - qui solo un filo piu' compatta (molte colonne, molti risultati). */
+  #sparql-risultati-contenitore{ overflow-x:auto; }
+  #sparql-tabella-risultati{ width:100%; border-collapse:collapse; font-size:var(--fs-piccolo); }
+  #sparql-tabella-risultati th, #sparql-tabella-risultati td{ text-align:left; padding:7px 10px; border-bottom:1px solid var(--separatore);
+        white-space:nowrap; max-width:360px; overflow:hidden; text-overflow:ellipsis; }
+  #sparql-tabella-risultati th{ color:var(--testo-sec); font-weight:600; font-size:var(--fs-minuscolo); text-transform:uppercase; letter-spacing:.03em;
+        position:sticky; top:0; background:var(--bg); }
+  #sparql-tabella-risultati td{ color:var(--testo); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  #sparql-risultati-vuoto{ color:var(--testo-sec); font-size:var(--fs-corpo); padding:20px 0; }
+
+  /* --- Genesi dell'opera ---
+     Spostate qui dal <style> locale di genesi.html (che riusa gia' per il
+     resto gli ID/classi reali del sito: #tabs, #corpo, .schermata,
+     #sidebar, .sezione, .legenda-voce, #dettagli, .campo...) cosi' tutte
+     le regole visive del sito vivono in un unico foglio di stile. Le forme
+     della legenda (rombo, triangolo, esagono...) sono colori/forme
+     FUNZIONALI di questa vista del grafo (distinguono il tipo di nodo, es.
+     "capitolo noto solo da volume" vs "rivista di provenienza") e restano
+     invariate, non toccate dalla stessa regola che vale per Vista a grafo. */
+  #tabs .tab-btn, #tabs .titolo-app{ text-decoration:none; display:inline-block; }
+  #genesi-vuoto{ display:none; padding:60px 28px; text-align:center; color:var(--testo-sec); font-size:var(--fs-corpo-grande); }
+  .legenda-linea-piena{ width:18px; height:0; border-top:2.5px solid; flex-shrink:0; }
+  .legenda-linea-tratteggiata{ width:18px; height:0; border-top:2.5px dashed; flex-shrink:0; }
+  .rombo{ width:11px; height:11px; transform:rotate(45deg); flex-shrink:0; }
+  .triangolo{ width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-bottom:11px solid; flex-shrink:0; }
+  .esagono{ width:13px; height:11px; clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); flex-shrink:0; }
