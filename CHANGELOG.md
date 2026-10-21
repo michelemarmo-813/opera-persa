@@ -3,6 +3,43 @@
 Registro delle versioni del progetto (sito + dati RDF). Copre l'intero progetto; per lo storico delle sole modifiche
 allo schema dell'ontologia, vedi anche il commento "STORICO VERSIONI" in `grafo_eco/ontologia_eco.ttl`.
 
+## 2026-10-21 (75) — «La struttura assente»: l'anno nella scheda segue l'edizione scelta
+
+Backup `20261021-1720` (suffisso `_anno_edizione`: `index.html`, CHANGELOG, Word).
+- **Problema**: scegliendo l'edizione 1980 la scheda mostrava ancora «Anno di pubblicazione: 1968» (anno del nodo unico).
+- **Correzione** (`index.html`, `disegnaDettaglioLibro`): per i libri con più indici per edizione l'anno mostrato è quello dell'edizione selezionata (`edizioneIndiceAttiva`); per gli altri libri resta l'anno del libro. Il nodo nel grafo e il suo pannello restano al 1968.
+- **Verifica Playwright**: La struttura assente 1968 → «1968», clic su 1980 → «1980»; Diario minimo 1966 → «1966»; nessun errore JS. Dati non toccati.
+- **Nota**: editore e città sono gli stessi per le due edizioni (Bompiani, Milano); il link OPAC SBN è unico.
+
+## 2026-10-21 (74) — Libro «La bustina di minerva» (2000): «m» minuscola
+
+Backup `20261021-1712` (suffisso `_libro_minerva`: `Articoli.xlsx`, `Indice.xlsx`, `Estratti.xlsx` anche in `sorgenti/backup/`, `index.html`, CHANGELOG, Word, `dati.js`, `query_esempio.js`, `grafo_completo_ttl.js`, `posizioni_iniziali.js`, `importa_indici.py`, `genera_rdf.py`, `ontologia_eco.ttl`, `istanze_espresso.ttl`, `grafo_dati.json`, i CSV di `dati_estratti/`, `dati_rdf/`).
+- **Su richiesta**: anche il titolo del libro del 2000 ha la «m» minuscola, come la rubrica (73).
+- **Fonti**: `raccolte_eco.csv`, `classificazione_libri.csv`, `ristampe_aggiunte.csv`, `articoli_riviste_tutte.csv` (colonna `ristampa_in_volume_raw`, 142 righe), `importa_indici.py` (tabella `FOGLI` e `CSV_INDICI`), `note_oscurate.md`; `sorgenti/Indice.xlsx` (foglio e cella A1 «La bustina di minerva») e `sorgenti/Estratti.xlsx` (foglio e riga nel foglio «Indice»). Il nome del file `Indice_La_bustina_di_Minerva_ordine_libro.csv` e l'URI `libro-la-bustina-di-minerva` non cambiano.
+- **Rigenerazione**: `indici_volumi.csv` (vecchio titolo nella prima colonna) aggiustato con una sostituzione provvisoria per sbloccare `genera_rdf.py`, poi catena completa: 593 voci in 15 libri, nodi 2780, archi 3183 invariati; `posizioni_iniziali.js` non ricalcolato.
+- **Invariati (storici)**: i registri `report_estrazione.txt`, `indici_volumi_report.txt`, `correzioni_applicate_agli_excel_20261016.csv`, `aggiornamento_da_articoli_20261021.csv` e le voci precedenti di questo CHANGELOG.
+- **Word**: titolo del libro aggiornato nei paragrafi dei capitoli (non nel cap. 20 né nei paragrafi 506/507).
+
+## 2026-10-21 (73) — Rubrica «La bustina di minerva»: «m» minuscola ovunque
+
+Backup `20261021-1707` (suffisso `_rubrica_minerva`: `Articoli.xlsx` anche in `sorgenti/backup/`, `index.html`, CHANGELOG, Word, `dati.js`, `query_esempio.js`, `grafo_completo_ttl.js`, `posizioni_iniziali.js`, `genera_rdf.py`, `ontologia_eco.ttl`, `istanze_espresso.ttl`, `grafo_dati.json`, `indici_volumi.csv`, i quattro CSV di `dati_estratti/tutto/`, `dati_rdf/`).
+- **Fonte**: `sorgenti/Articoli.xlsx`, colonna «Rubrica» (fogli journal_article e newspaper_article): 1106 celle «La bustina di Minerva» → «La bustina di minerva» (nessuna variante diversa trovata).
+- **Rigenerazione**: `aggiorna_da_articoli.py --applica` ha riportato le 1106 modifiche (solo `MODIFICATO`, 0 nuovi) in `articoli_riviste_tutte.csv`, colonna `rubrica`; poi `genera_rdf.py` → `importa_indici.py` → `genera_rdf.py` → `genera_dati_sito.py`. L'etichetta della risorsa `eco:Rubrica` e il campo `rubrica` degli articoli in `dati.js` sono ora in minuscolo; l'URI (`rubrica-la-bustina-di-minerva`) non cambia. Nodi 2780 e archi 3183 invariati; `posizioni_iniziali.js` non ricalcolato (ID e archi uguali).
+- **Testi**: esempi di rubrica in `index.html` (Home e timeline 1985), commenti in `ontologia_eco.ttl` (copiati in `dati_rdf/`), `genera_rdf.py`, `estrai_tutto.py`; Word, paragrafo sulla proprietà `eco:rubrica`.
+- **Invariato**: il **libro** «La bustina di Minerva» (raccolta, 2000) mantiene la «M» maiuscola, così come le sue ristampe e le colonne `ristampa_in_volume_raw`/`altre_ristampe_raw`.
+
+## 2026-10-21 (72) — «La struttura assente»: edizione 1968 (un solo libro, due indici)
+
+Backup `20261021-1702` (suffisso `_struttura_assente`: `Indice.xlsx` anche in `sorgenti/backup/`, `index.html`, `genesi.html`, `importa_indici.py`, `genera_rdf.py`, `genera_dati_sito.py`, `ontologia_eco.ttl`, `libro_indice.rq`, `raccolte_eco.csv`, `classificazione_libri.csv`, `indici_volumi.csv` e report, `istanze_espresso.ttl`, `grafo_dati.json`, `dati.js`, `query_esempio.js`, `grafo_completo_ttl.js`, `posizioni_iniziali.js`, `dati_rdf/`, CHANGELOG, Word). Catena rigenerata: `genera_rdf.py` → `importa_indici.py` → `genera_rdf.py` → `genera_dati_sito.py` (errore finale di Playwright atteso).
+- **Modello (su richiesta)**: nel grafo il nodo è uno solo, «La struttura assente», anno 1968 (prima edizione), senza distinzione fra edizioni: i rapporti fra gli articoli sono gli stessi. Le due edizioni sono due **indici** dello stesso libro. Id dei nodi, nodi (2780) e archi (3183) identici a prima; `posizioni_iniziali.js` non toccato (stessi id, stesso hash).
+- **Fonte**: `sorgenti/Indice.xlsx`, nuovo foglio «La struttura assente (1968)», copia del foglio «La struttura assente» (edizione 1980) senza la riga «Prefazione» (nel 1968 non c'è); intestazione A1 «La struttura assente (1968)». Foglio 1980 non modificato.
+- **Dati**: `raccolte_eco.csv` (titolo «La struttura assente», anno 1968, nota aggiornata), `classificazione_libri.csv` (stessa chiave). `importa_indici.py`: tabella `EDIZIONI_FOGLI` (foglio → anno) e nuova colonna `edizione` in `indici_volumi.csv`; le posizioni ripartono da 1 in ogni edizione. `genera_rdf.py`: la voce porta `eco:edizioneIndice` (URI delle voci 1980 invariati). Voci d'indice: 587 → 593 (6 nuove, edizione 1968).
+- **Ontologia 1.10**: nuova proprietà `eco:edizioneIndice` (xsd:gYear, dominio `eco:VoceIndice`); `libro_indice.rq` e `genera_dati_sito.py` la portano in `DATI.indici[libro][i].edizione`.
+- **Raccolte** (`index.html`): il pulsante dell'edizione 1968 (prima spento) è ora cliccabile e acceso di default quando si apre «La struttura assente»; accanto c'è il 1980. Cambiando edizione cambia l'indice (1968: 6 voci; 1980: 7, con la «Prefazione»). `EDIZIONI_NON_CARICATE` svuotata. Nelle schede dei capitoli presenti in entrambe le edizioni, «Ripubblicato anche in: La struttura assente (Milano: Bompiani, 19xx)» rimanda all'altra edizione, come per Diario minimo.
+- **Focus sull'opera** (`genesi.html`): un capitolo presente in più edizioni conta una volta sola.
+- Verifica Playwright (`file://`): pulsanti 1968\* / 1980; indici di 6 e 7 voci; collegamento fra le due edizioni nei capitoli «Il segnale e il senso» e «La struttura assente»; nessun collegamento sulla «Prefazione»; Diario minimo invariato; nessun errore JS.
+- Word: ontologia 1.10 (cap. 4.3 e tabella delle versioni), 593 voci (cap. 5 e 12.4 e tabella di evoluzione), elenco delle voci d'indice; descrizione dei pulsanti d'edizione in 12.4.
+
 ## 2026-10-21 (71) — «Focus sull'opera»: tolta la nota «Capitolo tratto da un contributo pubblicato originariamente in un volume collettivo…»
 
 Backup `20261021-1612` (suffisso `_note_volume`: `genesi.html`, CHANGELOG, Word). Solo `genesi.html` (visualizzazione) e Word; nessun dato toccato.

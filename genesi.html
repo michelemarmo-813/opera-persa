@@ -205,7 +205,11 @@ function capitoliSenzaArticolo(ed){
     return nc.map((c, idx) => Object.assign({ id: prefisso + idx, kind: "capitolo_nc" }, c));
   }
   const NOTA_ND = "Non abbiamo informazioni sulla versione originale di questo capitolo nel dataset.";
-  return indice.filter(v => v.stato !== "introduzione" && !v.articolo && !(v.articoli && v.articoli.length)).map(v => {
+  // libro con piu' indici (uno per edizione, es. «La struttura assente», 1968 e 1980): un capitolo presente in piu'
+  // edizioni conta una volta sola (stesso titolo in indice, si tiene la prima edizione)
+  const visti = new Set();
+  const vociUniche = indice.filter(v => { const k = norm(v.titolo); if(v.edizione){ if(visti.has(k)) return false; visti.add(k); } return true; });
+  return vociUniche.filter(v => v.stato !== "introduzione" && !v.articolo && !(v.articoli && v.articoli.length)).map(v => {
     const base = nc.find(c => norm(c.titolo) === norm(v.titolo))
       || (v.volume && nc.find(c => norm(c.titolo_volume_originale) === norm(v.volume.libro))) || null;
     const o = { id: prefisso + "i" + v.posizione, kind: "capitolo_nc", titolo: v.titolo,

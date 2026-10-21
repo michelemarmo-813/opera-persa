@@ -29,8 +29,8 @@
 <http://example.org/eco-graph/schema#> a owl:Ontology ;
     rdfs:label "Ontologia per la bibliografia di Umberto Eco (eco-graph)"@it ;
     rdfs:comment "Estensione minima di Dublin Core, FaBiO, PRISM, FRBR e FOAF per modellare gli articoli di Umberto Eco, le riviste su cui sono usciti, e i libri in cui sono stati ripubblicati. Non usa owl:imports (vedi nota sotto): le classi/proprieta' riusate sono referenziate per URI, non reimportate."@it ;
-    owl:versionInfo "1.9" ;
-    dcterms:modified "2026-10-14"^^xsd:date .
+    owl:versionInfo "1.10" ;
+    dcterms:modified "2026-10-21"^^xsd:date .
 
 #################################################################
 # STORICO VERSIONI
@@ -149,7 +149,7 @@
 #           eco:pseudonimo "Lia Quilici". Le correzioni di questo tipo si
 #           scrivono caso per caso in dati_estratti/articoli_titolo_pseudonimo.csv
 #           (nessuna regola automatica sulle parentesi quadre).
-# 1.8 - 2026-10-14 - indice della «Bustina di Minerva» e dati bibliografici
+# 1.8 - 2026-10-14 - indice della «Bustina di minerva» e dati bibliografici
 #       indicati dall'indice (richiesta esplicita).
 #         - Cinque nuove proprieta' datatype con dominio eco:VoceIndice:
 #           eco:titoloOriginaleIndicato, eco:testataIndicata,
@@ -164,7 +164,7 @@
 #           sorgenti/Indice_La_bustina_di_Minerva_ordine_libro.csv.
 #         - Un collegamento prism:isVersionOf in piu' (articolo JA2219
 #           «Sofri e l'onere della prova», MicroMega 1997 -> La bustina di
-#           Minerva), scritto in dati_estratti/ristampe_aggiunte.csv.
+#           minerva), scritto in dati_estratti/ristampe_aggiunte.csv.
 # 1.9 - 2026-10-14 - indice de «Il costume di casa» e dati dei contributi in
 #       volume indicati dall'indice (richiesta esplicita).
 #         - Sei nuove proprieta' datatype con dominio eco:VoceIndice:
@@ -183,6 +183,16 @@
 #           gruppi di colonne letti per posizione, senza colonna N.).
 #         - Due pseudonimi «Dedalus» in piu' (eco:pseudonimo, articoli NA0016
 #           e NA0015), in dati_estratti/articoli_titolo_pseudonimo.csv.
+# 1.10 - 2026-10-21 - piu' indici (uno per edizione) per lo stesso libro
+#       (richiesta esplicita: «La struttura assente», edizioni 1968 e 1980).
+#         - Una nuova proprieta' datatype con dominio eco:VoceIndice:
+#           eco:edizioneIndice (xsd:gYear), l'anno dell'edizione a cui
+#           appartiene l'indice in cui compare la voce. Vale solo per i libri
+#           con piu' indici; per gli altri la voce non la porta.
+#         - Nessuna nuova classe e nessun libro in piu': il libro resta uno
+#           solo (per «La struttura assente», anno della prima edizione: 1968).
+#           Dati: Indice.xlsx (nuovo foglio «La struttura assente (1968)»),
+#           colonna «edizione» di dati_estratti/indici_volumi.csv.
 #################################################################
 
 #################################################################
@@ -261,7 +271,7 @@ frbr:Expression a owl:Class ;
 #
 # A differenza delle classi sopra, questa NON e' lo stub di un vocabolario
 # esterno: e' una classe originale del progetto. Prima le rubriche (es. "La
-# bustina di Minerva") erano un semplice letterale stringa su eco:rubrica;
+# bustina di minerva") erano un semplice letterale stringa su eco:rubrica;
 # promosse a risorse con un URI proprio si possono collegare esplicitamente
 # nel grafo tutti gli articoli che condividono la stessa rubrica (non solo
 # per uguaglianza di stringa), e in futuro attaccarci altri metadati (es. il
@@ -272,7 +282,7 @@ frbr:Expression a owl:Class ;
 
 eco:Rubrica a owl:Class ;
     rdfs:label "Rubrica"@it ;
-    rdfs:comment "Sezione/rubrica fissa di un periodico (es. «La bustina di Minerva» su L'Espresso). Classe originale del progetto: nessun vocabolario riusato tratta le rubriche giornalistiche come entità a sé stanti."@it .
+    rdfs:comment "Sezione/rubrica fissa di un periodico (es. «La bustina di minerva» su L'Espresso). Classe originale del progetto: nessun vocabolario riusato tratta le rubriche giornalistiche come entità a sé stanti."@it .
 
 #################################################################
 # CLASSE CUSTOM: eco:CapitoloNonCollegato
@@ -374,7 +384,7 @@ frbr:part owl:inverseOf frbr:partOf .
 eco:rubrica a owl:ObjectProperty ;
     rdfs:subPropertyOf dcterms:subject ;
     rdfs:label "rubrica"@it ;
-    rdfs:comment "Sezione/rubrica del periodico in cui è apparso l'articolo (es. «La bustina di Minerva»). Punta a una risorsa eco:Rubrica (il nome leggibile è nel suo rdfs:label), non più a un semplice letterale stringa: così gli articoli che condividono la stessa rubrica sono collegati esplicitamente nel grafo. Nessun vocabolario riusato ha un termine specifico per le rubriche giornalistiche; la trattiamo come sotto-proprietà di dcterms:subject."@it ;
+    rdfs:comment "Sezione/rubrica del periodico in cui è apparso l'articolo (es. «La bustina di minerva»). Punta a una risorsa eco:Rubrica (il nome leggibile è nel suo rdfs:label), non più a un semplice letterale stringa: così gli articoli che condividono la stessa rubrica sono collegati esplicitamente nel grafo. Nessun vocabolario riusato ha un termine specifico per le rubriche giornalistiche; la trattiamo come sotto-proprietà di dcterms:subject."@it ;
     rdfs:domain fabio:JournalArticle ;
     rdfs:range eco:Rubrica .
 
@@ -505,6 +515,12 @@ eco:nelIndiceDi a owl:ObjectProperty ;
     rdfs:comment "Il libro nel cui indice compare questa voce."@it ;
     rdfs:domain eco:VoceIndice ;
     rdfs:range fabio:Book .
+
+eco:edizioneIndice a owl:DatatypeProperty ;
+    rdfs:label "edizione dell'indice"@it ;
+    rdfs:comment "Anno dell'edizione a cui appartiene l'indice in cui compare questa voce. Si usa solo per i libri con più indici (uno per edizione, per esempio «La struttura assente», 1968 e 1980): il libro resta un solo nodo."@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range xsd:gYear .
 
 eco:posizioneInIndice a owl:DatatypeProperty ;
     rdfs:label "posizione nell'indice"@it ;

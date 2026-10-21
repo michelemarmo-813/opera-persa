@@ -26473,8 +26473,97 @@ res:indice-la-definizione-dell-arte-020 a eco:VoceIndice ;
     eco:titoloInIndice "Un consuntivo metodologico"@it ;
     eco:titoloOriginaleIndicato "The Analysis of Structure"@it .
 
+res:indice-la-struttura-assente-1968-001 a eco:VoceIndice ;
+    rdfs:label "Introduzione"@it ;
+    eco:edizioneIndice "1968"^^xsd:gYear ;
+    eco:nelIndiceDi res:libro-la-struttura-assente ;
+    eco:posizioneInIndice 1 ;
+    eco:statoVoce "introduzione" ;
+    eco:titoloInIndice "Introduzione"@it .
+
+res:indice-la-struttura-assente-1968-002 a eco:VoceIndice ;
+    rdfs:label "Il segnale e il senso"@it ;
+    eco:annoVolumeIndicato "N.D."@it ;
+    eco:curatoreVolumeIndicato "N.D."@it ;
+    eco:dataIndicata "N.D."@it ;
+    eco:editoreVolumeIndicato "Bompiani"@it ;
+    eco:edizioneIndice "1968"^^xsd:gYear ;
+    eco:luogoVolumeIndicato "Milano"@it ;
+    eco:nelIndiceDi res:libro-la-struttura-assente ;
+    eco:numeroIndicato "N.D."@it ;
+    eco:paginaIndicata "N.D."@it ;
+    eco:paginaVolumeIndicato "N.D."@it ;
+    eco:posizioneInIndice 2 ;
+    eco:statoVoce "ristampa" ;
+    eco:testataIndicata "N.D."@it ;
+    eco:titoloInIndice "Il segnale e il senso"@it ;
+    eco:titoloOriginaleIndicato "Appunti per una semiologia delle comunicazioni visive"@it ;
+    eco:titoloVolumeIndicato "N.D."@it ;
+    rdfs:comment "Dispense scritti per gli studenti della Facoltà di Architettura dell'Università di Firenze"@it .
+
+res:indice-la-struttura-assente-1968-003 a eco:VoceIndice ;
+    rdfs:label "Lo sguardo discreto"@it ;
+    eco:annoVolumeIndicato "N.D."@it ;
+    eco:curatoreVolumeIndicato "N.D."@it ;
+    eco:dataIndicata "N.D."@it ;
+    eco:editoreVolumeIndicato "Bompiani"@it ;
+    eco:edizioneIndice "1968"^^xsd:gYear ;
+    eco:luogoVolumeIndicato "Milano"@it ;
+    eco:nelIndiceDi res:libro-la-struttura-assente ;
+    eco:numeroIndicato "N.D."@it ;
+    eco:paginaIndicata "N.D."@it ;
+    eco:paginaVolumeIndicato "N.D."@it ;
+    eco:posizioneInIndice 3 ;
+    eco:statoVoce "ristampa" ;
+    eco:testataIndicata "N.D."@it ;
+    eco:titoloInIndice "Lo sguardo discreto"@it ;
+    eco:titoloOriginaleIndicato "Appunti per una semiologia delle comunicazioni visive"@it ;
+    eco:titoloVolumeIndicato "N.D."@it ;
+    rdfs:comment "Dispense scritti per gli studenti della Facoltà di Architettura dell'Università di Firenze"@it .
+
+res:indice-la-struttura-assente-1968-004 a eco:VoceIndice ;
+    rdfs:label "La funzione e il segno"@it ;
+    eco:annoVolumeIndicato "N.D."@it ;
+    eco:curatoreVolumeIndicato "N.D."@it ;
+    eco:dataIndicata "N.D."@it ;
+    eco:editoreVolumeIndicato "Bompiani"@it ;
+    eco:edizioneIndice "1968"^^xsd:gYear ;
+    eco:luogoVolumeIndicato "Milano"@it ;
+    eco:nelIndiceDi res:libro-la-struttura-assente ;
+    eco:numeroIndicato "N.D."@it ;
+    eco:paginaIndicata "N.D."@it ;
+    eco:paginaVolumeIndicato "N.D."@it ;
+    eco:posizioneInIndice 4 ;
+    eco:statoVoce "ristampa" ;
+    eco:testataIndicata "N.D."@it ;
+    eco:titoloInIndice "La funzione e il segno"@it ;
+    eco:titoloOriginaleIndicato "Appunti per una semiologia delle comunicazioni visive"@it ;
+    eco:titoloVolumeIndicato "N.D."@it ;
+    rdfs:comment "Dispense scritti per gli studenti della Facoltà di Architettura dell'Università di Firenze"@it .
+
+res:indice-la-struttura-assente-1968-005 a eco:VoceIndice ;
+    rdfs:label "La struttura assente"@it ;
+    eco:articoloCorrispondente res:articolo-ja0406,
+        res:articolo-ja0503,
+        res:articolo-ja0522 ;
+    eco:edizioneIndice "1968"^^xsd:gYear ;
+    eco:nelIndiceDi res:libro-la-struttura-assente ;
+    eco:posizioneInIndice 5 ;
+    eco:statoVoce "ristampa" ;
+    eco:titoloInIndice "La struttura assente"@it ;
+    rdfs:comment "«Modelli e strutture»: Ristampa parziale"@it .
+
+res:indice-la-struttura-assente-1968-006 a eco:VoceIndice ;
+    rdfs:label "La frontiera semiologica"@it ;
+    eco:edizioneIndice "1968"^^xsd:gYear ;
+    eco:nelIndiceDi res:libro-la-struttura-assente ;
+    eco:posizioneInIndice 6 ;
+    eco:statoVoce "inedito" ;
+    eco:titoloInIndice "La frontiera semiologica"@it .
+
 res:indice-la-struttura-assente-1980-001 a eco:VoceIndice ;
     rdfs:label "Prefazione"@it ;
+    eco:edizioneIndice "1980"^^xsd:gYear ;
     eco:nelIndiceDi res:libro-la-struttura-assente ;
     eco:posizioneInIndice 1 ;
     eco:statoVoce "introduzione" ;
@@ -26482,6 +26571,7 @@ res:indice-la-struttura-assente-1980-001 a eco:VoceIndice ;
 
 res:indice-la-struttura-assente-1980-002 a eco:VoceIndice ;
     rdfs:label "Introduzione"@it ;
+    eco:edizioneIndice "1980"^^xsd:gYear ;
     eco:nelIndiceDi res:libro-la-struttura-assente ;
     eco:posizioneInIndice 2 ;
     eco:statoVoce "introduzione" ;
@@ -26493,6 +26583,7 @@ res:indice-la-struttura-assente-1980-003 a eco:VoceIndice ;
     eco:curatoreVolumeIndicato "N.D."@it ;
     eco:dataIndicata "N.D."@it ;
     eco:editoreVolumeIndicato "Bompiani"@it ;
+    eco:edizioneIndice "1980"^^xsd:gYear ;
     eco:luogoVolumeIndicato "Milano"@it ;
     eco:nelIndiceDi res:libro-la-struttura-assente ;
     eco:numeroIndicato "N.D."@it ;
@@ -26512,6 +26603,7 @@ res:indice-la-struttura-assente-1980-004 a eco:VoceIndice ;
     eco:curatoreVolumeIndicato "N.D."@it ;
     eco:dataIndicata "N.D."@it ;
     eco:editoreVolumeIndicato "Bompiani"@it ;
+    eco:edizioneIndice "1980"^^xsd:gYear ;
     eco:luogoVolumeIndicato "Milano"@it ;
     eco:nelIndiceDi res:libro-la-struttura-assente ;
     eco:numeroIndicato "N.D."@it ;
@@ -26531,6 +26623,7 @@ res:indice-la-struttura-assente-1980-005 a eco:VoceIndice ;
     eco:curatoreVolumeIndicato "N.D."@it ;
     eco:dataIndicata "N.D."@it ;
     eco:editoreVolumeIndicato "Bompiani"@it ;
+    eco:edizioneIndice "1980"^^xsd:gYear ;
     eco:luogoVolumeIndicato "Milano"@it ;
     eco:nelIndiceDi res:libro-la-struttura-assente ;
     eco:numeroIndicato "N.D."@it ;
@@ -26549,6 +26642,7 @@ res:indice-la-struttura-assente-1980-006 a eco:VoceIndice ;
     eco:articoloCorrispondente res:articolo-ja0406,
         res:articolo-ja0503,
         res:articolo-ja0522 ;
+    eco:edizioneIndice "1980"^^xsd:gYear ;
     eco:nelIndiceDi res:libro-la-struttura-assente ;
     eco:posizioneInIndice 6 ;
     eco:statoVoce "ristampa" ;
@@ -26557,6 +26651,7 @@ res:indice-la-struttura-assente-1980-006 a eco:VoceIndice ;
 
 res:indice-la-struttura-assente-1980-007 a eco:VoceIndice ;
     rdfs:label "La frontiera semiologica"@it ;
+    eco:edizioneIndice "1980"^^xsd:gYear ;
     eco:nelIndiceDi res:libro-la-struttura-assente ;
     eco:posizioneInIndice 7 ;
     eco:statoVoce "inedito" ;
@@ -28664,6 +28759,12 @@ eco:editoreVolumeOriginale a owl:DatatypeProperty ;
     rdfs:range xsd:string ;
     rdfs:subPropertyOf dcterms:publisher .
 
+eco:edizioneIndice a owl:DatatypeProperty ;
+    rdfs:label "edizione dell'indice"@it ;
+    rdfs:comment "Anno dell'edizione a cui appartiene l'indice in cui compare questa voce. Si usa solo per i libri con più indici (uno per edizione, per esempio «La struttura assente», 1968 e 1980): il libro resta un solo nodo."@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range xsd:gYear .
+
 eco:estrattoDi a owl:ObjectProperty ;
     rdfs:label "estratto di"@it ;
     rdfs:comment "Collega un articolo (estratto giornalistico) al libro di cui e' un estratto, da volume a rivista: il libro e' la fonte, l'articolo ne e' un estratto. Semanticamente l'opposto di prism:isVersionOf (vedi il commento sopra), pur avendo lo stesso verso articolo -> libro. Non dipende dalla categoria del libro (eco:tipoLibro): vedi il commento sopra per l'eccezione nota."@it ;
@@ -28775,7 +28876,7 @@ eco:pseudonimo a owl:DatatypeProperty ;
 
 eco:rubrica a owl:ObjectProperty ;
     rdfs:label "rubrica"@it ;
-    rdfs:comment "Sezione/rubrica del periodico in cui è apparso l'articolo (es. «La bustina di Minerva»). Punta a una risorsa eco:Rubrica (il nome leggibile è nel suo rdfs:label), non più a un semplice letterale stringa: così gli articoli che condividono la stessa rubrica sono collegati esplicitamente nel grafo. Nessun vocabolario riusato ha un termine specifico per le rubriche giornalistiche; la trattiamo come sotto-proprietà di dcterms:subject."@it ;
+    rdfs:comment "Sezione/rubrica del periodico in cui è apparso l'articolo (es. «La bustina di minerva»). Punta a una risorsa eco:Rubrica (il nome leggibile è nel suo rdfs:label), non più a un semplice letterale stringa: così gli articoli che condividono la stessa rubrica sono collegati esplicitamente nel grafo. Nessun vocabolario riusato ha un termine specifico per le rubriche giornalistiche; la trattiamo come sotto-proprietà di dcterms:subject."@it ;
     rdfs:domain fabio:JournalArticle ;
     rdfs:range eco:Rubrica ;
     rdfs:subPropertyOf dcterms:subject .
@@ -29147,18 +29248,6 @@ res:articolo-ja0386 a fabio:JournalArticle ;
     dcterms:title "Bandiera rossa in vaticano"@it ;
     frbr:partOf res:rivista-l-espresso .
 
-res:articolo-ja0406 a fabio:JournalArticle ;
-    rdfs:label "Modelli e strutture"@it ;
-    eco:titoloCapitolo "La struttura assente"@it ;
-    prism:endingPage 28 ;
-    prism:isVersionOf res:libro-la-struttura-assente ;
-    prism:number "20" ;
-    prism:publicationDate "1966"^^xsd:gYear ;
-    prism:startingPage 11 ;
-    dcterms:creator res:persona-umberto-eco ;
-    dcterms:title "Modelli e strutture"@it ;
-    frbr:partOf res:rivista-il-verri .
-
 res:articolo-ja0423 a fabio:JournalArticle ;
     rdfs:label "Narciso in tribunale"@it ;
     eco:rubrica res:rubrica-letture-e-idee ;
@@ -29262,17 +29351,6 @@ res:articolo-ja0501 a fabio:JournalArticle ;
     dcterms:title "Il cogito interruptus"@it ;
     frbr:partOf res:rivista-quindici .
 
-res:articolo-ja0503 a fabio:JournalArticle ;
-    rdfs:label "La struttura e l’assenza"@it ;
-    prism:endingPage 68 ;
-    prism:isVersionOf res:libro-la-struttura-assente ;
-    prism:number "27" ;
-    prism:publicationDate "1968"^^xsd:gYear ;
-    prism:startingPage 36 ;
-    dcterms:creator res:persona-umberto-eco ;
-    dcterms:title "La struttura e l’assenza"@it ;
-    frbr:partOf res:rivista-il-verri .
-
 res:articolo-ja0506 a fabio:JournalArticle ;
     rdfs:label "Il cifrario dei politici"@it ;
     eco:titoloCapitolo "Il cifrario dei politici"@it ;
@@ -29337,17 +29415,6 @@ res:articolo-ja0518 a fabio:JournalArticle ;
     dcterms:creator res:persona-umberto-eco ;
     dcterms:title "Vietando s'impara"@it ;
     frbr:partOf res:rivista-quindici .
-
-res:articolo-ja0522 a fabio:JournalArticle ;
-    rdfs:label "Pensiero strutturale e pensiero seriale"@it ;
-    prism:endingPage 45 ;
-    prism:isVersionOf res:libro-la-struttura-assente ;
-    prism:number "1" ;
-    prism:publicationDate "1968"^^xsd:gYear ;
-    prism:startingPage 25 ;
-    dcterms:creator res:persona-umberto-eco ;
-    dcterms:title "Pensiero strutturale e pensiero seriale"@it ;
-    frbr:partOf res:rivista-rivista-di-estetica .
 
 res:articolo-ja0526 a fabio:JournalArticle ;
     rdfs:label "Che giornale vorrei fare"@it ;
@@ -36006,9 +36073,9 @@ res:rubrica-umorismo a eco:Rubrica ;
 
 eco: a owl:Ontology ;
     rdfs:label "Ontologia per la bibliografia di Umberto Eco (eco-graph)"@it ;
-    dcterms:modified "2026-10-14"^^xsd:date ;
+    dcterms:modified "2026-10-21"^^xsd:date ;
     rdfs:comment "Estensione minima di Dublin Core, FaBiO, PRISM, FRBR e FOAF per modellare gli articoli di Umberto Eco, le riviste su cui sono usciti, e i libri in cui sono stati ripubblicati. Non usa owl:imports (vedi nota sotto): le classi/proprieta' riusate sono referenziate per URI, non reimportate."@it ;
-    owl:versionInfo "1.9" .
+    owl:versionInfo "1.10" .
 
 foaf:Person a owl:Class ;
     rdfs:label "Persona"@it ;
@@ -36130,6 +36197,40 @@ res:articolo-ja0313 a fabio:JournalArticle ;
     dcterms:creator res:persona-umberto-eco ;
     dcterms:title "Dove andremo a finire?"@it ;
     frbr:partOf res:rivista-il-verri .
+
+res:articolo-ja0406 a fabio:JournalArticle ;
+    rdfs:label "Modelli e strutture"@it ;
+    eco:titoloCapitolo "La struttura assente"@it ;
+    prism:endingPage 28 ;
+    prism:isVersionOf res:libro-la-struttura-assente ;
+    prism:number "20" ;
+    prism:publicationDate "1966"^^xsd:gYear ;
+    prism:startingPage 11 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "Modelli e strutture"@it ;
+    frbr:partOf res:rivista-il-verri .
+
+res:articolo-ja0503 a fabio:JournalArticle ;
+    rdfs:label "La struttura e l’assenza"@it ;
+    prism:endingPage 68 ;
+    prism:isVersionOf res:libro-la-struttura-assente ;
+    prism:number "27" ;
+    prism:publicationDate "1968"^^xsd:gYear ;
+    prism:startingPage 36 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "La struttura e l’assenza"@it ;
+    frbr:partOf res:rivista-il-verri .
+
+res:articolo-ja0522 a fabio:JournalArticle ;
+    rdfs:label "Pensiero strutturale e pensiero seriale"@it ;
+    prism:endingPage 45 ;
+    prism:isVersionOf res:libro-la-struttura-assente ;
+    prism:number "1" ;
+    prism:publicationDate "1968"^^xsd:gYear ;
+    prism:startingPage 25 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "Pensiero strutturale e pensiero seriale"@it ;
+    frbr:partOf res:rivista-rivista-di-estetica .
 
 res:articolo-ja1620 a fabio:JournalArticle ;
     rdfs:label "Che vergogna, non abbiamo nemici! Ma, a pensarci bene, è proprio vero?"@it ;
@@ -36695,21 +36796,6 @@ frbr:Expression a owl:Class ;
 res:rubrica-tic-tabu a eco:Rubrica ;
     rdfs:label "Tic & Tabu"@it .
 
-res:libro-la-struttura-assente a eco:LibroRaccolta,
-        fabio:Book ;
-    rdfs:label "La struttura assente (1980)"@it ;
-    eco:cittaDiPubblicazione "Milano"@it ;
-    eco:tipoLibro "raccolta"@it ;
-    prism:publicationDate "1980"^^xsd:gYear ;
-    dcterms:creator res:persona-umberto-eco ;
-    dcterms:publisher "Bompiani"@it ;
-    dcterms:title "La struttura assente (1980)"@it ;
-    frbr:part res:capitolo-non-collegato-la-struttura-assente-il-segnale-e-il-senso,
-        res:capitolo-non-collegato-la-struttura-assente-la-funzione-e-il-segno,
-        res:capitolo-non-collegato-la-struttura-assente-lo-sguardo-discreto ;
-    rdfs:comment "Edizione 1980 (l'indice mostrato è quello di questa edizione); prima edizione: 1968, Collana Nuovi Saggi Italiani, n. 1. Editore e città dell'edizione 1980 assunti uguali a quelli della prima (da confermare). Su OPAC SBN risulta la 7ª ed. (Bompiani, 1991); la 1ª ed. del 1968 non ha una scheda individuale in SBN."@it ;
-    rdfs:seeAlso <https://opac.sbn.it/en/risultati-ricerca-avanzata/-/opac-adv/index/1/ITICCURMS1432303?fieldvalue%5B1%5D=la+struttura+assente+eco&fieldaccess%5B1%5D=Keywords%3A1016&fieldstruct%5B1%5D=ricerca.parole_tutte%3A4%3D6&struct%3A1001=ricerca.parole_almeno_una%3A%40or%40> .
-
 res:rivista-filosofia a fabio:Journal ;
     rdfs:label "Filosofia"@it ;
     dcterms:title "Filosofia"@it ;
@@ -36765,6 +36851,21 @@ eco:LibroRaccolta a owl:Class ;
     rdfs:comment "Raccolta di saggi/articoli propri di Eco i cui «capitoli» sono a tutti gli effetti articoli ripubblicati (collegati con prism:isVersionOf). Corrisponde a eco:tipoLibro \"raccolta\"."@it ;
     rdfs:subClassOf fabio:Book .
 
+res:libro-la-struttura-assente a eco:LibroRaccolta,
+        fabio:Book ;
+    rdfs:label "La struttura assente"@it ;
+    eco:cittaDiPubblicazione "Milano"@it ;
+    eco:tipoLibro "raccolta"@it ;
+    prism:publicationDate "1968"^^xsd:gYear ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:publisher "Bompiani"@it ;
+    dcterms:title "La struttura assente"@it ;
+    frbr:part res:capitolo-non-collegato-la-struttura-assente-il-segnale-e-il-senso,
+        res:capitolo-non-collegato-la-struttura-assente-la-funzione-e-il-segno,
+        res:capitolo-non-collegato-la-struttura-assente-lo-sguardo-discreto ;
+    rdfs:comment "Prima edizione: 1968, Collana Nuovi Saggi Italiani, n. 1. Nel sito il libro è uno solo (anno della prima edizione); le edizioni di cui si ha l'indice (1968 e 1980) sono due indici dello stesso libro (eco:edizioneIndice). Editore e città dell'edizione 1980 assunti uguali a quelli della prima (da confermare). Su OPAC SBN risulta la 7ª ed. (Bompiani, 1991); la 1ª ed. del 1968 non ha una scheda individuale in SBN."@it ;
+    rdfs:seeAlso <https://opac.sbn.it/en/risultati-ricerca-avanzata/-/opac-adv/index/1/ITICCURMS1432303?fieldvalue%5B1%5D=la+struttura+assente+eco&fieldaccess%5B1%5D=Keywords%3A1016&fieldstruct%5B1%5D=ricerca.parole_tutte%3A4%3D6&struct%3A1001=ricerca.parole_almeno_una%3A%40or%40> .
+
 res:rivista-almanacco-del-bibliofilo a fabio:Journal ;
     rdfs:label "Almanacco del bibliofilo"@it ;
     dcterms:title "Almanacco del bibliofilo"@it ;
@@ -36807,7 +36908,7 @@ res:rubrica-quando-dire-e-fare a eco:Rubrica ;
 
 eco:Rubrica a owl:Class ;
     rdfs:label "Rubrica"@it ;
-    rdfs:comment "Sezione/rubrica fissa di un periodico (es. «La bustina di Minerva» su L'Espresso). Classe originale del progetto: nessun vocabolario riusato tratta le rubriche giornalistiche come entità a sé stanti."@it .
+    rdfs:comment "Sezione/rubrica fissa di un periodico (es. «La bustina di minerva» su L'Espresso). Classe originale del progetto: nessun vocabolario riusato tratta le rubriche giornalistiche come entità a sé stanti."@it .
 
 eco:CapitoloNonCollegato a owl:Class ;
     rdfs:label "Capitolo non collegato"@it ;
@@ -36971,13 +37072,13 @@ res:rivista-rivista-di-estetica a fabio:Journal ;
 
 res:libro-la-bustina-di-minerva a eco:LibroRaccolta,
         fabio:Book ;
-    rdfs:label "La bustina di Minerva"@it ;
+    rdfs:label "La bustina di minerva"@it ;
     eco:cittaDiPubblicazione "Milano"@it ;
     eco:tipoLibro "raccolta"@it ;
     prism:publicationDate "2000"^^xsd:gYear ;
     dcterms:creator res:persona-umberto-eco ;
     dcterms:publisher "Bompiani"@it ;
-    dcterms:title "La bustina di Minerva"@it ;
+    dcterms:title "La bustina di minerva"@it ;
     frbr:part res:capitolo-non-collegato-la-bustina-di-minerva-come-scrivere-bene,
         res:capitolo-non-collegato-la-bustina-di-minerva-dell-importanza-delle-lettere-maiuscole,
         res:capitolo-non-collegato-la-bustina-di-minerva-kosovo,
@@ -37008,7 +37109,7 @@ eco:VoceIndice a owl:Class ;
     rdfs:comment "Una voce dell'indice di un libro: un capitolo, nella posizione in cui compare nell'indice, con il titolo che ha nell'indice. Non è una relazione di riuso del testo: è l'appartenenza del capitolo all'indice del volume."@it .
 
 res:rubrica-la-bustina-di-minerva a eco:Rubrica ;
-    rdfs:label "La bustina di Minerva"@it .
+    rdfs:label "La bustina di minerva"@it .
 
 res:rivista-l-espresso a fabio:Journal ;
     rdfs:label "L'Espresso"@it ;

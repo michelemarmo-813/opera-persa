@@ -378,7 +378,7 @@
 
         <h2>Come sono organizzati i dati</h2>
         <p>I dati sono descritti in RDF (vedi il glossario). Sono rappresentati questi elementi: gli <strong>articoli</strong> (di rivista o di quotidiano), le <strong>testate</strong>,
-        i <strong>libri</strong> e le <strong>voci d'indice</strong> dei volumi; le <strong>rubriche</strong> (per esempio «La bustina di Minerva») e la persona <strong>Umberto Eco</strong>.
+        i <strong>libri</strong> e le <strong>voci d'indice</strong> dei volumi; le <strong>rubriche</strong> (per esempio «La bustina di minerva») e la persona <strong>Umberto Eco</strong>.
         I libri sono di tre categorie: <strong>raccolta</strong> (saggi e articoli di Eco), <strong>romanzo</strong> e <strong>libro non raccolta</strong>.</p>
         <p>Fra le pubblicazioni esistono due sole relazioni: la <strong>ristampa</strong> (un articolo riprodotto in un volume) e l'<strong>estratto</strong> (un articolo che riprende brani di un libro, dal libro alla rivista).
         Ogni articolo è inoltre legato alla propria testata. Un articolo può avere più ristampe, per esempio in diverse raccolte.</p>
@@ -3744,7 +3744,7 @@ let ordinaLibriPer = "anno";   // titolo | anno (default "anno" dal 2026-10-20)
 // [EDIZIONI-NON-CARICATE] Edizioni di cui si conosce l'esistenza ma di cui non c'e' (ancora) l'indice:
 // nell'elenco il libro porta l'anno di questa edizione (la prima) e nella scheda compare un pulsante
 // spento e non cliccabile. Per annullare: svuotare questa tabella.
-const EDIZIONI_NON_CARICATE = { "La struttura assente": 1968 };
+const EDIZIONI_NON_CARICATE = {};   // (2026-10-21) vuota: «La struttura assente» (1968) ora ha il suo indice (vedi INDICI PER EDIZIONE)
 
 function raggruppaLibriPerElenco(libri){
   const gruppi = {};
@@ -3930,6 +3930,43 @@ function campiFonteIndiceHTML(voce){
   return "<div class='campo campo-stato-voce'><b>Informazioni sull'articolo originale</b></div>" + colonneHTML(sx, dx) +
          (notaOk ? "<div class='campo campo-largo'><b>Note:</b> " + escHtmlIndice(notaOk) + "</div>" : "");
 }
+/* ----------------------------------------------------------------------
+   INDICI PER EDIZIONE (2026-10-21) - un libro con piu' indici (uno per edizione) resta UN solo nodo
+   nel grafo e un solo libro in Raccolte (oggi «La struttura assente», anno della prima edizione:
+   1968; indici 1968 e 1980). Ogni voce di DATI.indici[libro] porta il campo `edizione` (anno,
+   null per i libri con un solo indice). Nella scheda compare un pulsante per ciascuna edizione
+   (come per Diario minimo e Opera aperta): all'apertura e' scelta la piu' antica; nelle schede dei
+   capitoli presenti anche nell'altra edizione, «Ripubblicato anche in:» rimanda a quell'edizione.
+   ---------------------------------------------------------------------- */
+let edizioneIndiceAttiva = null, edizioneIndiceLibroId = null;
+function edizioniIndiceDiLibro(libro){
+  const voci = (typeof DATI.indici !== "undefined" && DATI.indici && DATI.indici[libro.id]) || [];
+  const eds = Array.from(new Set(voci.map(v => v.edizione).filter(Boolean))).sort();
+  return eds.length ? eds : null;
+}
+function vociIndiceAttive(libro){
+  const voci = (typeof DATI.indici !== "undefined" && DATI.indici) ? DATI.indici[libro.id] : null;
+  if(!voci) return null;
+  const eds = edizioniIndiceDiLibro(libro);
+  if(!eds) return voci;
+  if(edizioneIndiceLibroId !== libro.id || !eds.includes(edizioneIndiceAttiva)){ edizioneIndiceLibroId = libro.id; edizioneIndiceAttiva = eds[0]; }
+  return voci.filter(v => v.edizione === edizioneIndiceAttiva);
+}
+// Scheda di un capitolo: come per le edizioni di Diario minimo, «Ripubblicato anche in:» elenca le altre
+// edizioni in cui il capitolo compare (stesso titolo in indice), con lo stesso formato «Titolo (Città: Editore, anno)».
+function campiVoceIndiceConEdizioniHTML(voce, idLibro){
+  const base = campiVoceIndiceHTML(voce, idLibro);
+  if(!voce.edizione || !libroAttivo) return base;
+  const altre = ((DATI.indici && DATI.indici[libroAttivo.id]) || []).filter(v => v.edizione && v.edizione !== voce.edizione &&
+    v.stato !== "introduzione" && titoloRigaUguale(v.titolo, voce.titolo)).map(v => v.edizione);
+  const eds = Array.from(new Set(altre)).sort();
+  if(!eds.length) return base;
+  const l = libroAttivo;
+  const elenco = eds.map(ed => "<span class='link-articolo' data-vai-edizione=\"" + ed + "\">" + etichettaLibroSenzaAnnoRipetuto(l) + "</span>" +
+    (l.editore ? " (" + (l.citta ? l.citta + ": " : "") + l.editore + ", " + ed + ")" : " (" + ed + ")")).join(", ");
+  return base + "<div class='campo'><b>Ripubblicato anche in:</b> " + elenco + "</div>";
+}
+
 function campiVoceIndiceHTML(voce, idLibro){
   // Regola per TUTTI gli inediti: un capitolo dichiarato inedito riporta solo
   // la dicitura «Inedito», nient'altro (nessuna etichetta, nessun «N.D.»).
@@ -3989,7 +4026,7 @@ function attivaEspansioneInlineVoce(riga, voce, colspan){
   trDettagli.dataset.per = chiave;
   const td = document.createElement("td");
   td.colSpan = colspan;
-  td.innerHTML = campiVoceIndiceHTML(voce, libroAttivo ? libroAttivo.id : null);
+  td.innerHTML = campiVoceIndiceConEdizioniHTML(voce, libroAttivo ? libroAttivo.id : null);
   trDettagli.appendChild(td);
   riga.after(trDettagli);
   trDettagli.querySelectorAll("[data-vai-periodico]").forEach(el=>{
@@ -4000,6 +4037,10 @@ function attivaEspansioneInlineVoce(riga, voce, colspan){
   });
   trDettagli.querySelectorAll("[data-vai-libro]").forEach(el=>{
     el.addEventListener("click", (ev)=>{ ev.stopPropagation(); vaiALibro(el.dataset.vaiLibro); });
+  });
+  // altra edizione dello stesso libro (INDICI PER EDIZIONE): stesso comportamento del rimando fra edizioni di Diario minimo
+  trDettagli.querySelectorAll("[data-vai-edizione]").forEach(el=>{
+    el.addEventListener("click", (ev)=>{ ev.stopPropagation(); edizioneIndiceAttiva = el.dataset.vaiEdizione; disegnaDettaglioLibro(); });
   });
   // titolo dell'articolo originale -> scheda nella pagina "Articoli"
   trDettagli.querySelectorAll("[data-vai-scheda-articolo]").forEach(el=>{
@@ -4116,6 +4157,21 @@ function disegnaDettaglioLibro(){
       });
       edizioniBox.appendChild(b);
     });
+  } else if(edizioniIndiceDiLibro(libroAttivo)){
+    // un solo libro con piu' indici (una per edizione): un pulsante per edizione, la piu' antica e' quella di partenza
+    vociIndiceAttive(libroAttivo);
+    edizioniBox.style.display = "flex";
+    edizioniIndiceDiLibro(libroAttivo).forEach(ed=>{
+      const b = document.createElement("button");
+      b.className = "btn-edizione" + (ed === edizioneIndiceAttiva ? " attivo" : "");
+      b.textContent = ed;
+      b.addEventListener("click", ()=>{
+        if(ed === edizioneIndiceAttiva) return;
+        edizioneIndiceAttiva = ed;
+        disegnaDettaglioLibro();
+      });
+      edizioniBox.appendChild(b);
+    });
   } else {
     edizioniBox.style.display = "none";
   }
@@ -4123,7 +4179,9 @@ function disegnaDettaglioLibro(){
   let meta = "";
   if(libroAttivo.editore) meta += "<b>Editore:</b> " + libroAttivo.editore + "&emsp;";
   if(libroAttivo.citta) meta += "<b>Città:</b> " + libroAttivo.citta + "&emsp;";
-  if(libroAttivo.anno) meta += "<b>Anno di pubblicazione:</b> " + libroAttivo.anno;
+  // (2026-10-21) Libro con piu' indici (una per edizione): l'anno mostrato e' quello dell'edizione selezionata
+  const annoMostrato = edizioniIndiceDiLibro(libroAttivo) ? edizioneIndiceAttiva : libroAttivo.anno;
+  if(annoMostrato) meta += "<b>Anno di pubblicazione:</b> " + annoMostrato;
   if(libroAttivo.link) meta += "&emsp;<a href='" + libroAttivo.link + "' target='_blank'>OPAC SBN</a>";
   document.getElementById("ristampe-libro-meta").innerHTML = meta;
 
@@ -4173,7 +4231,7 @@ function disegnaDettaglioLibro(){
   // posto della tabella degli articoli ripubblicati (e dei capitoli senza
   // fonte, che in questa vista compaiono come "Inedito / N.D."). Gli altri
   // libri proseguono qui sotto, invariati.
-  const indiceLibro = (typeof DATI.indici !== "undefined" && DATI.indici) ? DATI.indici[libroAttivo.id] : null;
+  const indiceLibro = vociIndiceAttive(libroAttivo);
   if(indiceLibro && indiceLibro.length){
     disegnaIndiceVolume(indiceLibro);
     return;
@@ -4391,7 +4449,7 @@ const BIOGRAFIA_ECO = {
   1980: "Esordisce nella narrativa con «Il nome della rosa», che diventerà un bestseller internazionale tradotto in oltre 40 lingue e pubblicato in oltre 60 paesi, vincitore del Premio Strega.",
   1983: "Pubblica «Sette anni di desiderio».",
   1984: "Pubblica «Semiotica e filosofia del linguaggio», che raccoglie le voci \"segno\", \"significato\", \"simbolo\", \"metafora\" e \"codice\" scritte per l'Enciclopedia Einaudi.",
-  1985: "Comincia a tenere, in ultima pagina de L'Espresso, la rubrica «La bustina di Minerva», che scriverà fino al 2016.",
+  1985: "Comincia a tenere, in ultima pagina de L'Espresso, la rubrica «La bustina di minerva», che scriverà fino al 2016.",
   1988: "Fonda il Dipartimento della Comunicazione dell'Università di San Marino; pubblica il suo secondo romanzo, «Il pendolo di Foucault», ambientato anche sulle tracce dei Templari nella Forêt d'Orient francese.",
   1990: "Pubblica «I limiti dell'interpretazione»; tiene le Tanner Lectures all'Università di Cambridge.",
   1993: "Pubblica «La ricerca della lingua perfetta nella cultura europea»; tiene le Norton Lectures a Harvard.",
