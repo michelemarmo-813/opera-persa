@@ -3,6 +3,12 @@
 Registro delle versioni del progetto (sito + dati RDF). Copre l'intero progetto; per lo storico delle sole modifiche
 allo schema dell'ontologia, vedi anche il commento "STORICO VERSIONI" in `grafo_eco/ontologia_eco.ttl`.
 
+## 2026-10-22 (85) — Indice di «Pape Satàn Aleppe»: tolta una parola dal titolo di una voce
+
+Backup `20261022-2125` (suffisso `_pape_satan`: `Indice.xlsx` anche in `sorgenti/backup/`, `dati.js`, `query_esempio.js`, `grafo_completo_ttl.js`, `posizioni_iniziali.js`, `grafo_dati.json`, `istanze_espresso.ttl`, `indici_volumi.csv`, CHANGELOG, Word, `dati_rdf/`). mtime di `Indice.xlsx` 19:16 UTC (modificato da te dopo la mia ultima sessione sul file).
+- **Modifica rilevata** (confronto cella per cella con il backup precedente): unica differenza di contenuto, foglio «Pape Satàn Aleppe», cella A150: «"Rasista a mi? Ma se l'è lu che l'è negher!" Controlla» → «"Rasista a mi? Ma se l'è lu che l'è negher!"» (tolta la parola «Controlla», un appunto di lavoro).
+- **Rigenerazione**: catena completa. `indici_volumi.csv`: una sola riga cambiata (Pape Satàn Aleppe, posizione 148); la voce resta collegata allo stesso articolo (JA1996, «"Rasista mi? ma se l'è lü che l'è negher!"», L'Espresso, 20 novembre 2008). Controllo di collegamento di Pape Satàn Aleppe invariato: 177 righe, 174 articoli, 0 non abbinate, 0 discrepanze. 593 voci in 15 libri; nodi 2776 e archi 3180 invariati, `posizioni_iniziali.js` ancora valido. «Controlla» assente da `dati.js`.
+
 ## 2026-10-22 (84) — Link ACNP mancanti: «Fra Marx e Pavlov» e «Questo secolo è stato un infarto»
 
 Backup `20261022-2030` (suffisso `_link_acnp`: `Articoli.xlsx` anche in `sorgenti/backup/`, i due CSV di `dati_estratti/tutto/` anche in `tutto/backup/`, `dati.js`, `query_esempio.js`, `grafo_completo_ttl.js`, `posizioni_iniziali.js`, `grafo_dati.json`, `istanze_espresso.ttl`, CHANGELOG, Word, `dati_rdf/`). mtime di `Articoli.xlsx` 18:14 UTC (mio salvataggio precedente).

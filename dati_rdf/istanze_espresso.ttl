@@ -28182,12 +28182,12 @@ res:indice-pape-satan-aleppe-147 a eco:VoceIndice ;
     eco:titoloInIndice "My heart belongs to daddy"@it .
 
 res:indice-pape-satan-aleppe-148 a eco:VoceIndice ;
-    rdfs:label "\"Rasista a mi? Ma se l'è lu che l'è negher!\" Controlla"@it ;
+    rdfs:label "\"Rasista a mi? Ma se l'è lu che l'è negher!\""@it ;
     eco:articoloCorrispondente res:articolo-ja1996 ;
     eco:nelIndiceDi res:libro-pape-satan-aleppe ;
     eco:posizioneInIndice 148 ;
     eco:statoVoce "ristampa" ;
-    eco:titoloInIndice "\"Rasista a mi? Ma se l'è lu che l'è negher!\" Controlla"@it .
+    eco:titoloInIndice "\"Rasista a mi? Ma se l'è lu che l'è negher!\""@it .
 
 res:indice-pape-satan-aleppe-149 a eco:VoceIndice ;
     rdfs:label "Berlusconi e Pistorius"@it ;
