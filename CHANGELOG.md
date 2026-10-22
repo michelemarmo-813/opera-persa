@@ -3,6 +3,28 @@
 Registro delle versioni del progetto (sito + dati RDF). Copre l'intero progetto; per lo storico delle sole modifiche
 allo schema dell'ontologia, vedi anche il commento "STORICO VERSIONI" in `grafo_eco/ontologia_eco.ttl`.
 
+## 2026-10-22 (84) — Link ACNP mancanti: «Fra Marx e Pavlov» e «Questo secolo è stato un infarto»
+
+Backup `20261022-2030` (suffisso `_link_acnp`: `Articoli.xlsx` anche in `sorgenti/backup/`, i due CSV di `dati_estratti/tutto/` anche in `tutto/backup/`, `dati.js`, `query_esempio.js`, `grafo_completo_ttl.js`, `posizioni_iniziali.js`, `grafo_dati.json`, `istanze_espresso.ttl`, CHANGELOG, Word, `dati_rdf/`). mtime di `Articoli.xlsx` 18:14 UTC (mio salvataggio precedente).
+- **Origine**: differenze di link ACNP fra `Nuove_date.xlsx` e `Articoli.xlsx` (4 casi), decise da Michele:
+  - «Fra Marx e Pavlov» (L'Espresso Colore, 1971, n. 47): aggiunto `https://acnpsearch.unibo.it/journal/32817` (il link di L'Espresso Colore).
+  - «Questo secolo è stato un infarto» (L'Espresso, 1990, n. 11, supplemento): aggiunto `https://acnpsearch.unibo.it/journal/53484` (il link de L'Espresso).
+  - «Inventiamo la nuova scuola» (Genius, 1984): resta `https://acnpsearch.unibo.it/journal/72710`, indicato da Michele come giusto (nessuna modifica; il `971251` del file nuovo non è stato usato).
+  - «Ultime notizie» (Res publica, 1979): il link al PDF di Eugenio Carmi non è stato aggiunto, su richiesta.
+- **Fonte**: `sorgenti/Articoli.xlsx`, foglio journal_article, colonna «ACNP» (valore e collegamento ipertestuale, stesso stile delle altre righe), 2 celle.
+- **Rigenerazione**: dry run (2 MODIFICATO, solo `rivista_link_acnp`), `--applica`, catena completa. Nodi e archi invariati; ID invariati, `posizioni_iniziali.js` ancora valido.
+
+## 2026-10-22 (83) — Date de L'Espresso e de L'Espresso Colore da `Nuove_date.xlsx`
+
+Backup `20261022-2025` (suffisso `_date_colore`: `Articoli.xlsx` anche in `sorgenti/backup/`, i due CSV di `dati_estratti/tutto/` anche in `tutto/backup/`, `dati.js`, `query_esempio.js`, `grafo_completo_ttl.js`, `posizioni_iniziali.js`, `grafo_dati.json`, `istanze_espresso.ttl`, CHANGELOG, Word, `dati_rdf/`). mtime di `Articoli.xlsx` 16:55 UTC (mio salvataggio precedente).
+- **Origine**: file `Nuove_date.xlsx` (fogli journal_article, newspaper_article, book_chapter), confrontato con `Articoli.xlsx` per titolo+anno (confronto completo comunicato a parte). Applicata, su richiesta, solo la parte «date de L'Espresso e de L'Espresso Colore»: **100 date**.
+  - **42** date nuove de L'Espresso Colore (tutte domeniche); ora nessun articolo de L'Espresso Colore è senza data.
+  - **52** date nuove de L'Espresso; ora nessun articolo de L'Espresso è senza data (prima 52).
+  - **6** correzioni de L'Espresso (data attuale → nuova): «Falsi, copie e omaggi» n. 37, 1989-09-18 → 1988-09-18; «La sorpresa dell'ovvio» n. 38, 1990-09-25 → 1988-09-25; «Il mistero del 2000» n. 2, 2001-02-11 → 2001-01-11; «Basta con gli intellettuali!» n. 4, 2001-02-25 → 2001-01-25; «Prego, lasciateli esagerare un po'» n. 31, 1977-09-07 → 1977-08-07; «Horvath e Brecht: chi dei due si dispera meglio» n. 10, 1974-03-01 → 1974-03-10.
+- **Non applicato** (resta com'era): le altre differenze del file (link ACNP, pseudonimi, nota «Altre ristampe» su Joyce, numeri di Marcatré 8/9/10, titoli/anni, quotidiani) e la data di «Lettura di Steve Canyon», che il file non ha.
+- **Registro**: `grafo_eco/dati_estratti/date_espresso_colore_20261022.csv` (100 righe: riga di `Articoli.xlsx`, titolo, anno, rivista, numero, data attuale, data nuova, tipo). Ogni riga è verificata (titolo, anno, rivista, numero e data attuale) prima della scrittura.
+- **Rigenerazione**: dry run (100 MODIFICATO, tutti `data_completa`), `--applica`, catena completa. Nodi 2776 e archi 3180 invariati; ID invariati, quindi `posizioni_iniziali.js` ancora valido (nessun ricalcolo, nessun avviso nel browser). Verifica Playwright: nessun errore JS; «Il mistero del 2000» → «Data: 11 gennaio 2001», «Lady Barbara» (L'Espresso Colore) → «Data: 11 ottobre 1970». Nota: `aggiornamento_da_articoli_20261022.csv` è sovrascritto a ogni esecuzione dello stesso giorno e contiene ora solo queste 100 righe (le voci 79, 81 e 82 restano documentate qui).
+
 ## 2026-10-22 (82) — Tolti i doppioni di «Un giorno in pretura senza telecamere» e «Uomini e Gnù» (L'Espresso)
 
 Backup `20261022-1905` (suffisso `_doppioni_pretura_gnu`: `Articoli.xlsx` anche in `sorgenti/backup/`, `aggiorna_da_articoli.py`, i due CSV di `dati_estratti/tutto/` anche in `tutto/backup/`, `dati.js`, `query_esempio.js`, `grafo_completo_ttl.js`, `posizioni_iniziali.js`, `grafo_dati.json`, `istanze_espresso.ttl`, `indici_volumi.csv`, CHANGELOG, Word, `dati_rdf/`). mtime di `Articoli.xlsx` 16:51 UTC (mio salvataggio precedente).
