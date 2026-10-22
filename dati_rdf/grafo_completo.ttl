@@ -3553,7 +3553,7 @@ res:articolo-ja0351 a fabio:JournalArticle ;
     prism:publicationDate "1965"^^xsd:gYear ;
     dcterms:creator res:persona-umberto-eco ;
     dcterms:title "Il fumetto intellettuale"@it ;
-    frbr:partOf res:rivista-comics-salone-internazionale-dei-comics-salon-international-des-bandes-dessinees-international-exhibition-of-comics-bordighera .
+    frbr:partOf res:rivista-comics-mensile-di-critica-storia-e-informazione-sul-cartooning .
 
 res:articolo-ja0352 a fabio:JournalArticle ;
     rdfs:label "Il linguaggio e il fumetto"@it ;
@@ -3561,7 +3561,7 @@ res:articolo-ja0352 a fabio:JournalArticle ;
     prism:publicationDate "1965"^^xsd:gYear ;
     dcterms:creator res:persona-umberto-eco ;
     dcterms:title "Il linguaggio e il fumetto"@it ;
-    frbr:partOf res:rivista-comics-salone-internazionale-dei-comics-salon-international-des-bandes-dessinees-international-exhibition-of-comics-bordighera .
+    frbr:partOf res:rivista-comics-mensile-di-critica-storia-e-informazione-sul-cartooning .
 
 res:articolo-ja0353 a fabio:JournalArticle ;
     rdfs:label "Le forbici del borghese"@it ;
@@ -36307,9 +36307,9 @@ res:rivista-civilta-delle-macchine a fabio:Journal ;
     dcterms:title "Civiltà delle macchine"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/1222> .
 
-res:rivista-comics-salone-internazionale-dei-comics-salon-international-des-bandes-dessinees-international-exhibition-of-comics-bordighera a fabio:Journal ;
-    rdfs:label "Comics : Salone internazionale dei comics, salon international des bandes déssinées, international exhibition of comics, Bordighera"@it ;
-    dcterms:title "Comics : Salone internazionale dei comics, salon international des bandes déssinées, international exhibition of comics, Bordighera"@it ;
+res:rivista-comics-mensile-di-critica-storia-e-informazione-sul-cartooning a fabio:Journal ;
+    rdfs:label "Comics : mensile di critica, storia e informazione sul cartooning"@it ;
+    dcterms:title "Comics : mensile di critica, storia e informazione sul cartooning"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/66351> .
 
 res:rivista-comunicazioni-di-massa a fabio:Journal ;

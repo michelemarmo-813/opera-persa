@@ -3,6 +3,13 @@
 Registro delle versioni del progetto (sito + dati RDF). Copre l'intero progetto; per lo storico delle sole modifiche
 allo schema dell'ontologia, vedi anche il commento "STORICO VERSIONI" in `grafo_eco/ontologia_eco.ttl`.
 
+## 2026-10-22 (79) — Rivista «Comics»: titolo e link secondo ACNP
+
+Backup `20261022-1410` (suffisso `_comics`: `Articoli.xlsx` anche in `sorgenti/backup/`, i due CSV di `dati_estratti/tutto/` anche in `tutto/backup/`, `dati.js`, `query_esempio.js`, `grafo_completo_ttl.js`, `posizioni_iniziali.js`, `grafo_dati.json`, `istanze_espresso.ttl`, CHANGELOG, Word, `dati_rdf/`).
+- **Su richiesta**: la rivista «Comics : Salone internazionale dei comics, salon international des bandes déssinées, international exhibition of comics, Bordighera» è ora «Comics : mensile di critica, storia e informazione sul cartooning» (notazione ACNP), link ACNP https://acnpsearch.unibo.it/journal/66351 (nelle righe era già questo: ribadito).
+- **Fonte**: `sorgenti/Articoli.xlsx`, foglio journal_article, colonne «Rivista» e «ACNP», 2 righe: «Il fumetto intellettuale» e «Il linguaggio e il fumetto» (1965).
+- **Rigenerazione**: `aggiorna_da_articoli.py` (dry run: 2 MODIFICATO, solo il campo rivista), `--applica`, catena completa. Nodi 2779 e archi 3183 invariati; l'ID del nodo rivista cambia (deriva dal nome), quindi `posizioni_iniziali.js` ricalcolato nel cloud (66 s; 604 e 189 nodi) e copiato sul Mac. La prima copia sul Mac era rimasta quella vecchia (rilevato dall'avviso della pagina «posizioni non corrispondenti»): ricopiata e verificata con checksum. Verifica Playwright: nessun errore JS né avviso sulle posizioni, scheda della rivista con il nuovo titolo, «Bordighera» assente da `dati.js`.
+
 ## 2026-10-21 (78) — Supplementi accorpati alla testata: Cacopedia → Alfabeta, supplemento a Media Forum → Media Forum
 
 Backup `20261021-2230` (suffisso `_supplementi`: `Articoli.xlsx` anche in `sorgenti/backup/`, i due CSV di `dati_estratti/tutto/` anche in `tutto/backup/`, `dati.js`, `query_esempio.js`, `grafo_completo_ttl.js`, `posizioni_iniziali.js`, `grafo_dati.json`, `istanze_espresso.ttl`, `indici_volumi.csv`, CHANGELOG, Word, `dati_rdf/`). mtime di `Articoli.xlsx` 15:08, nessuna modifica di altre sessioni.
