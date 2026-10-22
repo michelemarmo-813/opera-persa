@@ -3,6 +3,16 @@
 Registro delle versioni del progetto (sito + dati RDF). Copre l'intero progetto; per lo storico delle sole modifiche
 allo schema dell'ontologia, vedi anche il commento "STORICO VERSIONI" in `grafo_eco/ontologia_eco.ttl`.
 
+## 2026-10-22 (80) — L'Espresso: 59 date mancanti e 8 articoli in «Letture e idee» da `Date_espresso.csv`
+
+Backup `20261022-1745` (suffisso `_date_espresso`: `Articoli.xlsx` anche in `sorgenti/backup/`, i due CSV di `dati_estratti/tutto/` anche in `tutto/backup/`, `dati.js`, `query_esempio.js`, `grafo_completo_ttl.js`, `posizioni_iniziali.js`, `grafo_dati.json`, `istanze_espresso.ttl`, CHANGELOG, Word, `dati_rdf/`). mtime di `Articoli.xlsx` 12:06 UTC (mio salvataggio precedente).
+- **Origine**: il CSV allegato (2250 righe, codifica Windows-1252, stesse colonne di `Articoli.xlsx`). Confronto con il foglio journal_article per titolo normalizzato + anno + numero: i 1624 articoli de L'Espresso del sito corrispondono tutti, uno a uno. Date già presenti: nessuna discordanza (1513 uguali). Numeri: nessuna discordanza.
+- **Date**: 59 articoli senza data nel nostro file hanno la data nel CSV → scritta in `Articoli.xlsx` (colonna «Data», stesso formato delle altre). 58 sono domeniche; un'eccezione, «La farfalla pedagogica» (n. 51, 1966), il cui 15/12/1966 è un giovedì: inserita com'è nel CSV, da controllare. Restano 52 articoli de L'Espresso senza data anche nel CSV.
+- **Rubrica «Letture e idee»**: 8 articoli senza rubrica nel nostro file la hanno nel CSV → colonna «Rubrica» (da 51 a 59 articoli): «Bandiere e matematica», «Da Balzac a Re Vittorio», «I fumetti di Napoleone III», «La sigaretta dell'indiano», «Le alcove proibite di Montanelli», «Le reliquie di Joyce», «Potenza della termodinamica», «Un fumetto per consumi alto-borghesi». Nessun'altra rubrica discordante.
+- **Non importato**: «Che bell'errore!» (2016, solo nel CSV): articolo uscito dopo la morte di Eco, escluso dal sito; la rubrica «La bustina di Minerva» del CSV (con M maiuscola) non è stata toccata, per la voce (73).
+- **Registro**: `grafo_eco/dati_estratti/date_espresso_e_letture_e_idee_20261022.csv` (59 righe: riga di `Articoli.xlsx`, titolo, anno, numero, data/rubrica inserita).
+- **Rigenerazione**: `aggiorna_da_articoli.py` (dry run: 67 MODIFICATO = 59 `data_completa` + 8 `rubrica`; poi `--applica`), catena completa. Nodi 2779 e archi 3183 invariati; ID invariati, `posizioni_iniziali.js` valido (nessun ricalcolo). Verifica Playwright: nessun errore JS né avviso sulle posizioni; 59 articoli in «Letture e idee», 52 senza data; la scheda di «Bandiere e matematica» mostra «Data: 19 marzo 1967» e «Rubrica: Letture e idee».
+
 ## 2026-10-22 (79) — Rivista «Comics»: titolo e link secondo ACNP
 
 Backup `20261022-1410` (suffisso `_comics`: `Articoli.xlsx` anche in `sorgenti/backup/`, i due CSV di `dati_estratti/tutto/` anche in `tutto/backup/`, `dati.js`, `query_esempio.js`, `grafo_completo_ttl.js`, `posizioni_iniziali.js`, `grafo_dati.json`, `istanze_espresso.ttl`, CHANGELOG, Word, `dati_rdf/`).
