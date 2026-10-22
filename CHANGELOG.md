@@ -3,6 +3,24 @@
 Registro delle versioni del progetto (sito + dati RDF). Copre l'intero progetto; per lo storico delle sole modifiche
 allo schema dell'ontologia, vedi anche il commento "STORICO VERSIONI" in `grafo_eco/ontologia_eco.ttl`.
 
+## 2026-10-22 (82) — Tolti i doppioni di «Un giorno in pretura senza telecamere» e «Uomini e Gnù» (L'Espresso)
+
+Backup `20261022-1905` (suffisso `_doppioni_pretura_gnu`: `Articoli.xlsx` anche in `sorgenti/backup/`, `aggiorna_da_articoli.py`, i due CSV di `dati_estratti/tutto/` anche in `tutto/backup/`, `dati.js`, `query_esempio.js`, `grafo_completo_ttl.js`, `posizioni_iniziali.js`, `grafo_dati.json`, `istanze_espresso.ttl`, `indici_volumi.csv`, CHANGELOG, Word, `dati_rdf/`). mtime di `Articoli.xlsx` 16:51 UTC (mio salvataggio precedente).
+- **Su richiesta**: per ciascuna coppia di doppioni è rimasto quello con più dati.
+  - «Un giorno in pretura senza telecamere» (26 marzo 1989): tolta la riga senza numero, pagina e rubrica (JA1223); resta quella della «Bustina di minerva» (n. 12, p. 266, JA1185).
+  - «Uomini e gnù» / «Uomini e Gnù» (8 marzo 1992): tolta la riga senza numero, in minuscolo («gnù»); resta «Uomini e Gnù», n. 10. Poiché il programma abbina per titolo normalizzato (maiuscole irrilevanti), l'unica riga rimasta è stata assegnata al primo ID, JA1391, e si toglie JA1392 (voce in `RIGHE_RIMOSSE_CONSAPEVOLMENTE`, con spiegazione): per il sito cambia solo l'ID interno, non i dati.
+- **Fonte**: `sorgenti/Articoli.xlsx`, foglio journal_article, righe 1248 e 1418 eliminate spostando a mano valori, stili e link ACNP (openpyxl `delete_rows` non sposta i link: vedi voce 81). Verifica riga per riga contro il backup: 0 differenze oltre alle due righe tolte.
+- **Rigenerazione**: dry run (2 RIMOSSO; 2 MODIFICATO su JA1391, titolo e numero, voluti), `--applica`, catena completa. Articoli 2621 → 2619, nodi 2778 → 2776, archi 3182 → 3180.
+- **Posizioni**: `posizioni_iniziali.js` ricalcolato per tutto il grafo (38 s; 604 e 189 nodi) e copiato sul Mac con verifica del checksum. Verifica Playwright: nessun errore JS né avviso sulle posizioni, nessun arco con estremi mancanti; «Un giorno in pretura…» (JA1185) e «Uomini e Gnù» (n. 10, 8 marzo 1992) presenti una sola volta.
+
+## 2026-10-22 (81) — Tolto il doppione incompleto di «Il potere e la gloria» (L'Espresso, 1987)
+
+Backup `20261022-1855` (suffisso `_doppione_potere`: `Articoli.xlsx` anche in `sorgenti/backup/`, `aggiorna_da_articoli.py`, i due CSV di `dati_estratti/tutto/` anche in `tutto/backup/`, `dati.js`, `query_esempio.js`, `grafo_completo_ttl.js`, `posizioni_iniziali.js`, `grafo_dati.json`, `istanze_espresso.ttl`, `indici_volumi.csv`, CHANGELOG, Word, `dati_rdf/`). mtime di `Articoli.xlsx` 15:37 UTC (mio salvataggio precedente).
+- **Su richiesta**: dei due articoli «Il potere e la gloria» (L'Espresso, 3 maggio 1987, p. 226) è stato tolto quello senza numero e senza rubrica (JA1110), doppione incompleto di quello della «Bustina di minerva» (n. 17, JA1074), che resta.
+- **Fonte**: `sorgenti/Articoli.xlsx`, foglio journal_article, riga 1138 eliminata. Attenzione tecnica: `delete_rows` di openpyxl NON sposta i collegamenti ipertestuali della colonna ACNP (952 celle), quindi un primo tentativo aveva sfalsato i link di tutte le righe successive (se ne è accorta la verifica: comparivano un articolo «nuovo» e un link ACNP spostato). Ripristinato dal backup e rifatto spostando a mano valore, stile e link; verifica riga per riga contro il backup: 0 differenze oltre alla riga tolta.
+- **Registro del progetto**: `aggiorna_da_articoli.py`, `RIGHE_RIMOSSE_CONSAPEVOLMENTE` ha ora la voce JA1110 con la motivazione (come per gli altri articoli tolti); dry run: solo `RIMOSSO` 1, poi `--applica` e catena completa.
+- **Effetto**: articoli 2622 → 2621, nodi 2779 → 2778, archi 3183 → 3182 (l'arco dell'articolo verso la sua rivista). `posizioni_iniziali.js` ricalcolato (38 s; 604 e 189 nodi) e copiato sul Mac con verifica del checksum. Verifica Playwright: nessun errore JS né avviso sulle posizioni; resta un solo «Il potere e la gloria», con «Data: 3 maggio 1987», «Numero: 17», «Rubrica: La bustina di minerva»; JA1110 assente da `dati.js`.
+
 ## 2026-10-22 (80) — L'Espresso: 59 date mancanti e 8 articoli in «Letture e idee» da `Date_espresso.csv`
 
 Backup `20261022-1745` (suffisso `_date_espresso`: `Articoli.xlsx` anche in `sorgenti/backup/`, i due CSV di `dati_estratti/tutto/` anche in `tutto/backup/`, `dati.js`, `query_esempio.js`, `grafo_completo_ttl.js`, `posizioni_iniziali.js`, `grafo_dati.json`, `istanze_espresso.ttl`, CHANGELOG, Word, `dati_rdf/`). mtime di `Articoli.xlsx` 12:06 UTC (mio salvataggio precedente).

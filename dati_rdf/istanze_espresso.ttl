@@ -10807,16 +10807,6 @@ res:articolo-ja1109 a fabio:JournalArticle ;
     dcterms:title "La notizia viene dal video"@it ;
     frbr:partOf res:rivista-l-espresso .
 
-res:articolo-ja1110 a fabio:JournalArticle ;
-    rdfs:label "Il potere e la gloria"@it ;
-    prism:coverDate "1987-05-03"^^xsd:date ;
-    prism:endingPage 226 ;
-    prism:publicationDate "1987"^^xsd:gYear ;
-    prism:startingPage 226 ;
-    dcterms:creator res:persona-umberto-eco ;
-    dcterms:title "Il potere e la gloria"@it ;
-    frbr:partOf res:rivista-l-espresso .
-
 res:articolo-ja1111 a fabio:JournalArticle ;
     rdfs:label "Intervento senza titolo"@it ;
     prism:coverDate "1987-05-03"^^xsd:date ;
@@ -12143,14 +12133,6 @@ res:articolo-ja1222 a fabio:JournalArticle ;
     prism:startingPage 266 ;
     dcterms:creator res:persona-umberto-eco ;
     dcterms:title "Paolo, Mario e Indiana Jones"@it ;
-    frbr:partOf res:rivista-l-espresso .
-
-res:articolo-ja1223 a fabio:JournalArticle ;
-    rdfs:label "Un giorno in pretura senza telecamere"@it ;
-    prism:coverDate "1989-03-26"^^xsd:date ;
-    prism:publicationDate "1989"^^xsd:gYear ;
-    dcterms:creator res:persona-umberto-eco ;
-    dcterms:title "Un giorno in pretura senza telecamere"@it ;
     frbr:partOf res:rivista-l-espresso .
 
 res:articolo-ja1224 a fabio:JournalArticle ;
@@ -13801,14 +13783,6 @@ res:articolo-ja1390 a fabio:JournalArticle ;
     frbr:partOf res:rivista-l-espresso .
 
 res:articolo-ja1391 a fabio:JournalArticle ;
-    rdfs:label "Uomini e gnù"@it ;
-    prism:coverDate "1992-03-08"^^xsd:date ;
-    prism:publicationDate "1992"^^xsd:gYear ;
-    dcterms:creator res:persona-umberto-eco ;
-    dcterms:title "Uomini e gnù"@it ;
-    frbr:partOf res:rivista-l-espresso .
-
-res:articolo-ja1392 a fabio:JournalArticle ;
     rdfs:label "Uomini e Gnù"@it ;
     prism:coverDate "1992-03-08"^^xsd:date ;
     prism:number "10" ;
