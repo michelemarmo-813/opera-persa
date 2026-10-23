@@ -350,10 +350,10 @@
         </ul>
         <h3>Articoli</h3>
         <p>Elenco di tutti gli articoli, consultabile per intero, per periodico o per rubrica. Si può cercare per titolo, limitare gli anni e ordinare
-        per data, titolo, periodico o rubrica. Un clic su una riga apre la scheda dell'articolo, con le eventuali ristampe.</p>
+        per data, titolo, periodico o rubrica. Un clic su una riga apre la scheda dell'articolo, con le eventuali ristampe. Cliccando sul titolo del libro in cui un articolo è stato ristampato si apre direttamente il capitolo corrispondente nell'indice del libro (nell'edizione giusta, se il libro ne ha più di una). Nelle note di un articolo i nomi delle riviste, dei quotidiani e dei libri presenti nel dataset sono scritti per esteso e sono collegamenti cliccabili: portano alla stessa destinazione degli altri nomi di testata del sito; un nome non presente nel dataset resta testo semplice.</p>
         <h3>Raccolte</h3>
         <p>Le raccolte curate da Eco, ordinabili per anno o per titolo. Ogni scheda riporta i dati bibliografici del volume e l'indice, capitolo per capitolo.
-        Un clic su un capitolo mostra le informazioni sull'articolo originale (testata, data, pagine e altre ristampe). Le introduzioni e le prefazioni sono elencate ma non hanno scheda.
+        Un clic su un capitolo mostra le informazioni sull'articolo originale (testata, data, pagine e altre ristampe); un clic sul titolo di un altro libro fra le ristampe apre il capitolo corrispondente di quel libro. Le introduzioni e le prefazioni sono elencate ma non hanno scheda.
         I capitoli senza articolo nel campione indicano, quando noti, la fonte originale oppure risultano inediti. Il pulsante «Focus sull'opera» apre un diagramma a imbuto:
         in alto gli articoli da cui il libro si è formato, ordinati per anno, in basso il volume.</p>
         <h3>Linea del tempo</h3>
@@ -658,7 +658,12 @@ function ripristinaStato(stato){
     const libro = TUTTI_LIBRI.find(l => l.id === stato.valore);
     if(libro && libroInRaccolte(libro.id)){
       libroAttivo = libro;
+      if(stato.edizione){ edizioneIndiceLibroId = libro.id; edizioneIndiceAttiva = String(stato.edizione); }
       disegnaElencoLibri(); disegnaDettaglioLibro();
+      if(stato.voce != null){
+        const v = ((DATI.indici && DATI.indici[libro.id]) || []).find(x => String(x.posizione) === String(stato.voce) && (!stato.edizione || x.edizione === String(stato.edizione)));
+        if(v) apriVoceIndice(v);
+      }
     }
   }
 }
@@ -790,6 +795,92 @@ function notaVisibile(t){
   if(tipo === "inglese" && NOTE_CONFIG.tipiAmmessi.indexOf("inglese") < 0) return false;
   return String(t).trim().length <= NOTE_CONFIG.lunghezzaMax;
 }
+/* ============================================================
+   NOTE CON NOMI CLICCABILI - UNA SOLA FUNZIONE: noteConLink(testo, artId)
+   Trasforma il testo di una nota in HTML: il testo viene prima "escapato" (nessuna iniezione),
+   poi i nomi di riviste, quotidiani e libri presenti nel dataset (DATI.nodes, gruppi rivista /
+   quotidiano / libro) diventano gli stessi collegamenti usati altrove nel sito
+   (span.link-articolo con data-vai-periodico oppure data-vai-libro [+ data-vai-capitolo]).
+   Si collega solo il nome (non le parole intorno); un nome non presente nel dataset resta testo.
+   NOTE_LINK_ESCLUSI elenca i nomi che sono anche parole comuni (mai collegati).
+   Il testo dei dati non cambia. Confronto robusto: maiuscole/minuscole, accenti, apostrofi dritti e
+   tipografici; il nome deve essere una parola intera; i nomi piu' lunghi vincono sui piu' corti;
+   nessun collegamento dentro un altro. Non si collegano forme senza articolo ne' nomi ambigui
+   (es. «Il nome della rosa» senza anno: due nodi). I libri si collegano solo se hanno la scheda in Raccolte.
+   TABELLA MANUALE (vuota): per forzare una forma a un nodo: {forma:"...", nodo:"<label esatta del nodo>"}.
+   ============================================================ */
+const NOTE_LINK_MANUALI = [];
+// Nomi di testata che sono anche parole comuni o nomi propri: NON si collegano mai in automatico
+// (il testo resta semplice). Per collegarne uno basta toglierlo da qui o metterlo in NOTE_LINK_MANUALI.
+const NOTE_LINK_ESCLUSI = ["Filosofia","Leggere","Pianeta","Sette","Risorgimento","Rinascita","Itinerari",
+  "Qualificazione","Quindici","Intersezioni","Linus","Pirelli","Domus","Telema","QUERY"];
+// Confronto: accenti e apostrofi tipografici si ignorano. I nomi di 3 o piu' parole si confrontano senza
+// distinguere maiuscole e minuscole; quelli di 1-2 parole (es. «Il Giorno», «La Stampa», «Il Ponte») solo con le
+// stesse maiuscole del nome (l'iniziale dell'articolo puo' essere minuscola), cosi' non si collega l'uso comune
+// della locuzione («il giorno», «la stampa»).
+function normNomeNota(s){
+  return String(s).normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[‘’ʼ`´]/g,"'");
+}
+let _nomiNota = null;
+function nomiPerNote(){
+  if(_nomiNota) return _nomiNota;
+  const per = {};   // forma normalizzata (maiuscole conservate) -> [nodi]
+  const aggiungi = (forma, n)=>{ const k = normNomeNota(forma).replace(/\s+/g," ").trim(); if(!k) return; (per[k] = per[k] || []).push(n); };
+  DATI.nodes.forEach(n=>{
+    if(NOTE_LINK_ESCLUSI.indexOf(n.label) >= 0) return;
+    if(n.group === "rivista" || n.group === "quotidiano") aggiungi(n.label, n);
+    else if(n.group === "libro" && libroInRaccolte(n.id)) aggiungi(n.label, n);
+  });
+  NOTE_LINK_MANUALI.forEach(m=>{ const n = DATI.nodes.find(x=>x.label === m.nodo); if(n) aggiungi(m.forma, n); });
+  // due nomi uguali a meno delle maiuscole che puntano a nodi diversi sono ambigui: non si collegano
+  const perMin = {};
+  Object.keys(per).forEach(k=>{ const m = k.toLowerCase(); (perMin[m] = perMin[m] || []).push(k); });
+  _nomiNota = Object.keys(per).filter(k=>per[k].length === 1 && perMin[k.toLowerCase()].length === 1).map(k=>{
+    const parole = k.split(/\s+/).length;
+    return {k:k, ci:parole >= 3, nodo:per[k][0]};
+  }).sort((a,b)=>b.k.length - a.k.length);
+  return _nomiNota;
+}
+function noteConLink(testo, artId){
+  const orig = String(testo == null ? "" : testo);
+  // testo normalizzato carattere per carattere, con la mappa verso le posizioni originali
+  let norm = "", mappa = [];
+  for(let i=0;i<orig.length;i++){
+    const c = normNomeNota(orig[i]);
+    for(let j=0;j<c.length;j++){ norm += c[j]; mappa.push(i); }
+  }
+  const normMin = norm.toLowerCase();
+  const lettera = ch => !!ch && /[\p{L}\p{N}]/u.test(ch);
+  const presi = [];   // [inizioOrig, fineOrig, nodo]
+  nomiPerNote().forEach(e=>{
+    const forme = e.ci ? [e.k.toLowerCase()] : [e.k, e.k[0].toLowerCase() + e.k.slice(1), e.k[0].toUpperCase() + e.k.slice(1)]
+      .filter((x,i,a)=>a.indexOf(x) === i);
+    const hay = e.ci ? normMin : norm;
+    forme.forEach(f=>{
+      let da = 0, p;
+      while((p = hay.indexOf(f, da)) >= 0){
+        da = p + 1;
+        if(lettera(hay[p-1]) || lettera(hay[p + f.length])) continue;
+        const a = mappa[p], b = mappa[p + f.length - 1] + 1;
+        if(presi.some(r=>a < r[1] && b > r[0])) continue;
+        presi.push([a, b, e.nodo]);
+      }
+    });
+  });
+  presi.sort((x,y)=>x[0]-y[0]);
+  let html = "", pos = 0;
+  presi.forEach(r=>{
+    html += escHtmlIndice(orig.slice(pos, r[0]));
+    const nome = escHtmlIndice(orig.slice(r[0], r[1])), n = r[2];
+    if(n.group === "libro"){
+      html += "<span class='link-articolo' data-vai-libro=\"" + n.id + "\"" + (artId ? " data-vai-capitolo=\"" + String(artId).replace(/"/g,"&quot;") + "\"" : "") + ">" + nome + "</span>";
+    } else {
+      html += "<span class='link-articolo' data-vai-periodico=\"" + n.label.replace(/"/g,"&quot;") + "\">" + nome + "</span>";
+    }
+    pos = r[1];
+  });
+  return html + escHtmlIndice(orig.slice(pos));
+}
 // Due colonne di campi (sinistra, destra): i campi vuoti ('') si saltano, quelli sotto salgono.
 // Se una delle due colonne resta senza campi non si lascia un vuoto: i campi della colonna piena
 // salgono e, se non c'e' niente, non si scrive nemmeno il contenitore.
@@ -866,12 +957,12 @@ function campiArticoloHTML(raw, opzioni){
     const libriAParte = libri.filter(l => idAParte.includes(l.id));
     if(libriAParte.length) libri = libri.filter(l => !idAParte.includes(l.id));
     const elencoVolumi = ls => ls.map(lib =>
-        htmlTitoloLibroCollegato(lib) +
+        htmlTitoloLibroCollegato(lib, artId) +
         (lib.editore ? " (" + (lib.citta?lib.citta+": ":"") + lib.editore + (lib.anno? ", "+lib.anno:"") + ")" : "")
       ).join(", ");
     if(libri.length){
       const elencoLibri = libri.map(lib =>
-        htmlTitoloLibroCollegato(lib) +
+        htmlTitoloLibroCollegato(lib, artId) +
         (lib.editore ? " (" + (lib.citta?lib.citta+": ":"") + lib.editore + (lib.anno? ", "+lib.anno:"") + ")" : "")
       ).join(", ");
       html += "<div class='campo'><b>" + (escludi ? "Ripubblicato anche in:" : "Ripubblicato in:") + "</b> " + elencoLibri + "</div>";
@@ -894,7 +985,7 @@ function campiArticoloHTML(raw, opzioni){
             .map(e=>DATI.nodes.find(n=>n.id===e.to)).filter(Boolean);
     if(libriEstratto.length){
       const elencoLibriEstratto = libriEstratto.map(lib =>
-        htmlTitoloLibroCollegato(lib) +
+        htmlTitoloLibroCollegato(lib, artId) +
         (lib.editore ? " (" + (lib.citta?lib.citta+": ":"") + lib.editore + (lib.anno? ", "+lib.anno:"") + ")" : "")
       ).join(", ");
       html += "<div class='campo'><b>Estratto da:</b> " + elencoLibriEstratto + "</div>";
@@ -914,13 +1005,13 @@ function campiArticoloHTML(raw, opzioni){
     if(raw.anno_volume_originale) riga += (riga ? ", " : "") + raw.anno_volume_originale;
     if(raw.pagine_volume_originale) riga += (riga ? ", " : "") + "pp. " + raw.pagine_volume_originale;
     if(riga) html += "<div class='campo'>" + riga + "</div>";
-    if(notaVisibile(raw.nota_volume_originale)) html += "<div class='campo'><b>Nota:</b> " + raw.nota_volume_originale + "</div>";
+    if(notaVisibile(raw.nota_volume_originale)) html += "<div class='campo'><b>Nota:</b> " + noteConLink(raw.nota_volume_originale, raw.id) + "</div>";
   }
   if(raw.note_ristampa && !(opzioni && opzioni.senzaRistampe)) raw.note_ristampa.filter(notaVisibile).forEach(nt=>{
-    html += "<div class='campo'><b>Nota ristampa:</b> " + nt + "</div>";
+    html += "<div class='campo'><b>Nota ristampa:</b> " + noteConLink(nt, raw.id) + "</div>";
   });
   if(raw.note_estratto) raw.note_estratto.filter(notaVisibile).forEach(nt=>{
-    html += "<div class='campo'><b>Nota (estratto):</b> " + nt + "</div>";
+    html += "<div class='campo'><b>Nota (estratto):</b> " + noteConLink(nt, raw.id) + "</div>";
   });
   if(fissi) html = html.slice(0, finePosti) + html.slice(finePosti).replace(/class='campo'/g, "class='campo campo-largo'");
   // (l'avviso «dato ricostruito da una data di Excel» non si mostra piu': il dato resta
@@ -990,7 +1081,7 @@ function mostraDettagli(raw){
     el.addEventListener("click", (ev)=>{ ev.stopPropagation(); vaiARubrica(el.dataset.vaiRubrica); });
   });
   contenuto.querySelectorAll("[data-vai-libro]").forEach(el=>{
-    el.addEventListener("click", () => vaiALibro(el.dataset.vaiLibro));
+    el.addEventListener("click", () => vaiALibroDaCollegamento(el));
   });
   contenuto.querySelectorAll("[data-vai-scheda-articolo]").forEach(el=>{
     el.addEventListener("click", () => vaiAArticolo(el.dataset.vaiSchedaArticolo));
@@ -1027,7 +1118,7 @@ function attivaEspansioneInline(riga, articolo, colspan, contenitore, opzioni){
     el.addEventListener("click", (ev)=>{ ev.stopPropagation(); vaiARubrica(el.dataset.vaiRubrica); });
   });
   trDettagli.querySelectorAll("[data-vai-libro]").forEach(el=>{
-    el.addEventListener("click", (ev)=>{ ev.stopPropagation(); vaiALibro(el.dataset.vaiLibro); });
+    el.addEventListener("click", (ev)=>{ ev.stopPropagation(); vaiALibroDaCollegamento(el); });
   });
 }
 
@@ -1048,7 +1139,7 @@ function campiCapitoloVolumeHTML(c){
   if(c.anno_volume_originale) riga += (riga ? ", " : "") + c.anno_volume_originale;
   if(c.pagine_volume_originale) riga += (riga ? ", " : "") + "pp. " + c.pagine_volume_originale;
   if(riga) html += "<div class='campo'>" + riga + "</div>";
-  if(notaVisibile(c.nota_volume_originale)) html += "<div class='campo'><b>Nota:</b> " + c.nota_volume_originale + "</div>";
+  if(notaVisibile(c.nota_volume_originale)) html += "<div class='campo'><b>Nota:</b> " + noteConLink(c.nota_volume_originale, c.id) + "</div>";
   return html;
 }
 
@@ -1096,7 +1187,7 @@ function attivaEspansioneInlineDiv(voce, articolo, contenitore){
     el.addEventListener("click", (ev)=>{ ev.stopPropagation(); vaiARubrica(el.dataset.vaiRubrica); });
   });
   div.querySelectorAll("[data-vai-libro]").forEach(el=>{
-    el.addEventListener("click", (ev)=>{ ev.stopPropagation(); vaiALibro(el.dataset.vaiLibro); });
+    el.addEventListener("click", (ev)=>{ ev.stopPropagation(); vaiALibroDaCollegamento(el); });
   });
 }
 
@@ -3393,7 +3484,7 @@ function mostraDettaglioArticoloElenco(articolo){
     el.addEventListener("click", (ev)=>{ ev.stopPropagation(); vaiARubrica(el.dataset.vaiRubrica); });
   });
   contenuto.querySelectorAll("[data-vai-libro]").forEach(el=>{
-    el.addEventListener("click", (ev)=>{ ev.stopPropagation(); vaiALibro(el.dataset.vaiLibro); });
+    el.addEventListener("click", (ev)=>{ ev.stopPropagation(); vaiALibroDaCollegamento(el); });
   });
 }
 
@@ -3725,10 +3816,13 @@ function etichettaLibroSenzaAnnoRipetuto(lib){
   }
   return lib.label;
 }
-function htmlTitoloLibroCollegato(lib){
+// REGOLA «dalla ristampa al capitolo» (2026-10-23): se si conosce l'articolo (artId) il collegamento porta anche
+// il suo id (data-vai-capitolo): il click apre la scheda del libro, l'indice dell'edizione giusta e l'infobox
+// del capitolo corrispondente (vaiAlCapitolo, definita in fondo alla sezione Raccolte, vedi vaiALibroDaCollegamento).
+function htmlTitoloLibroCollegato(lib, artId){
   const et = etichettaLibroSenzaAnnoRipetuto(lib);
   return libroInRaccolte(lib.id)
-    ? "<span class='link-articolo' data-vai-libro=\"" + lib.id + "\">" + et + "</span>"
+    ? "<span class='link-articolo' data-vai-libro=\"" + lib.id + "\"" + (artId ? " data-vai-capitolo=\"" + String(artId).replace(/"/g,"&quot;") + "\"" : "") + ">" + et + "</span>"
     : et;
 }
 
@@ -3930,7 +4024,7 @@ function campiFonteIndiceHTML(voce){
     return "<div class='campo campo-stato-voce'><b>Informazioni sul contributo originale</b></div>" +
       colonneHTML(
         [campo("Titolo", ((!vol.libro || ["","N.D."].includes(String(vol.libro).trim())) && vol.link) ? titoloConLink(escHtmlIndice(v(f.titolo)), vol.link) : escHtmlIndice(v(f.titolo))), campo("Autore", autore), campo("Pubblicato in", titoloVolumeHTML(vol)),
-         campo("Editore", escHtmlIndice(v(vol.editore))), campo("Anno", escHtmlIndice(v(vol.anno))), campo("Note", escHtmlIndice(v(notaOk)))],
+         campo("Editore", escHtmlIndice(v(vol.editore))), campo("Anno", escHtmlIndice(v(vol.anno))), campo("Note", noteConLink(v(notaOk), voce.articolo))],
         [campo("Tipo", "Contributo in volume"), campo("Co-autore", escHtmlIndice(v(voce.coautore))), campo(etichettaCuratoreVolume(v(vol.curatore))[0], escHtmlIndice(etichettaCuratoreVolume(v(vol.curatore))[1])),
          campo("Luogo", escHtmlIndice(v(vol.luogo))), campo("Pagine", escHtmlIndice(v(vol.pagine))), altreRistampeIndiceHTML(voce)]);
   }
@@ -3946,7 +4040,7 @@ function campiFonteIndiceHTML(voce){
     dx.push(campo(etichettaCuratoreVolume(v(vol.curatore))[0], escHtmlIndice(etichettaCuratoreVolume(v(vol.curatore))[1])), campo("Luogo", escHtmlIndice(v(vol.luogo))), campo("Pagine nel volume", escHtmlIndice(v(vol.pagine))));
   }
   return "<div class='campo campo-stato-voce'><b>Informazioni sull'articolo originale</b></div>" + colonneHTML(sx, dx) +
-         (notaOk ? "<div class='campo campo-largo'><b>Note:</b> " + escHtmlIndice(notaOk) + "</div>" : "");
+         (notaOk ? "<div class='campo campo-largo'><b>Note:</b> " + noteConLink(notaOk, voce.articolo) + "</div>" : "");
 }
 /* ----------------------------------------------------------------------
    INDICI PER EDIZIONE (2026-10-21) - un libro con piu' indici (uno per edizione) resta UN solo nodo
@@ -3975,12 +4069,13 @@ function vociIndiceAttive(libro){
 function campiVoceIndiceConEdizioniHTML(voce, idLibro){
   const base = campiVoceIndiceHTML(voce, idLibro);
   if(!voce.edizione || !libroAttivo) return base;
-  const altre = ((DATI.indici && DATI.indici[libroAttivo.id]) || []).filter(v => v.edizione && v.edizione !== voce.edizione &&
-    v.stato !== "introduzione" && titoloRigaUguale(v.titolo, voce.titolo)).map(v => v.edizione);
+  const altreVoci = ((DATI.indici && DATI.indici[libroAttivo.id]) || []).filter(v => v.edizione && v.edizione !== voce.edizione &&
+    v.stato !== "introduzione" && titoloRigaUguale(v.titolo, voce.titolo));
+  const altre = altreVoci.map(v => v.edizione);
   const eds = Array.from(new Set(altre)).sort();
   if(!eds.length) return base;
   const l = libroAttivo;
-  const elenco = eds.map(ed => "<span class='link-articolo' data-vai-edizione=\"" + ed + "\">" + etichettaLibroSenzaAnnoRipetuto(l) + "</span>" +
+  const elenco = eds.map(ed => "<span class='link-articolo' data-vai-edizione=\"" + ed + "\" data-vai-voce=\"" + altreVoci.find(v => v.edizione === ed).posizione + "\">" + etichettaLibroSenzaAnnoRipetuto(l) + "</span>" +
     (l.editore ? " (" + (l.citta ? l.citta + ": " : "") + l.editore + ", " + ed + ")" : " (" + ed + ")")).join(", ");
   return base + "<div class='campo'><b>Ripubblicato anche in:</b> " + elenco + "</div>";
 }
@@ -4011,7 +4106,7 @@ function campiVoceIndiceHTML(voce, idLibro){
       primo = false;
       h += campiArticoloHTML(Object.assign({}, a, {id_completo: a.id, pseudonimo: a.pseudonimo || voce.pseudonimo || null}), {escludiLibro: idLibro, titoloRiga: voce.titolo, senzaRistampe: true, slotFissi: true, titolo: a.label});
     });
-    if(notaVisibile(voce.nota)) h += "<hr class='divisore-articoli'><div class='campo campo-largo'><b>Nota:</b> " + escHtmlIndice(voce.nota) + "</div>";
+    if(notaVisibile(voce.nota)) h += "<hr class='divisore-articoli'><div class='campo campo-largo'><b>Nota:</b> " + noteConLink(voce.nota, voce.articolo) + "</div>";
     return h;
   }
   let html = "<div class='campo campo-stato-voce'><b>Informazioni sull'articolo originale</b></div>";
@@ -4027,14 +4122,16 @@ function campiVoceIndiceHTML(voce, idLibro){
   // eco:pseudonimo, si usa quello della voce.
   if(art) html += campiArticoloHTML(Object.assign({}, art, {id_completo: art.id, pseudonimo: art.pseudonimo || voce.pseudonimo || null}), {escludiLibro: idLibro, titoloRiga: voce.titolo, slotFissi: true, coautore: voce.coautore, titolo: art.label});
   else if(voce.coautore) html += "<div class='campo'><b>Co-autore:</b> " + escHtmlIndice(voce.coautore) + "</div>";
-  if(notaVisibile(voce.nota)) html += "<div class='campo campo-largo'><b>Nota:</b> " + escHtmlIndice(voce.nota) + "</div>";
+  if(notaVisibile(voce.nota)) html += "<div class='campo campo-largo'><b>Nota:</b> " + noteConLink(voce.nota, voce.articolo) + "</div>";
   return html;
 }
-function attivaEspansioneInlineVoce(riga, voce, colspan){
+function attivaEspansioneInlineVoce(riga, voce, colspan, forzaApertura){
   const contenitore = riga.parentElement;
   const successiva = riga.nextElementSibling;
   const chiave = "voce-" + voce.posizione;
   const giaAperta = successiva && successiva.classList.contains("riga-inline-dettagli") && successiva.dataset.per === chiave;
+  // forzaApertura (dalla regola «ristampa -> capitolo»): se la voce e' gia' aperta resta aperta, non si chiude
+  if(giaAperta && forzaApertura) return;
   contenitore.querySelectorAll(".riga-inline-dettagli").forEach(r=>r.remove());
   contenitore.querySelectorAll(".espansa").forEach(r=>r.classList.remove("espansa"));
   if(giaAperta) return;
@@ -4054,11 +4151,16 @@ function attivaEspansioneInlineVoce(riga, voce, colspan){
     el.addEventListener("click", (ev)=>{ ev.stopPropagation(); vaiARubrica(el.dataset.vaiRubrica); });
   });
   trDettagli.querySelectorAll("[data-vai-libro]").forEach(el=>{
-    el.addEventListener("click", (ev)=>{ ev.stopPropagation(); vaiALibro(el.dataset.vaiLibro); });
+    el.addEventListener("click", (ev)=>{ ev.stopPropagation(); vaiALibroDaCollegamento(el); });
   });
   // altra edizione dello stesso libro (INDICI PER EDIZIONE): stesso comportamento del rimando fra edizioni di Diario minimo
   trDettagli.querySelectorAll("[data-vai-edizione]").forEach(el=>{
-    el.addEventListener("click", (ev)=>{ ev.stopPropagation(); edizioneIndiceAttiva = el.dataset.vaiEdizione; disegnaDettaglioLibro(); });
+    el.addEventListener("click", (ev)=>{ ev.stopPropagation(); edizioneIndiceAttiva = el.dataset.vaiEdizione; disegnaDettaglioLibro();
+      // regola «ristampa -> capitolo»: nell'altra edizione si apre anche il capitolo corrispondente
+      const voceAltra = (DATI.indici[libroAttivo.id] || []).find(v => v.edizione === el.dataset.vaiEdizione && String(v.posizione) === el.dataset.vaiVoce);
+      if(voceAltra) apriVoceIndice(voceAltra);
+      pushStato({tab:"ristampe", tipo:"libro", valore:libroAttivo.id, edizione:el.dataset.vaiEdizione, voce:el.dataset.vaiVoce});
+    });
   });
   // titolo dell'articolo originale -> scheda nella pagina "Articoli"
   trDettagli.querySelectorAll("[data-vai-scheda-articolo]").forEach(el=>{
@@ -4121,6 +4223,7 @@ function disegnaIndiceVolume(voci){
   const tipiPresenti = new Set();
   voci.forEach(v=>{
     const tr = document.createElement("tr");
+    tr.dataset.posizione = v.posizione;
     const notaz = tipoNotazioneVoce(v);
     if(notaz) tipiPresenti.add(notaz);
     tr.innerHTML =
@@ -4327,7 +4430,7 @@ function disegnaDettaglioLibro(){
     tr.className = "riga-capitolo-non-collegato";
     tr.innerHTML =
       "<td class='col-titolo-capitolo'>" + (c.titolo ? "«" + c.titolo + "»" : "&mdash;") + marcaNotazione(tipoNotazioneCapitoloNonCollegato(c)) + "</td>" +
-      "<td colspan='3'>" + ((notaVisibile(c.nota) && c.nota) || "Non abbiamo informazioni sulla versione originale di questo capitolo nel dataset.") + "</td>";
+      "<td colspan='3'>" + ((notaVisibile(c.nota) && noteConLink(c.nota, c.id)) || "Non abbiamo informazioni sulla versione originale di questo capitolo nel dataset.") + "</td>";
     frammento.appendChild(tr);
   });
   corpo.appendChild(frammento);
@@ -4413,6 +4516,54 @@ function vaiALibro(id){
   const voceAttiva = document.querySelector("#elenco-libri .libro-voce.attivo");
   if(voceAttiva && voceAttiva.scrollIntoView) voceAttiva.scrollIntoView({block:"nearest"});
   pushStato({tab:"ristampe", tipo:"libro", valore:id});
+}
+/* ----------------------------------------------------------------------
+   REGOLA «DALLA RISTAMPA AL CAPITOLO» (2026-10-23) - un solo punto per tutti i collegamenti di ristampa
+   Cliccando sul titolo di un libro in cui un articolo e' stato ristampato (Vista a grafo, Articoli, Linea del
+   tempo, infobox delle Raccolte...) si apre la sezione Raccolte con la scheda del libro, si sceglie l'indice
+   dell'edizione in cui l'articolo compare, si apre l'infobox del capitolo corrispondente (lo stesso che si
+   apre cliccando a mano sulla voce) e la voce viene portata in vista. I dati sono quelli di DATI.indici
+   (campi `articolo` / `articoli` di ogni voce): nessun campo nuovo.
+   Casi limite: libro senza indice, o articolo senza voce nell'indice -> si apre solo la scheda del libro
+   (come prima); articolo in piu' edizioni dello stesso libro -> la piu' antica in cui compare (il collegamento
+   non dice quale; fra le edizioni si passa poi dal rimando «Ripubblicato anche in:» del capitolo); due voci
+   dello stesso indice per lo stesso articolo -> la prima; le introduzioni non si aprono mai.
+   ---------------------------------------------------------------------- */
+function voceDiArticoloInLibro(libroId, artId){
+  const voci = (typeof DATI.indici !== "undefined" && DATI.indici && DATI.indici[libroId]) || [];
+  const cand = voci.filter(v => v.stato !== "introduzione" && (v.articolo === artId || (v.articoli && v.articoli.indexOf(artId) >= 0)));
+  if(!cand.length) return null;
+  const eds = cand.map(v => v.edizione).filter(Boolean).sort();
+  const edizione = eds.length ? eds[0] : null;
+  return { voce: edizione ? cand.find(v => v.edizione === edizione) : cand[0], edizione: edizione };
+}
+// apre (senza chiuderla se e' gia' aperta) l'infobox di una voce dell'indice mostrato e la porta in vista
+function apriVoceIndice(voce){
+  const corpo = document.getElementById("tabella-indice-corpo");
+  const riga = corpo && corpo.querySelector("tr[data-posizione='" + String(voce.posizione).replace(/'/g,"") + "']");
+  if(!riga || riga.classList.contains("voce-non-apribile")) return false;
+  attivaEspansioneInlineVoce(riga, voce, 2, true);
+  if(riga.scrollIntoView) riga.scrollIntoView({block:"center"});
+  return true;
+}
+function vaiAlCapitolo(libroId, artId){
+  const libro = TUTTI_LIBRI.find(l => l.id === libroId);
+  if(!libro || !libroInRaccolte(libro.id)) return;
+  const trovato = artId ? voceDiArticoloInLibro(libro.id, artId) : null;
+  if(!trovato){ vaiALibro(libroId); return; }   // senza indice o senza voce corrispondente: come prima
+  if(trovato.edizione){ edizioneIndiceLibroId = libro.id; edizioneIndiceAttiva = trovato.edizione; }
+  vaiA("ristampe");
+  libroAttivo = libro;
+  disegnaElencoLibri(); disegnaDettaglioLibro();
+  const voceAttiva = document.querySelector("#elenco-libri .libro-voce.attivo");
+  if(voceAttiva && voceAttiva.scrollIntoView) voceAttiva.scrollIntoView({block:"nearest"});
+  apriVoceIndice(trovato.voce);
+  pushStato({tab:"ristampe", tipo:"libro", valore:libro.id, edizione:trovato.edizione, voce:trovato.voce.posizione});
+}
+// gestore unico dei click sui nomi di libro (data-vai-libro): con data-vai-capitolo apre il capitolo, altrimenti la sola scheda
+function vaiALibroDaCollegamento(el){
+  if(el.dataset.vaiCapitolo) vaiAlCapitolo(el.dataset.vaiLibro, el.dataset.vaiCapitolo);
+  else vaiALibro(el.dataset.vaiLibro);
 }
 // Porta dal pannello dell'articolo nella Vista a grafo alla sua riga nella
 // pagina "Articoli": naviga per periodico (stesso raggruppamento che usa

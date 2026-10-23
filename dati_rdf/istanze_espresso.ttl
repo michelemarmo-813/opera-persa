@@ -3425,7 +3425,7 @@ res:articolo-ja0340 a fabio:JournalArticle ;
 
 res:articolo-ja0341 a fabio:JournalArticle ;
     rdfs:label "Eugenio Carmi"@it ;
-    eco:notaRistampa "Ristampato in Marcatre n. 11-13"@it ;
+    eco:notaRistampa "Ristampato anche in Marcatré n. 11/13, in forma ampliata"@it ;
     eco:numeroRicostruitoDaData true ;
     prism:endingPage 232 ;
     prism:number "6/7" ;
@@ -3994,13 +3994,13 @@ res:articolo-ja0394 a fabio:JournalArticle ;
     frbr:partOf res:rivista-marcatre .
 
 res:articolo-ja0395 a fabio:JournalArticle ;
-    rdfs:label "Nota introduttiva"@it ;
+    rdfs:label "[nota introduttiva senza titolo]"@it ;
     prism:endingPage 249 ;
     prism:number "11/13" ;
     prism:publicationDate "1965"^^xsd:gYear ;
     prism:startingPage 249 ;
     dcterms:creator res:persona-umberto-eco ;
-    dcterms:title "Nota introduttiva"@it ;
+    dcterms:title "[nota introduttiva senza titolo]"@it ;
     frbr:partOf res:rivista-marcatre .
 
 res:articolo-ja0396 a fabio:JournalArticle ;
@@ -4027,7 +4027,7 @@ res:articolo-ja0397 a fabio:JournalArticle ;
 
 res:articolo-ja0398 a fabio:JournalArticle ;
     rdfs:label "Carmi"@it ;
-    eco:notaRistampa "Ristampato in Marcatre n. 6/7"@it ;
+    eco:notaRistampa "Dal catalogo della mostra di Eugenio Carmi, Galerie D, Francoforte (1965). Riprende, ampliandolo, il testo uscito in Marcatré n. 6/7."@it ;
     prism:endingPage 356 ;
     prism:number "11/13" ;
     prism:publicationDate "1965"^^xsd:gYear ;
@@ -4688,13 +4688,13 @@ res:articolo-ja0458 a fabio:JournalArticle ;
     frbr:partOf res:rivista-linus .
 
 res:articolo-ja0459 a fabio:JournalArticle ;
-    rdfs:label "Nota introduttiva"@it ;
+    rdfs:label "[nota introduttiva senza titolo]"@it ;
     prism:endingPage 138 ;
     prism:number "23/25" ;
     prism:publicationDate "1966"^^xsd:gYear ;
     prism:startingPage 138 ;
     dcterms:creator res:persona-umberto-eco ;
-    dcterms:title "Nota introduttiva"@it ;
+    dcterms:title "[nota introduttiva senza titolo]"@it ;
     frbr:partOf res:rivista-marcatre .
 
 res:articolo-ja0460 a fabio:JournalArticle ;
@@ -5305,7 +5305,7 @@ res:articolo-ja0525 a fabio:JournalArticle ;
 
 res:articolo-ja0527 a fabio:JournalArticle ;
     rdfs:label "Doktor falco / la biblioteca del giudice"@it ;
-    eco:notaRistampa "Trent'anni di costume, parte seconda (a cura di U. Eco, l'Espresso, 1985)."@it ;
+    eco:notaRistampa "Trent'anni di costume, parte seconda (a cura di U. Eco, L'Espresso, 1985)."@it ;
     prism:coverDate "1969-01-12"^^xsd:date ;
     prism:endingPage 3 ;
     prism:number "2" ;
@@ -6616,7 +6616,7 @@ res:articolo-ja0694 a fabio:JournalArticle ;
     prism:coverDate "1976-11-28"^^xsd:date ;
     prism:endingPage 21 ;
     prism:number "48" ;
-    prism:publicationDate "1975"^^xsd:gYear ;
+    prism:publicationDate "1976"^^xsd:gYear ;
     prism:startingPage 21 ;
     dcterms:creator res:persona-umberto-eco ;
     dcterms:title "Ma Ottone è di Genova, come Colombo"@it ;
@@ -10169,7 +10169,7 @@ res:articolo-ja1048 a fabio:JournalArticle ;
 
 res:articolo-ja1049 a fabio:JournalArticle ;
     rdfs:label "Abbicì o doremì"@it ;
-    eco:notaRistampa "Ristampato in MicroMega n. 3, 1995"@it ;
+    eco:notaRistampa "Ristampato in MicroMega : le ragioni della sinistra, n. 3, 1995"@it ;
     prism:coverDate "1986-08-10"^^xsd:date ;
     prism:endingPage 93 ;
     prism:number "31" ;
@@ -20286,6 +20286,7 @@ res:articolo-ja2233 a fabio:JournalArticle ;
 
 res:articolo-ja2234 a fabio:JournalArticle ;
     rdfs:label "Collazioni di un collezionista"@it ;
+    eco:notaRistampa "Ristampato anche in L'Esopo : rivista trimestrale di bibliofilia, n. 46 (1990), pp. 9-17"@it ;
     prism:number "6" ;
     prism:publicationDate "1995"^^xsd:gYear ;
     dcterms:creator res:persona-umberto-eco ;
@@ -20438,6 +20439,77 @@ res:articolo-ja2253 a fabio:JournalArticle ;
     dcterms:creator res:persona-umberto-eco ;
     dcterms:title "Il play-boy, l'autonomo e le macchine dell'oblio"@it ;
     frbr:partOf res:rivista-la-societa .
+
+res:articolo-ja2254 a fabio:JournalArticle ;
+    rdfs:label "Rappresentazioni del sacro"@it ;
+    prism:endingPage 39 ;
+    prism:number "1" ;
+    prism:publicationDate "2014"^^xsd:gYear ;
+    prism:startingPage 23 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "Rappresentazioni del sacro"@it ;
+    frbr:partOf res:rivista-california-italian-studies .
+
+res:articolo-ja2255 a fabio:JournalArticle ;
+    rdfs:label "Un ricordo di Eugenio Battisti"@it ;
+    prism:endingPage 169 ;
+    prism:number "105/107" ;
+    prism:publicationDate "1993"^^xsd:gYear ;
+    prism:startingPage 167 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "Un ricordo di Eugenio Battisti"@it ;
+    frbr:partOf res:rivista-arte-lombarda-rivista-di-storia-dell-arte .
+
+res:articolo-ja2256 a fabio:JournalArticle ;
+    rdfs:label "Le notizie sono troppe imparate a decimarle, subito"@it ;
+    prism:endingPage 18 ;
+    prism:number "4" ;
+    prism:publicationDate "1996"^^xsd:gYear ;
+    prism:startingPage 14 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "Le notizie sono troppe imparate a decimarle, subito"@it ;
+    frbr:partOf res:rivista-telema .
+
+res:articolo-ja2257 a fabio:JournalArticle ;
+    rdfs:label "I Bestiari"@it ;
+    prism:endingPage 23 ;
+    prism:number "128" ;
+    prism:publicationDate "1998"^^xsd:gYear ;
+    prism:startingPage 20 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "I Bestiari"@it ;
+    frbr:partOf res:rivista-fmr-ed-italiana .
+
+res:articolo-ja2258 a fabio:JournalArticle ;
+    rdfs:label "Lo strano caso della Hanau 1609"@it ;
+    prism:endingPage 36 ;
+    prism:number "40" ;
+    prism:publicationDate "1988"^^xsd:gYear ;
+    prism:startingPage 9 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "Lo strano caso della Hanau 1609"@it ;
+    frbr:partOf res:rivista-l-esopo-rivista-trimestrale-di-bibliofilia .
+
+res:articolo-ja2259 a fabio:JournalArticle ;
+    rdfs:label "Collazioni di un collezionista"@it ;
+    eco:notaRistampa "Ristampato anche in Almanacco del bibliofilo, n. 6 (1995)"@it ;
+    prism:endingPage 17 ;
+    prism:number "46" ;
+    prism:publicationDate "1990"^^xsd:gYear ;
+    prism:startingPage 9 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "Collazioni di un collezionista"@it ;
+    frbr:partOf res:rivista-l-esopo-rivista-trimestrale-di-bibliofilia .
+
+res:articolo-ja2260 a fabio:JournalArticle ;
+    rdfs:label "Appunti per una semiologia delle comunicazioni visive"@it ;
+    prism:endingPage 282 ;
+    prism:number "10" ;
+    prism:publicationDate "1968"^^xsd:gYear ;
+    prism:startingPage 281 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "Appunti per una semiologia delle comunicazioni visive"@it ;
+    frbr:partOf res:rivista-bollettino-del-centro-internazionale-di-studi-d-architettura-andrea-palladio .
 
 res:articolo-na0003 a fabio:NewspaperArticle ;
     rdfs:label "Ma Superman a cosa serve?"@it ;
@@ -20760,6 +20832,7 @@ res:articolo-na0045 a fabio:NewspaperArticle ;
 
 res:articolo-na0046 a fabio:NewspaperArticle ;
     rdfs:label "Come la stampa borghese intreccia la bugia all’informazione"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-05-05"^^xsd:date ;
     prism:endingPage 3 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -20770,6 +20843,7 @@ res:articolo-na0046 a fabio:NewspaperArticle ;
 
 res:articolo-na0047 a fabio:NewspaperArticle ;
     rdfs:label "Come un colpo di stato diventa un colpo di testa"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-05-09"^^xsd:date ;
     prism:endingPage 3 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -20780,6 +20854,7 @@ res:articolo-na0047 a fabio:NewspaperArticle ;
 
 res:articolo-na0048 a fabio:NewspaperArticle ;
     rdfs:label "Il migliore dei mondi possibili"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-05-16"^^xsd:date ;
     prism:endingPage 3 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -20790,6 +20865,7 @@ res:articolo-na0048 a fabio:NewspaperArticle ;
 
 res:articolo-na0049 a fabio:NewspaperArticle ;
     rdfs:label "Cerchiamo di usare anche Toro Seduto"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-05-23"^^xsd:date ;
     prism:endingPage 3 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -20800,6 +20876,7 @@ res:articolo-na0049 a fabio:NewspaperArticle ;
 
 res:articolo-na0050 a fabio:NewspaperArticle ;
     rdfs:label "No, i cinesi sono diversi"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-05-30"^^xsd:date ;
     prism:endingPage 2 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -20810,6 +20887,7 @@ res:articolo-na0050 a fabio:NewspaperArticle ;
 
 res:articolo-na0051 a fabio:NewspaperArticle ;
     rdfs:label "Rischiatutto e ammazzatutto"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-06-06"^^xsd:date ;
     prism:endingPage 3 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -20820,6 +20898,7 @@ res:articolo-na0051 a fabio:NewspaperArticle ;
 
 res:articolo-na0052 a fabio:NewspaperArticle ;
     rdfs:label "Come ricevere. Ma come spedire"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-06-13"^^xsd:date ;
     prism:endingPage 4 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -20830,6 +20909,7 @@ res:articolo-na0052 a fabio:NewspaperArticle ;
 
 res:articolo-na0053 a fabio:NewspaperArticle ;
     rdfs:label "Il culto dei poveri e quello di Fanfani"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-06-27"^^xsd:date ;
     prism:endingPage 3 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -20840,6 +20920,7 @@ res:articolo-na0053 a fabio:NewspaperArticle ;
 
 res:articolo-na0054 a fabio:NewspaperArticle ;
     rdfs:label "La pesca di maleficenza"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-07-18"^^xsd:date ;
     prism:endingPage 3 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -20850,6 +20931,7 @@ res:articolo-na0054 a fabio:NewspaperArticle ;
 
 res:articolo-na0055 a fabio:NewspaperArticle ;
     rdfs:label "Spara, ma con giudizio"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-07-25"^^xsd:date ;
     prism:endingPage 2 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -20860,6 +20942,7 @@ res:articolo-na0055 a fabio:NewspaperArticle ;
 
 res:articolo-na0056 a fabio:NewspaperArticle ;
     rdfs:label "Non fare uscire dall’utero il cittadino tranquillo"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-08-08"^^xsd:date ;
     prism:endingPage 3 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -20870,6 +20953,7 @@ res:articolo-na0056 a fabio:NewspaperArticle ;
 
 res:articolo-na0057 a fabio:NewspaperArticle ;
     rdfs:label "Succhia e taci"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-08-17"^^xsd:date ;
     prism:endingPage 3 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -20880,6 +20964,7 @@ res:articolo-na0057 a fabio:NewspaperArticle ;
 
 res:articolo-na0058 a fabio:NewspaperArticle ;
     rdfs:label "Fallo, ma pensaci"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-08-22"^^xsd:date ;
     prism:endingPage 3 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -20890,6 +20975,7 @@ res:articolo-na0058 a fabio:NewspaperArticle ;
 
 res:articolo-na0059 a fabio:NewspaperArticle ;
     rdfs:label "Rubin e Jackson"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-08-31"^^xsd:date ;
     prism:endingPage 3 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -20900,6 +20986,7 @@ res:articolo-na0059 a fabio:NewspaperArticle ;
 
 res:articolo-na0060 a fabio:NewspaperArticle ;
     rdfs:label "Quindici errori contro Dedalus"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-09-08"^^xsd:date ;
     prism:endingPage 3 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -20910,6 +20997,7 @@ res:articolo-na0060 a fabio:NewspaperArticle ;
 
 res:articolo-na0061 a fabio:NewspaperArticle ;
     rdfs:label "Una, due, tre, cento altre scuole"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-10-10"^^xsd:date ;
     prism:endingPage 2 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -20920,6 +21008,7 @@ res:articolo-na0061 a fabio:NewspaperArticle ;
 
 res:articolo-na0062 a fabio:NewspaperArticle ;
     rdfs:label "I drammi individuali contano"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-10-17"^^xsd:date ;
     prism:endingPage 3 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -20930,6 +21019,7 @@ res:articolo-na0062 a fabio:NewspaperArticle ;
 
 res:articolo-na0063 a fabio:NewspaperArticle ;
     rdfs:label "Chiamate Roma 3131"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-10-31"^^xsd:date ;
     prism:endingPage 3 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -20940,6 +21030,7 @@ res:articolo-na0063 a fabio:NewspaperArticle ;
 
 res:articolo-na0064 a fabio:NewspaperArticle ;
     rdfs:label "La notte del \"grande cocomero\""@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-11-03"^^xsd:date ;
     prism:endingPage 2 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -20950,6 +21041,7 @@ res:articolo-na0064 a fabio:NewspaperArticle ;
 
 res:articolo-na0065 a fabio:NewspaperArticle ;
     rdfs:label "Leonardo va di moda"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-11-14"^^xsd:date ;
     prism:endingPage 3 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -20968,6 +21060,7 @@ res:articolo-na0066 a fabio:NewspaperArticle ;
 
 res:articolo-na0067 a fabio:NewspaperArticle ;
     rdfs:label "Il 1972 fu denso di eventi felici…"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-11-28"^^xsd:date ;
     prism:endingPage 3 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -20978,6 +21071,7 @@ res:articolo-na0067 a fabio:NewspaperArticle ;
 
 res:articolo-na0068 a fabio:NewspaperArticle ;
     rdfs:label "Quando l’Italia ebbe per motto \"uva e moschino\""@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-12-05"^^xsd:date ;
     prism:endingPage 4 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -20988,6 +21082,7 @@ res:articolo-na0068 a fabio:NewspaperArticle ;
 
 res:articolo-na0069 a fabio:NewspaperArticle ;
     rdfs:label "Come un uragano…"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-12-11"^^xsd:date ;
     prism:endingPage 3 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -20998,6 +21093,7 @@ res:articolo-na0069 a fabio:NewspaperArticle ;
 
 res:articolo-na0070 a fabio:NewspaperArticle ;
     rdfs:label "Il cortigiano dell’Aretino"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1971-12-28"^^xsd:date ;
     prism:endingPage 3 ;
     prism:publicationDate "1971"^^xsd:gYear ;
@@ -21044,6 +21140,7 @@ res:articolo-na0074 a fabio:NewspaperArticle ;
 
 res:articolo-na0075 a fabio:NewspaperArticle ;
     rdfs:label "Quello che ha capito lui"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1972-01-30"^^xsd:date ;
     prism:endingPage 4 ;
     prism:publicationDate "1972"^^xsd:gYear ;
@@ -21054,6 +21151,7 @@ res:articolo-na0075 a fabio:NewspaperArticle ;
 
 res:articolo-na0076 a fabio:NewspaperArticle ;
     rdfs:label "L'oppio, religione dei popoli"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1972-02-06"^^xsd:date ;
     prism:endingPage 3 ;
     prism:publicationDate "1972"^^xsd:gYear ;
@@ -21064,6 +21162,7 @@ res:articolo-na0076 a fabio:NewspaperArticle ;
 
 res:articolo-na0077 a fabio:NewspaperArticle ;
     rdfs:label "Elementare, caro Watson"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1972-02-27"^^xsd:date ;
     prism:endingPage 4 ;
     prism:publicationDate "1972"^^xsd:gYear ;
@@ -21074,6 +21173,7 @@ res:articolo-na0077 a fabio:NewspaperArticle ;
 
 res:articolo-na0078 a fabio:NewspaperArticle ;
     rdfs:label "Le conversioni di Montanelli"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1972-03-26"^^xsd:date ;
     prism:endingPage 2 ;
     prism:publicationDate "1972"^^xsd:gYear ;
@@ -21084,6 +21184,7 @@ res:articolo-na0078 a fabio:NewspaperArticle ;
 
 res:articolo-na0079 a fabio:NewspaperArticle ;
     rdfs:label "Il latino a colori"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1972-08-25"^^xsd:date ;
     prism:endingPage 4 ;
     prism:publicationDate "1972"^^xsd:gYear ;
@@ -21094,6 +21195,7 @@ res:articolo-na0079 a fabio:NewspaperArticle ;
 
 res:articolo-na0080 a fabio:NewspaperArticle ;
     rdfs:label "Ciò che non ho visto a Monaco"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     prism:coverDate "1972-08-29"^^xsd:date ;
     prism:endingPage 3 ;
     prism:publicationDate "1972"^^xsd:gYear ;
@@ -21104,6 +21206,7 @@ res:articolo-na0080 a fabio:NewspaperArticle ;
 
 res:articolo-na0081 a fabio:NewspaperArticle ;
     rdfs:label "L’aranciata littoria"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     eco:rubrica res:rubrica-un-film-alla-settimana-sceneggiature-per-la-controinformazione ;
     prism:coverDate "1972-10-21"^^xsd:date ;
     prism:endingPage 1 ;
@@ -21115,6 +21218,7 @@ res:articolo-na0081 a fabio:NewspaperArticle ;
 
 res:articolo-na0082 a fabio:NewspaperArticle ;
     rdfs:label "Il padrone"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     eco:rubrica res:rubrica-un-film-alla-settimana-sceneggiature-per-la-controinformazione ;
     prism:coverDate "1972-10-22"^^xsd:date ;
     prism:endingPage 2 ;
@@ -21126,6 +21230,7 @@ res:articolo-na0082 a fabio:NewspaperArticle ;
 
 res:articolo-na0083 a fabio:NewspaperArticle ;
     rdfs:label "Il video violento della legge"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     eco:rubrica res:rubrica-un-film-alla-settimana-sceneggiature-per-la-controinformazione ;
     prism:coverDate "1972-10-29"^^xsd:date ;
     prism:endingPage 4 ;
@@ -21137,6 +21242,7 @@ res:articolo-na0083 a fabio:NewspaperArticle ;
 
 res:articolo-na0084 a fabio:NewspaperArticle ;
     rdfs:label "Il mostro di Baronstein"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     eco:rubrica res:rubrica-un-film-alla-settimana-sceneggiature-per-la-controinformazione ;
     prism:coverDate "1972-11-05"^^xsd:date ;
     prism:endingPage 3 ;
@@ -21148,6 +21254,7 @@ res:articolo-na0084 a fabio:NewspaperArticle ;
 
 res:articolo-na0085 a fabio:NewspaperArticle ;
     rdfs:label "La voce umana"@it ;
+    eco:pseudonimo "Dedalus"@it ;
     eco:rubrica res:rubrica-un-film-alla-settimana-sceneggiature-per-la-controinformazione ;
     prism:coverDate "1972-11-12"^^xsd:date ;
     prism:endingPage 2 ;
@@ -35627,6 +35734,11 @@ res:rivista-annali-della-scuola-superiore-di-comunicazioni-sociali a fabio:Journ
     dcterms:title "Annali della scuola superiore di Comunicazioni sociali"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/60626> .
 
+res:rivista-arte-lombarda-rivista-di-storia-dell-arte a fabio:Journal ;
+    rdfs:label "Arte lombarda : rivista di storia dell'arte"@it ;
+    dcterms:title "Arte lombarda : rivista di storia dell'arte"@it ;
+    rdfs:seeAlso <https://acnpsearch.unibo.it/journal/34772> .
+
 res:rivista-astrolabio a fabio:Journal ;
     rdfs:label "Astrolabio"@it ;
     dcterms:title "Astrolabio"@it ;
@@ -35647,10 +35759,20 @@ res:rivista-biblioteca-e-territorio a fabio:Journal ;
     dcterms:title "Biblioteca e territorio"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/46542> .
 
+res:rivista-bollettino-del-centro-internazionale-di-studi-d-architettura-andrea-palladio a fabio:Journal ;
+    rdfs:label "Bollettino del Centro Internazionale di Studi d'Architettura Andrea Palladio"@it ;
+    dcterms:title "Bollettino del Centro Internazionale di Studi d'Architettura Andrea Palladio"@it ;
+    rdfs:seeAlso <https://acnpsearch.unibo.it/journal/1137> .
+
 res:rivista-bollettino-della-societa-filosofica-italiana-nuova-serie a fabio:Journal ;
     rdfs:label "Bollettino della società filosofica italiana, nuova serie"@it ;
     dcterms:title "Bollettino della società filosofica italiana, nuova serie"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/43626> .
+
+res:rivista-california-italian-studies a fabio:Journal ;
+    rdfs:label "California Italian Studies"@it ;
+    dcterms:title "California Italian Studies"@it ;
+    rdfs:seeAlso <https://acnpsearch.unibo.it/journal/3074008> .
 
 res:rivista-cinema-cinema a fabio:Journal ;
     rdfs:label "Cinema & cinema"@it ;
@@ -35685,6 +35807,11 @@ res:rivista-film-selezione a fabio:Journal ;
     rdfs:label "Film Selezione"@it ;
     dcterms:title "Film Selezione"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/49825> .
+
+res:rivista-fmr-ed-italiana a fabio:Journal ;
+    rdfs:label "FMR (Ed. italiana)"@it ;
+    dcterms:title "FMR (Ed. italiana)"@it ;
+    rdfs:seeAlso <https://acnpsearch.unibo.it/journal/69026> .
 
 res:rivista-fuori-mensile-di-liberazione-sessuale a fabio:Journal ;
     rdfs:label "Fuori! : mensile di liberazione sessuale"@it ;
@@ -35942,6 +36069,11 @@ res:rivista-techne-rivista-cultura-contemporanea a fabio:Journal ;
     rdfs:label "Tèchne : rivista cultura contemporanea"@it ;
     dcterms:title "Tèchne : rivista cultura contemporanea"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/3086126> .
+
+res:rivista-telema a fabio:Journal ;
+    rdfs:label "Telema"@it ;
+    dcterms:title "Telema"@it ;
+    rdfs:seeAlso <https://acnpsearch.unibo.it/journal/1014802> .
 
 res:rivista-video-la-rivista-della-televisione a fabio:Journal ;
     rdfs:label "Video: la rivista della televisione"@it ;
@@ -36219,6 +36351,11 @@ res:rivista-il-nuovo-canzoniere-italiano a fabio:Journal ;
     rdfs:label "Il nuovo Canzoniere Italiano"@it ;
     dcterms:title "Il nuovo Canzoniere Italiano"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/54190> .
+
+res:rivista-l-esopo-rivista-trimestrale-di-bibliofilia a fabio:Journal ;
+    rdfs:label "L'Esopo : rivista trimestrale di bibliofilia"@it ;
+    dcterms:title "L'Esopo : rivista trimestrale di bibliofilia"@it ;
+    rdfs:seeAlso <https://acnpsearch.unibo.it/journal/31294> .
 
 res:rivista-la-biennale-di-venezia a fabio:Journal ;
     rdfs:label "La Biennale di Venezia"@it ;
