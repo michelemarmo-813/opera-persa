@@ -155,7 +155,7 @@
         outline:2px solid var(--accento-testo); outline-offset:2px; }
   #home-stats{ margin-top:38px; font-size:12px; color:var(--testo-sec); letter-spacing:.02em; }
 
-  #sidebar, #elenco-sidebar{ width:300px; min-width:300px; background:var(--pannello); border-right:1px solid var(--separatore);
+  #sidebar, #elenco-sidebar, #elenco-sidebar-raccolte{ width:300px; min-width:300px; background:var(--pannello); border-right:1px solid var(--separatore);
              padding:18px; overflow-y:auto; }
   /* Titoli di sezione (uno per schermata: "Grafo bibliografico",
      "Naviga gli articoli", "Raccolte", "Linea del tempo") in serif invece
@@ -163,8 +163,8 @@
      quando questo font viveva solo nel titolo della Home. Prima erano
      stilizzati con uno style="" ripetuto uguale in ogni schermata (stessa
      dimensione, stesso margine): unificato qui in una sola regola condivisa
-     (#elenco-sidebar e' l'id usato sia da Articoli sia da Raccolte). */
-  #sidebar h1, #elenco-sidebar h1{ font-size:var(--fs-titolo-medio); margin:0 0 6px; font-family:var(--font-serif); font-weight:700; }
+     (#elenco-sidebar e' la sidebar di Articoli, #elenco-sidebar-raccolte quella di Raccolte). */
+  #sidebar h1, #elenco-sidebar h1, #elenco-sidebar-raccolte h1{ font-size:var(--fs-titolo-medio); margin:0 0 6px; font-family:var(--font-serif); font-weight:700; }
   .sottotitolo{ font-size:var(--fs-piccolo); color:var(--testo-sec); margin-bottom:16px; }
   /* .sezione--senza-bordo sostituisce lo style="border-bottom:none" ripetuto
      in riga nell'ultima .sezione di ogni barra laterale (Vista a grafo,
@@ -352,8 +352,8 @@
      di hover/attivo, che hanno la stessa specificita' e altrimenti le coprirebbero) */
 
   /* --- Elenco articoli ---
-     Tre colonne: #elenco-sidebar (modalita'/anno/categorie, invariata,
-     condivisa con Raccolte) | #elenco-main (elenco articoli, larghezza
+     Tre colonne: #elenco-sidebar (modalita'/anno/categorie; Raccolte ha la
+     propria, #elenco-sidebar-raccolte, con le stesse regole) | #elenco-main (elenco articoli, larghezza
      regolabile dall'utente, vedi #elenco-resize e lo script piu' in basso
      "ridimensionamento colonna elenco") | #elenco-dettaglio (scheda
      bibliografica completa dell'articolo scelto, nuova - prima questi

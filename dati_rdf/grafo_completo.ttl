@@ -6352,7 +6352,7 @@ res:articolo-ja0657 a fabio:JournalArticle ;
 res:articolo-ja0659 a fabio:JournalArticle ;
     rdfs:label "Rapporto al convegno \"Crisi dell'ideologia tecnocratica e recupero dell'espressione\", Bologna, 11-13 gennaio 1974"@it ;
     prism:endingPage 87 ;
-    prism:number "nov.- dic. 1974" ;
+    prism:number "nov./dic. 1974" ;
     prism:publicationDate "1974"^^xsd:gYear ;
     prism:startingPage 16 ;
     dcterms:creator res:persona-umberto-eco ;
@@ -14798,12 +14798,12 @@ res:articolo-ja1504 a fabio:JournalArticle ;
 res:articolo-ja1505 a fabio:JournalArticle ;
     rdfs:label "Mentalese e traduzione"@it ;
     prism:endingPage 28 ;
-    prism:number "2" ;
+    prism:number "2 (nuova serie)" ;
     prism:publicationDate "1995"^^xsd:gYear ;
     prism:startingPage 23 ;
     dcterms:creator res:persona-umberto-eco ;
     dcterms:title "Mentalese e traduzione"@it ;
-    frbr:partOf res:rivista-carte-semiotiche-nuova-serie .
+    frbr:partOf res:rivista-carte-semiotiche .
 
 res:articolo-ja1506 a fabio:JournalArticle ;
     rdfs:label "Porre in essere la deglutizione del bolo. Traduzione: \"Inghiottire\""@it ;
@@ -15198,22 +15198,22 @@ res:articolo-ja1558 a fabio:JournalArticle ;
 res:articolo-ja1559 a fabio:JournalArticle ;
     rdfs:label "Sul simbolo"@it ;
     prism:endingPage 53 ;
-    prism:number "4" ;
+    prism:number "4 (special issue «Simbolo», a cura di S. Briosi)" ;
     prism:publicationDate "1995"^^xsd:gYear ;
     prism:startingPage 35 ;
     dcterms:creator res:persona-umberto-eco ;
     dcterms:title "Sul simbolo"@it ;
-    frbr:partOf res:rivista-simbolo-ed-s-briosi-special-issue-di-l-immagine-riflessa .
+    frbr:partOf res:rivista-l-immagine-riflessa .
 
 res:articolo-ja1560 a fabio:JournalArticle ;
     rdfs:label "Stile, critica e semiotica del testo"@it ;
     prism:endingPage 56 ;
-    prism:number "3" ;
+    prism:number "3 (nuova serie)" ;
     prism:publicationDate "1996"^^xsd:gYear ;
     prism:startingPage 44 ;
     dcterms:creator res:persona-umberto-eco ;
     dcterms:title "Stile, critica e semiotica del testo"@it ;
-    frbr:partOf res:rivista-carte-semiotiche-nuova-serie .
+    frbr:partOf res:rivista-carte-semiotiche .
 
 res:articolo-ja1561 a fabio:JournalArticle ;
     rdfs:label "Zero a zero tra politica e stampa. Sono complici, non avversari"@it ;
@@ -17514,52 +17514,52 @@ res:articolo-ja1851 a fabio:JournalArticle ;
     rdfs:label "Aspetti conoscitivi della metafora in Aristotele"@it ;
     eco:paginaRicostruitaDaData true ;
     prism:endingPage 7 ;
-    prism:number "3" ;
+    prism:number "3 (special issue «La metafora nel Medioevo»)" ;
     prism:publicationDate "2004"^^xsd:gYear ;
     prism:startingPage 5 ;
     dcterms:creator res:persona-umberto-eco ;
     dcterms:title "Aspetti conoscitivi della metafora in Aristotele"@it ;
-    frbr:partOf res:rivista-in-la-metafora-nel-medioevo-special-issue-doctor-virtualis .
+    frbr:partOf res:rivista-doctor-virtualis .
 
 res:articolo-ja1852 a fabio:JournalArticle ;
     rdfs:label "Conclusione"@it ;
     prism:endingPage 111 ;
-    prism:number "3" ;
+    prism:number "3 (special issue «La metafora nel Medioevo»)" ;
     prism:publicationDate "2004"^^xsd:gYear ;
     prism:startingPage 17 ;
     dcterms:creator res:persona-umberto-eco ;
     dcterms:title "Conclusione"@it ;
-    frbr:partOf res:rivista-in-la-metafora-nel-medioevo-special-issue-doctor-virtualis .
+    frbr:partOf res:rivista-doctor-virtualis .
 
 res:articolo-ja1853 a fabio:JournalArticle ;
     rdfs:label "L’analogia entis"@it ;
     prism:endingPage 109 ;
-    prism:number "3" ;
+    prism:number "3 (special issue «La metafora nel Medioevo»)" ;
     prism:publicationDate "2004"^^xsd:gYear ;
     prism:startingPage 99 ;
     dcterms:creator res:persona-umberto-eco ;
     dcterms:title "L’analogia entis"@it ;
-    frbr:partOf res:rivista-in-la-metafora-nel-medioevo-special-issue-doctor-virtualis .
+    frbr:partOf res:rivista-doctor-virtualis .
 
 res:articolo-ja1854 a fabio:JournalArticle ;
     rdfs:label "L’Aristotele Latino"@it ;
     prism:endingPage 26 ;
-    prism:number "3" ;
+    prism:number "3 (special issue «La metafora nel Medioevo»)" ;
     prism:publicationDate "2004"^^xsd:gYear ;
     prism:startingPage 9 ;
     dcterms:creator res:persona-umberto-eco ;
     dcterms:title "L’Aristotele Latino"@it ;
-    frbr:partOf res:rivista-in-la-metafora-nel-medioevo-special-issue-doctor-virtualis .
+    frbr:partOf res:rivista-doctor-virtualis .
 
 res:articolo-ja1855 a fabio:JournalArticle ;
     rdfs:label "La metafora nel Medioevo latino"@it ;
     prism:endingPage 75 ;
-    prism:number "3" ;
+    prism:number "3 (special issue «La metafora nel Medioevo»)" ;
     prism:publicationDate "2004"^^xsd:gYear ;
     prism:startingPage 35 ;
     dcterms:creator res:persona-umberto-eco ;
     dcterms:title "La metafora nel Medioevo latino"@it ;
-    frbr:partOf res:rivista-in-la-metafora-nel-medioevo-special-issue-doctor-virtualis .
+    frbr:partOf res:rivista-doctor-virtualis .
 
 res:articolo-ja1856 a fabio:JournalArticle ;
     rdfs:label "I grandi scomparsi"@it ;
@@ -27419,12 +27419,12 @@ res:indice-pape-satan-aleppe-046 a eco:VoceIndice ;
     eco:titoloInIndice "Una bella compagnia"@it .
 
 res:indice-pape-satan-aleppe-047 a eco:VoceIndice ;
-    rdfs:label "Indovina grillo"@it ;
+    rdfs:label "Indovinala grillo"@it ;
     eco:articoloCorrispondente res:articolo-ja2038 ;
     eco:nelIndiceDi res:libro-pape-satan-aleppe ;
     eco:posizioneInIndice 47 ;
     eco:statoVoce "ristampa" ;
-    eco:titoloInIndice "Indovina grillo"@it .
+    eco:titoloInIndice "Indovinala grillo"@it .
 
 res:indice-pape-satan-aleppe-048 a eco:VoceIndice ;
     rdfs:label "Non credete alle coincidenze"@it ;
@@ -30293,7 +30293,7 @@ res:articolo-ja0726 a fabio:JournalArticle ;
     prism:publicationDate "1977"^^xsd:gYear ;
     dcterms:creator res:persona-umberto-eco ;
     dcterms:title "La controcultura"@it ;
-    frbr:partOf res:rivista-la-civilta-delle-macchine .
+    frbr:partOf res:rivista-civilta-delle-macchine .
 
 res:articolo-ja0727 a fabio:JournalArticle ;
     rdfs:label "Leica e P.38. È bastata una fotografia"@it ;
@@ -32812,7 +32812,7 @@ res:articolo-ja1761 a fabio:JournalArticle ;
     prism:coverDate "2000-12-21"^^xsd:date ;
     prism:endingPage 350 ;
     prism:isVersionOf res:libro-pape-satan-aleppe ;
-    prism:number "50-51-52" ;
+    prism:number "50/51/52" ;
     prism:publicationDate "2000"^^xsd:gYear ;
     prism:startingPage 350 ;
     dcterms:creator res:persona-umberto-eco ;
@@ -36024,15 +36024,15 @@ res:rivista-l-architettura-cronache-e-storia a fabio:Journal ;
     dcterms:title "L'architettura: cronache e storia"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/576> .
 
+res:rivista-l-immagine-riflessa a fabio:Journal ;
+    rdfs:label "L'immagine riflessa"@it ;
+    dcterms:title "L'immagine riflessa"@it ;
+    rdfs:seeAlso <https://acnpsearch.unibo.it/journal/50758> .
+
 res:rivista-la-battana a fabio:Journal ;
     rdfs:label "La Battana"@it ;
     dcterms:title "La Battana"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/46366> .
-
-res:rivista-la-civilta-delle-macchine a fabio:Journal ;
-    rdfs:label "La civiltà delle macchine"@it ;
-    dcterms:title "La civiltà delle macchine"@it ;
-    rdfs:seeAlso <https://acnpsearch.unibo.it/journal/1222> .
 
 res:rivista-la-prova-radicale a fabio:Journal ;
     rdfs:label "La prova radicale"@it ;
@@ -36186,11 +36186,6 @@ res:rivista-sette a fabio:Journal ;
     rdfs:label "Sette"@it ;
     dcterms:title "Sette"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/73443> .
-
-res:rivista-simbolo-ed-s-briosi-special-issue-di-l-immagine-riflessa a fabio:Journal ;
-    rdfs:label "Simbolo”, ed. S. Briosi, special issue di L’immagine riflessa"@it ;
-    dcterms:title "Simbolo”, ed. S. Briosi, special issue di L’immagine riflessa"@it ;
-    rdfs:seeAlso <https://acnpsearch.unibo.it/journal/50758> .
 
 res:rivista-sipario-rassegna-mensile-dello-spettacolo a fabio:Journal ;
     rdfs:label "Sipario : rassegna mensile dello spettacolo"@it ;
@@ -36483,16 +36478,6 @@ res:rivista-cahiers-ferdinand-de-saussure a fabio:Journal ;
     dcterms:title "Cahiers Ferdinand de Saussure"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/35175> .
 
-res:rivista-carte-semiotiche-nuova-serie a fabio:Journal ;
-    rdfs:label "Carte Semiotiche: nuova serie"@it ;
-    dcterms:title "Carte Semiotiche: nuova serie"@it ;
-    rdfs:seeAlso <https://acnpsearch.unibo.it/journal/1088142> .
-
-res:rivista-civilta-delle-macchine a fabio:Journal ;
-    rdfs:label "Civiltà delle macchine"@it ;
-    dcterms:title "Civiltà delle macchine"@it ;
-    rdfs:seeAlso <https://acnpsearch.unibo.it/journal/1222> .
-
 res:rivista-comics-mensile-di-critica-storia-e-informazione-sul-cartooning a fabio:Journal ;
     rdfs:label "Comics : mensile di critica, storia e informazione sul cartooning"@it ;
     dcterms:title "Comics : mensile di critica, storia e informazione sul cartooning"@it ;
@@ -36773,10 +36758,10 @@ res:rivista-alfabeta2 a fabio:Journal ;
     dcterms:title "Alfabeta2"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/2740690> .
 
-res:rivista-carte-semiotiche a fabio:Journal ;
-    rdfs:label "Carte Semiotiche"@it ;
-    dcterms:title "Carte Semiotiche"@it ;
-    rdfs:seeAlso <https://acnpsearch.unibo.it/journal/1088142> .
+res:rivista-civilta-delle-macchine a fabio:Journal ;
+    rdfs:label "Civiltà delle macchine"@it ;
+    dcterms:title "Civiltà delle macchine"@it ;
+    rdfs:seeAlso <https://acnpsearch.unibo.it/journal/1222> .
 
 res:rivista-il-protagora a fabio:Journal ;
     rdfs:label "Il Protagora"@it ;
@@ -36922,9 +36907,14 @@ res:rivista-artecasa a fabio:Journal ;
     dcterms:title "Artecasa"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/84803> .
 
-res:rivista-in-la-metafora-nel-medioevo-special-issue-doctor-virtualis a fabio:Journal ;
-    rdfs:label "in “La metafora nel Medioevo”, special issue, Doctor Virtualis"@it ;
-    dcterms:title "in “La metafora nel Medioevo”, special issue, Doctor Virtualis"@it ;
+res:rivista-carte-semiotiche a fabio:Journal ;
+    rdfs:label "Carte Semiotiche"@it ;
+    dcterms:title "Carte Semiotiche"@it ;
+    rdfs:seeAlso <https://acnpsearch.unibo.it/journal/1088142> .
+
+res:rivista-doctor-virtualis a fabio:Journal ;
+    rdfs:label "Doctor Virtualis"@it ;
+    dcterms:title "Doctor Virtualis"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/2628180> .
 
 res:rivista-radiocorriere-tv a fabio:Journal ;
