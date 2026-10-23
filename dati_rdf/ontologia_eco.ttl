@@ -29,7 +29,7 @@
 <http://example.org/eco-graph/schema#> a owl:Ontology ;
     rdfs:label "Ontologia per la bibliografia di Umberto Eco (eco-graph)"@it ;
     rdfs:comment "Estensione minima di Dublin Core, FaBiO, PRISM, FRBR e FOAF per modellare gli articoli di Umberto Eco, le riviste su cui sono usciti, e i libri in cui sono stati ripubblicati. Non usa owl:imports (vedi nota sotto): le classi/proprieta' riusate sono referenziate per URI, non reimportate."@it ;
-    owl:versionInfo "1.11" ;
+    owl:versionInfo "1.12" ;
     dcterms:modified "2026-10-23"^^xsd:date .
 
 #################################################################
@@ -201,6 +201,15 @@
 #           OPAC SBN) del volume in cui il capitolo e' uscito per la prima
 #           volta. Facoltativa: solo dove indicata (colonna T «Link volume»
 #           di Indice.xlsx). Nessuna nuova classe.
+# 1.12 - 2026-10-23 - indirizzo web del volume originale anche per i
+#       capitoli non collegati e per gli articoli con dati del volume
+#       originale (richiesta esplicita: titoli dei volumi cliccabili, con
+#       i link all'OPAC SBN).
+#         - Una nuova proprieta' datatype, senza dominio vincolato (si usa su
+#           eco:CapitoloNonCollegato e su fabio:JournalArticle):
+#           eco:linkVolumeOriginale (xsd:anyURI). Facoltativa; dati nella
+#           colonna «link_volume_originale» di capitoli_non_collegati.csv e
+#           articoli_volume_originale.csv. Nessuna nuova classe.
 #################################################################
 
 #################################################################
@@ -625,6 +634,11 @@ eco:linkVolumeIndicato a owl:DatatypeProperty ;
     rdfs:label "indirizzo web del volume indicato"@it ;
     rdfs:comment "Indirizzo web (per esempio la scheda dell'OPAC SBN) del volume in cui il capitolo e' uscito per la prima volta; presente solo dove l'indice lo indica."@it ;
     rdfs:domain eco:VoceIndice ;
+    rdfs:range xsd:anyURI .
+
+eco:linkVolumeOriginale a owl:DatatypeProperty ;
+    rdfs:label "indirizzo web del volume originale"@it ;
+    rdfs:comment "Indirizzo web (per esempio la scheda dell'OPAC SBN) del volume collettivo in cui il contributo è stato pubblicato originariamente; presente solo dove indicato."@it ;
     rdfs:range xsd:anyURI .
 
 eco:statoVoce a owl:DatatypeProperty ;

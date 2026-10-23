@@ -905,7 +905,7 @@ function campiArticoloHTML(raw, opzioni){
   // Eco tratto in origine da un'antologia curata da altri (caso raro in cui
   // il capitolo è comunque collegato a un fabio:JournalArticle esistente).
   if(raw.titolo_volume_originale){
-    html += "<div class='campo campo-volume-originale'><b>Pubblicato originariamente in:</b> «" + raw.titolo_volume_originale + "»" +
+    html += "<div class='campo campo-volume-originale'><b>Pubblicato originariamente in:</b> «" + titoloConLink(raw.titolo_volume_originale, raw.link_volume_originale) + "»" +
             (raw.curatori_volume_originale ? ", " + raw.curatori_volume_originale : "") + "</div>";
     let dove = [];
     if(raw.citta_volume_originale) dove.push(raw.citta_volume_originale);
@@ -1039,7 +1039,7 @@ function attivaEspansioneInline(riga, articolo, colspan, contenitore, opzioni){
 function campiCapitoloVolumeHTML(c){
   let html = "";
   html += "<div class='campo'><b>Titolo:</b> " + c.titolo + "</div>";
-  html += "<div class='campo campo-volume-originale'><b>Pubblicato originariamente in:</b> «" + c.titolo_volume_originale + "»" +
+  html += "<div class='campo campo-volume-originale'><b>Pubblicato originariamente in:</b> «" + titoloConLink(c.titolo_volume_originale, c.link_volume_originale) + "»" +
           (c.curatori_volume_originale ? ", " + c.curatori_volume_originale : "") + "</div>";
   let dove = [];
   if(c.citta_volume_originale) dove.push(c.citta_volume_originale);
@@ -3874,6 +3874,12 @@ function etichettaCuratoreVolume(testo){
   return m ? ["Autore del volume", m[1]] : ["A cura di", testo];
 }
 // (2026-10-23) Titolo del volume: cliccabile (scheda OPAC SBN, ecc.) se l'indice indica un indirizzo web
+// v1.12: titolo di un volume originale (capitoli non collegati / articoli con dati del
+// volume) reso cliccabile se c'e' un indirizzo (scheda OPAC SBN); titolo non modificato.
+function titoloConLink(titolo, url){
+  const u = url && /^https?:\/\//i.test(String(url)) ? String(url) : null;
+  return u ? "<a href='" + String(u).replace(/&/g,"&amp;").replace(/'/g,"%27") + "' target='_blank' rel='noopener'>" + titolo + "</a>" : titolo;
+}
 function titoloVolumeHTML(vol){
   const t = escHtmlIndice(String(vol.libro == null ? "" : vol.libro));
   const u = vol.link && /^https?:\/\//i.test(String(vol.link)) ? String(vol.link) : null;
@@ -3923,7 +3929,7 @@ function campiFonteIndiceHTML(voce){
   if(vol && !periodico){
     return "<div class='campo campo-stato-voce'><b>Informazioni sul contributo originale</b></div>" +
       colonneHTML(
-        [campo("Titolo", escHtmlIndice(v(f.titolo))), campo("Autore", autore), campo("Pubblicato in", titoloVolumeHTML(vol)),
+        [campo("Titolo", ((!vol.libro || ["","N.D."].includes(String(vol.libro).trim())) && vol.link) ? titoloConLink(escHtmlIndice(v(f.titolo)), vol.link) : escHtmlIndice(v(f.titolo))), campo("Autore", autore), campo("Pubblicato in", titoloVolumeHTML(vol)),
          campo("Editore", escHtmlIndice(v(vol.editore))), campo("Anno", escHtmlIndice(v(vol.anno))), campo("Note", escHtmlIndice(v(notaOk)))],
         [campo("Tipo", "Contributo in volume"), campo("Co-autore", escHtmlIndice(v(voce.coautore))), campo(etichettaCuratoreVolume(v(vol.curatore))[0], escHtmlIndice(etichettaCuratoreVolume(v(vol.curatore))[1])),
          campo("Luogo", escHtmlIndice(v(vol.luogo))), campo("Pagine", escHtmlIndice(v(vol.pagine))), altreRistampeIndiceHTML(voce)]);
@@ -4308,7 +4314,7 @@ function disegnaDettaglioLibro(){
       // libro invece che da un periodico.
       tr.innerHTML =
         "<td class='col-titolo-capitolo'>" + "«" + c.titolo + "»" + marcaNotazione(tipoNotazioneCapitoloNonCollegato(c)) + "</td>" +
-        "<td>" + "«" + c.titolo_volume_originale + "»" + "</td>" +
+        "<td>" + "«" + titoloConLink(c.titolo_volume_originale, c.link_volume_originale) + "»" + "</td>" +
         "<td>" + (c.curatori_volume_originale || "") + "</td>" +
         "<td>" + (c.anno_volume_originale || "") + "</td>";
       tr.addEventListener("click", ()=> attivaEspansioneInlineCapitolo(tr, c, 4));
