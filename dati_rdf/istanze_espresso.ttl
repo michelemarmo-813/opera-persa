@@ -26880,9 +26880,10 @@ res:indice-opera-aperta-1966-007 a eco:VoceIndice ;
 res:indice-opera-aperta-1966-008 a eco:VoceIndice ;
     rdfs:label "Lo Zen e l'Occidente"@it ;
     eco:annoVolumeIndicato "1959"@it ;
-    eco:curatoreVolumeIndicato "A. W. Watts (autore del volume; Eco ne firma la prefazione)"@it ;
+    eco:curatoreVolumeIndicato "Autore del volume: Alan Watts [a cura di Umberto Eco]"@it ;
     eco:dataIndicata "N.D."@it ;
     eco:editoreVolumeIndicato "Bompiani"@it ;
+    eco:linkVolumeIndicato "https://opac.sbn.it/en/risultati-ricerca-avanzata/-/opac-adv/index/8/ITICCULO10506392?fieldvalue%5B1%5D=lo+zen+watts&fieldaccess%5B1%5D=Keywords%3A1016&fieldstruct%5B1%5D=ricerca.parole_tutte%3A4%3D6&struct%3A1001=ricerca.parole_almeno_una%3A%40or%40&sort_access=Data_ascendente%3A+min+31%2C+min+3086%2C+min+5003"^^xsd:anyURI ;
     eco:luogoVolumeIndicato "Milano"@it ;
     eco:nelIndiceDi res:libro-opera-aperta-1966 ;
     eco:numeroIndicato "N.D."@it ;
@@ -26893,7 +26894,7 @@ res:indice-opera-aperta-1966-008 a eco:VoceIndice ;
     eco:testataIndicata "N.D."@it ;
     eco:titoloInIndice "Lo Zen e l'Occidente"@it ;
     eco:titoloOriginaleIndicato "Lo Zen e l'Occidente"@it ;
-    eco:titoloVolumeIndicato "Lo Zen"@it .
+    eco:titoloVolumeIndicato "Lo Zen : un modo di vita, lavoro e arte in estremo Oriente"@it .
 
 res:indice-opera-aperta-1966-009 a eco:VoceIndice ;
     rdfs:label "Del modo di formare come impiego sulla realtà"@it ;
@@ -26967,9 +26968,10 @@ res:indice-opera-aperta-1976-008 a eco:VoceIndice ;
 res:indice-opera-aperta-1976-009 a eco:VoceIndice ;
     rdfs:label "Lo Zen e l'Occidente"@it ;
     eco:annoVolumeIndicato "1959"@it ;
-    eco:curatoreVolumeIndicato "A. W. Watts (autore del volume; Eco ne firma la prefazione)"@it ;
+    eco:curatoreVolumeIndicato "Autore del volume: Alan Watts [a cura di Umberto Eco]"@it ;
     eco:dataIndicata "N.D."@it ;
     eco:editoreVolumeIndicato "Bompiani"@it ;
+    eco:linkVolumeIndicato "https://opac.sbn.it/en/risultati-ricerca-avanzata/-/opac-adv/index/8/ITICCULO10506392?fieldvalue%5B1%5D=lo+zen+watts&fieldaccess%5B1%5D=Keywords%3A1016&fieldstruct%5B1%5D=ricerca.parole_tutte%3A4%3D6&struct%3A1001=ricerca.parole_almeno_una%3A%40or%40&sort_access=Data_ascendente%3A+min+31%2C+min+3086%2C+min+5003"^^xsd:anyURI ;
     eco:luogoVolumeIndicato "Milano"@it ;
     eco:nelIndiceDi res:libro-opera-aperta-1976 ;
     eco:numeroIndicato "N.D."@it ;
@@ -26980,7 +26982,7 @@ res:indice-opera-aperta-1976-009 a eco:VoceIndice ;
     eco:testataIndicata "N.D."@it ;
     eco:titoloInIndice "Lo Zen e l'Occidente"@it ;
     eco:titoloOriginaleIndicato "Lo Zen e l'Occidente"@it ;
-    eco:titoloVolumeIndicato "Lo Zen"@it .
+    eco:titoloVolumeIndicato "Lo Zen : un modo di vita, lavoro e arte in estremo Oriente"@it .
 
 res:indice-opera-aperta-1976-010 a eco:VoceIndice ;
     rdfs:label "Del modo di formare come impiego sulla realtà"@it ;
@@ -35415,11 +35417,11 @@ res:capitolo-non-collegato-opera-aperta-1966-lo-zen-e-l-occidente a eco:Capitolo
     rdfs:label "Lo Zen e l'Occidente"@it ;
     eco:annoVolumeOriginale "1959" ;
     eco:cittaVolumeOriginale "Milano"@it ;
-    eco:curatoriVolumeOriginale "A. W. Watts (autore del volume; Eco ne firma la prefazione)"@it ;
+    eco:curatoriVolumeOriginale "Autore del volume: Alan Watts [a cura di Umberto Eco]"@it ;
     eco:editoreVolumeOriginale "Bompiani"@it ;
     eco:notaVolumeOriginale "Prefazione di Eco al volume «Lo Zen» di Alan W. Watts."@it ;
     eco:pagineVolumeOriginale "147-172" ;
-    eco:titoloVolumeOriginale "Lo Zen"@it ;
+    eco:titoloVolumeOriginale "Lo Zen : un modo di vita, lavoro e arte in estremo Oriente"@it ;
     dcterms:title "Lo Zen e l'Occidente"@it ;
     rdfs:comment "Capitolo tratto da un contributo pubblicato originariamente in un volume collettivo (dati bibliografici riportati sotto), non in un periodico: per questo non è collegato a un fabio:JournalArticle."@it .
 
@@ -35427,11 +35429,11 @@ res:capitolo-non-collegato-opera-aperta-1976-lo-zen-e-l-occidente a eco:Capitolo
     rdfs:label "Lo Zen e l'Occidente"@it ;
     eco:annoVolumeOriginale "1959" ;
     eco:cittaVolumeOriginale "Milano"@it ;
-    eco:curatoriVolumeOriginale "A. W. Watts (autore del volume; Eco ne firma la prefazione)"@it ;
+    eco:curatoriVolumeOriginale "Autore del volume: Alan Watts [a cura di Umberto Eco]"@it ;
     eco:editoreVolumeOriginale "Bompiani"@it ;
     eco:notaVolumeOriginale "Prefazione di Eco al volume «Lo Zen» di Alan W. Watts."@it ;
     eco:pagineVolumeOriginale "147-172" ;
-    eco:titoloVolumeOriginale "Lo Zen"@it ;
+    eco:titoloVolumeOriginale "Lo Zen : un modo di vita, lavoro e arte in estremo Oriente"@it ;
     dcterms:title "Lo Zen e l'Occidente"@it ;
     rdfs:comment "Capitolo tratto da un contributo pubblicato originariamente in un volume collettivo (dati bibliografici riportati sotto), non in un periodico: per questo non è collegato a un fabio:JournalArticle."@it .
 

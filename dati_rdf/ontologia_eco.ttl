@@ -29,8 +29,8 @@
 <http://example.org/eco-graph/schema#> a owl:Ontology ;
     rdfs:label "Ontologia per la bibliografia di Umberto Eco (eco-graph)"@it ;
     rdfs:comment "Estensione minima di Dublin Core, FaBiO, PRISM, FRBR e FOAF per modellare gli articoli di Umberto Eco, le riviste su cui sono usciti, e i libri in cui sono stati ripubblicati. Non usa owl:imports (vedi nota sotto): le classi/proprieta' riusate sono referenziate per URI, non reimportate."@it ;
-    owl:versionInfo "1.10" ;
-    dcterms:modified "2026-10-21"^^xsd:date .
+    owl:versionInfo "1.11" ;
+    dcterms:modified "2026-10-23"^^xsd:date .
 
 #################################################################
 # STORICO VERSIONI
@@ -193,6 +193,14 @@
 #           solo (per «La struttura assente», anno della prima edizione: 1968).
 #           Dati: Indice.xlsx (nuovo foglio «La struttura assente (1968)»),
 #           colonna «edizione» di dati_estratti/indici_volumi.csv.
+# 1.11 - 2026-10-23 - indirizzo web del volume in un'indice
+#       (richiesta esplicita: titolo del volume «Lo Zen» di Alan Watts,
+#       cliccabile, nell'indice di «Opera aperta»).
+#         - Una nuova proprieta' datatype con dominio eco:VoceIndice:
+#           eco:linkVolumeIndicato (xsd:anyURI), l'indirizzo web (es. scheda
+#           OPAC SBN) del volume in cui il capitolo e' uscito per la prima
+#           volta. Facoltativa: solo dove indicata (colonna T «Link volume»
+#           di Indice.xlsx). Nessuna nuova classe.
 #################################################################
 
 #################################################################
@@ -612,6 +620,12 @@ eco:paginaVolumeIndicato a owl:DatatypeProperty ;
     rdfs:comment "Pagine del capitolo nel volume in cui e' uscito per la prima volta, come lo indica la fonte dell'indice (contributi in volume); «N.D.» se non indicato."@it ;
     rdfs:domain eco:VoceIndice ;
     rdfs:range xsd:string .
+
+eco:linkVolumeIndicato a owl:DatatypeProperty ;
+    rdfs:label "indirizzo web del volume indicato"@it ;
+    rdfs:comment "Indirizzo web (per esempio la scheda dell'OPAC SBN) del volume in cui il capitolo e' uscito per la prima volta; presente solo dove l'indice lo indica."@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range xsd:anyURI .
 
 eco:statoVoce a owl:DatatypeProperty ;
     rdfs:label "stato della voce"@it ;

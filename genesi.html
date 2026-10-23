@@ -213,10 +213,10 @@ function capitoliSenzaArticolo(ed){
     const base = nc.find(c => norm(c.titolo) === norm(v.titolo))
       || (v.volume && nc.find(c => norm(c.titolo_volume_originale) === norm(v.volume.libro))) || null;
     const o = { id: prefisso + "i" + v.posizione, kind: "capitolo_nc", titolo: v.titolo,
-      titolo_volume_originale: null, curatori_volume_originale: null, citta_volume_originale: null,
+      titolo_volume_originale: null, curatori_volume_originale: null, link_volume_originale: null, citta_volume_originale: null,
       editore_volume_originale: null, anno_volume_originale: null, pagine_volume_originale: null, nota_volume_originale: null };
     if(v.volume && v.volume.libro){
-      Object.assign(o, { titolo_volume_originale: v.volume.libro, curatori_volume_originale: v.volume.curatore || null,
+      Object.assign(o, { titolo_volume_originale: v.volume.libro, curatori_volume_originale: v.volume.curatore || null, link_volume_originale: v.volume.link || null,
         citta_volume_originale: v.volume.luogo || null, editore_volume_originale: v.volume.editore || null,
         anno_volume_originale: v.volume.anno || null, pagine_volume_originale: v.volume.pagine || null });
       o.nota = null;   // niente nota per i capitoli da volume (vedi NOTA_VOLUME_COLLETTIVO)
@@ -744,8 +744,13 @@ function mostraDettaglioGenesi(raw){
       "' target='_blank' rel='noopener'>Vai alla scheda dell'articolo &rarr;</a></div>";
   } else if(raw.kind === "capitolo_nc"){
     html += "<div class='campo'><b>Tipo:</b> Capitolo senza fonte periodica individuata</div>";
-    if(raw.titolo_volume_originale) html += "<div class='campo'><b>Tratto da:</b> «" + raw.titolo_volume_originale + "»" + (raw.anno_volume_originale ? " (" + raw.anno_volume_originale + ")" : "") + "</div>";
-    if(raw.curatori_volume_originale) html += "<div class='campo'><b>Curatori/autori:</b> " + raw.curatori_volume_originale + "</div>";
+    const _tv = raw.link_volume_originale && /^https?:\/\//i.test(raw.link_volume_originale)
+      ? "<a href='" + String(raw.link_volume_originale).replace(/&/g,"&amp;").replace(/'/g,"%27") + "' target='_blank' rel='noopener'>" + raw.titolo_volume_originale + "</a>" : raw.titolo_volume_originale;
+    if(raw.titolo_volume_originale) html += "<div class='campo'><b>Tratto da:</b> «" + _tv + "»" + (raw.anno_volume_originale ? " (" + raw.anno_volume_originale + ")" : "") + "</div>";
+    if(raw.curatori_volume_originale){
+      const _m = /^Autore del volume:\s*(.+)$/i.exec(String(raw.curatori_volume_originale));
+      html += "<div class='campo'><b>" + (_m ? "Autore del volume" : "Curatori/autori") + ":</b> " + (_m ? _m[1] : raw.curatori_volume_originale) + "</div>";
+    }
     // (2026-10-21) la nota «Capitolo tratto da un contributo pubblicato originariamente in un volume collettivo (…)»
     // non si mostra mai nel focus: i dati del volume sono gia' nei campi «Tratto da» e «Curatori/autori».
     if(raw.nota && !NOTA_VOLUME_COLLETTIVO.test(raw.nota)) html += "<div class='campo'>" + raw.nota + "</div>";
