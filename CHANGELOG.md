@@ -3,6 +3,13 @@
 Registro delle versioni del progetto (sito + dati RDF). Copre l'intero progetto; per lo storico delle sole modifiche
 allo schema dell'ontologia, vedi anche il commento "STORICO VERSIONI" in `grafo_eco/ontologia_eco.ttl`.
 
+## 2026-10-24 (107) — Indice.xlsx: nuovo foglio «La memoria vegetale» (libro non caricato nel sito)
+
+Backup `20261024-1830` (suffisso `_indice_memoria_vegetale`) in `backup/` (e `Indice.xlsx` anche in `sorgenti/backup/`): Indice.xlsx, CHANGELOG, Word.
+- **Fonte**: `sorgenti/Indice.xlsx`, nuovo foglio «La memoria vegetale» (22º foglio, in coda; il nome del libro è più lungo del limite di 31 caratteri di Excel: in A1 c'è il titolo intero, «La memoria vegetale e altri scritti di bibliofilia», Tascabili Bompiani, 2011). Stesso layout a 19 colonne degli altri fogli (intestazioni, stili e larghezze copiati da «Dall'albero al labirinto»). 18 capitoli dell'indice dell'epub, nell'ordine del libro, con la provenienza dichiarata nelle note del volume (colonna Note: «Nota di provenienza dal libro: …», più la sezione del libro: SULLA BIBLIOFILIA, HISTORICA, FOLLI LETTERARI (E SCIENTIFICI), ETEROTOPIE E FALSIFICAZIONI). Tipologie: 10 «Articolo in rivista» (3 su L'Esopo, 7 su Almanacco del bibliofilo), 2 «Ristampa di un volume» (i due volumetti Rovello), 3 «Contributo in volume», 3 «N.D.» (nessuna nota di provenienza: «Perché Kircher?», «Per una riforma dei cataloghi», «Il problema della soglia»); i dati non presenti nell'epub (pagine, numeri, luoghi) sono «N.D.». Non inserita la «Bibliografia» finale (non è un testo di Eco).
+- **Non caricato**: il foglio non è elencato in `FOGLI_DEFINITIVO` di `importa_indici.py` (come «Dall'albero al labirinto», «Cinque scritti morali», «Le forme del contenuto»): nessun nodo, nessun arco, nessun dato del sito. Per caricarlo servirà una riga in `FOGLI_DEFINITIVO` (e di decidere nome del libro e tipo), su indicazione dell'utente.
+- **Verifiche**: confronto cella per cella dei 21 fogli esistenti: 0 differenze (valori, collegamenti, formati, larghezze); eseguiti `importa_indici.py`, `genera_rdf.py`, `genera_dati_sito.py`: `dati.js`, `grafo_dati.json` e `posizioni_iniziali.js` identici (sha1), `query_esempio.js` identico, nodi 2787, archi 3187, triple 33928; nessuna traccia di «memoria vegetale» in dati.js, indici_volumi.csv, RDF e index.html. Word aggiornato (paragrafo sulle fonti).
+
 ## 2026-10-23 (106) — Nota di «Eugenio Carmi» (Marcatré n. 6/7) ridotta
 
 Backup `20261023-2312` (suffisso `_note_carmi_breve`) in `backup/` (e `Articoli.xlsx` anche in `sorgenti/backup/`).
