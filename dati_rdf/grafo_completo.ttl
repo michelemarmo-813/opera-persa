@@ -20535,6 +20535,150 @@ res:articolo-ja2260 a fabio:JournalArticle ;
     dcterms:title "Appunti per una semiologia delle comunicazioni visive"@it ;
     frbr:partOf res:rivista-bollettino-del-centro-internazionale-di-studi-d-architettura-andrea-palladio .
 
+res:articolo-ja2261 a fabio:JournalArticle ;
+    rdfs:label "Magia nel Rinascimento e oltre"@it ;
+    prism:endingPage 566 ;
+    prism:number "2" ;
+    prism:publicationDate "2014"^^xsd:gYear ;
+    prism:startingPage 563 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "Magia nel Rinascimento e oltre"@it ;
+    frbr:partOf res:rivista-bruniana-campanelliana .
+
+res:articolo-ja2262 a fabio:JournalArticle ;
+    rdfs:label "Tradurre \"Exercices de style\" di Queneau"@it ;
+    prism:endingPage 19 ;
+    prism:number "5" ;
+    prism:publicationDate "1983"^^xsd:gYear ;
+    prism:startingPage 3 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "Tradurre \"Exercices de style\" di Queneau"@it ;
+    frbr:partOf res:rivista-francofonia-studi-e-ricerche-sulle-letterature-di-lingua-francese .
+
+res:articolo-ja2263 a fabio:JournalArticle ;
+    rdfs:label "Scrittura \"creativa\" e no. Una distinzione sensata?"@it ;
+    prism:endingPage 32 ;
+    prism:number "27" ;
+    prism:publicationDate "1994"^^xsd:gYear ;
+    prism:startingPage 13 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "Scrittura \"creativa\" e no. Una distinzione sensata?"@it ;
+    frbr:partOf res:rivista-francofonia-studi-e-ricerche-sulle-letterature-di-lingua-francese .
+
+res:articolo-ja2264 a fabio:JournalArticle ;
+    rdfs:label "Erika Papagni intervista Umberto Eco"@it ;
+    prism:endingPage 321 ;
+    prism:number "2/3" ;
+    prism:publicationDate "2008"^^xsd:gYear ;
+    prism:startingPage 319 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "Erika Papagni intervista Umberto Eco"@it ;
+    frbr:partOf res:rivista-italica .
+
+res:articolo-ja2265 a fabio:JournalArticle ;
+    rdfs:label "La memoria vegetale"@it ;
+    prism:endingPage 25 ;
+    prism:number "53" ;
+    prism:publicationDate "1992"^^xsd:gYear ;
+    prism:startingPage 9 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "La memoria vegetale"@it ;
+    frbr:partOf res:rivista-l-esopo-rivista-trimestrale-di-bibliofilia .
+
+res:articolo-ja2266 a fabio:JournalArticle ;
+    rdfs:label "Per una riforma dei cataloghi"@it ;
+    eco:rubrica res:rubrica-in-angulo-cum-libro ;
+    prism:endingPage 12 ;
+    prism:number "67/68" ;
+    prism:publicationDate "1996"^^xsd:gYear ;
+    prism:startingPage 11 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "Per una riforma dei cataloghi"@it ;
+    frbr:partOf res:rivista-l-esopo-rivista-trimestrale-di-bibliofilia .
+
+res:articolo-ja2267 a fabio:JournalArticle ;
+    rdfs:label "Del vandalismo democratico"@it ;
+    eco:rubrica res:rubrica-in-angulo-cum-libro ;
+    prism:endingPage 14 ;
+    prism:number "65/66" ;
+    prism:publicationDate "1996"^^xsd:gYear ;
+    prism:startingPage 11 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "Del vandalismo democratico"@it ;
+    frbr:partOf res:rivista-l-esopo-rivista-trimestrale-di-bibliofilia .
+
+res:articolo-ja2268 a fabio:JournalArticle ;
+    rdfs:label "Un nuovo mistero egizio"@it ;
+    eco:rubrica res:rubrica-in-angulo-cum-libro ;
+    prism:endingPage 14 ;
+    prism:number "71/72" ;
+    prism:publicationDate "1997"^^xsd:gYear ;
+    prism:startingPage 11 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "Un nuovo mistero egizio"@it ;
+    frbr:partOf res:rivista-l-esopo-rivista-trimestrale-di-bibliofilia .
+
+res:articolo-ja2269 a fabio:JournalArticle ;
+    rdfs:label "Prezzi distillati"@it ;
+    prism:endingPage 14 ;
+    prism:number "75/76" ;
+    prism:publicationDate "1998"^^xsd:gYear ;
+    prism:startingPage 11 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "Prezzi distillati"@it ;
+    frbr:partOf res:rivista-l-esopo-rivista-trimestrale-di-bibliofilia .
+
+res:articolo-ja2270 a fabio:JournalArticle ;
+    rdfs:label "Come punire chi non esporta opere d'arte"@it ;
+    eco:rubrica res:rubrica-in-angulo-cum-libro ;
+    prism:endingPage 85 ;
+    prism:number "75/76" ;
+    prism:publicationDate "1998"^^xsd:gYear ;
+    prism:startingPage 83 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "Come punire chi non esporta opere d'arte"@it ;
+    frbr:partOf res:rivista-l-esopo-rivista-trimestrale-di-bibliofilia .
+
+res:articolo-ja2271 a fabio:JournalArticle ;
+    rdfs:label "Perchè i libri allungano la nostra vita"@it ;
+    prism:endingPage 14 ;
+    prism:number "81/82" ;
+    prism:publicationDate "2000"^^xsd:gYear ;
+    prism:startingPage 11 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "Perchè i libri allungano la nostra vita"@it ;
+    frbr:partOf res:rivista-l-esopo-rivista-trimestrale-di-bibliofilia .
+
+res:articolo-ja2272 a fabio:JournalArticle ;
+    rdfs:label "Riflessioni sulla bibliofilia"@it ;
+    prism:endingPage 38 ;
+    prism:number "85/86" ;
+    prism:publicationDate "2001"^^xsd:gYear ;
+    prism:startingPage 23 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "Riflessioni sulla bibliofilia"@it ;
+    frbr:partOf res:rivista-l-esopo-rivista-trimestrale-di-bibliofilia .
+
+res:articolo-ja2273 a fabio:JournalArticle ;
+    rdfs:label "Varia et curiosa, storia dei Fous Littéraires"@it ;
+    prism:endingPage 32 ;
+    prism:number "89/90" ;
+    prism:publicationDate "2002"^^xsd:gYear ;
+    prism:startingPage 9 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "Varia et curiosa, storia dei Fous Littéraires"@it ;
+    frbr:partOf res:rivista-l-esopo-rivista-trimestrale-di-bibliofilia .
+
+res:articolo-ja2274 a fabio:JournalArticle ;
+    rdfs:label "Para Peri Epi, e dintorni in un falso del XVIII secolo"@it ;
+    prism:endingPage 144 ;
+    prism:number "1" ;
+    prism:publicationDate "2004"^^xsd:gYear ;
+    prism:startingPage 137 ;
+    dcterms:creator res:persona-umberto-eco ;
+    dcterms:title "Para Peri Epi, e dintorni in un falso del XVIII secolo"@it ;
+    frbr:partOf res:rivista-paratesto .
+
 res:articolo-na0003 a fabio:NewspaperArticle ;
     rdfs:label "Ma Superman a cosa serve?"@it ;
     prism:coverDate "1963-10-27"^^xsd:date ;
@@ -36042,6 +36186,11 @@ res:rivista-bollettino-della-societa-filosofica-italiana-nuova-serie a fabio:Jou
     dcterms:title "Bollettino della società filosofica italiana, nuova serie"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/43626> .
 
+res:rivista-bruniana-campanelliana a fabio:Journal ;
+    rdfs:label "Bruniana & Campanelliana"@it ;
+    dcterms:title "Bruniana & Campanelliana"@it ;
+    rdfs:seeAlso <https://acnpsearch.unibo.it/journal/1017436> .
+
 res:rivista-california-italian-studies a fabio:Journal ;
     rdfs:label "California Italian Studies"@it ;
     dcterms:title "California Italian Studies"@it ;
@@ -36135,6 +36284,11 @@ res:rivista-intersezioni a fabio:Journal ;
     rdfs:label "Intersezioni"@it ;
     dcterms:title "Intersezioni"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/51110> .
+
+res:rivista-italica a fabio:Journal ;
+    rdfs:label "Italica"@it ;
+    dcterms:title "Italica"@it ;
+    rdfs:seeAlso <https://acnpsearch.unibo.it/journal/37595> .
 
 res:rivista-itinerari a fabio:Journal ;
     rdfs:label "Itinerari"@it ;
@@ -36235,6 +36389,11 @@ res:rivista-paragone-letteratura a fabio:Journal ;
     rdfs:label "Paragone. Letteratura"@it ;
     dcterms:title "Paragone. Letteratura"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/54503> .
+
+res:rivista-paratesto a fabio:Journal ;
+    rdfs:label "Paratesto"@it ;
+    dcterms:title "Paratesto"@it ;
+    rdfs:seeAlso <https://acnpsearch.unibo.it/journal/2324579> .
 
 res:rivista-pianeta a fabio:Journal ;
     rdfs:label "Pianeta"@it ;
@@ -36625,6 +36784,11 @@ res:rivista-edilizia-moderna a fabio:Journal ;
     dcterms:title "Edilizia Moderna"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/69267> .
 
+res:rivista-francofonia-studi-e-ricerche-sulle-letterature-di-lingua-francese a fabio:Journal ;
+    rdfs:label "Francofonia : studi e ricerche sulle letterature di lingua francese"@it ;
+    dcterms:title "Francofonia : studi e ricerche sulle letterature di lingua francese"@it ;
+    rdfs:seeAlso <https://acnpsearch.unibo.it/journal/67343> .
+
 res:rivista-il-caffe-politico-e-letterario a fabio:Journal ;
     rdfs:label "Il Caffè politico e letterario"@it ;
     dcterms:title "Il Caffè politico e letterario"@it ;
@@ -36634,11 +36798,6 @@ res:rivista-il-nuovo-canzoniere-italiano a fabio:Journal ;
     rdfs:label "Il nuovo Canzoniere Italiano"@it ;
     dcterms:title "Il nuovo Canzoniere Italiano"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/54190> .
-
-res:rivista-l-esopo-rivista-trimestrale-di-bibliofilia a fabio:Journal ;
-    rdfs:label "L'Esopo : rivista trimestrale di bibliofilia"@it ;
-    dcterms:title "L'Esopo : rivista trimestrale di bibliofilia"@it ;
-    rdfs:seeAlso <https://acnpsearch.unibo.it/journal/31294> .
 
 res:rivista-la-biennale-di-venezia a fabio:Journal ;
     rdfs:label "La Biennale di Venezia"@it ;
@@ -37020,8 +37179,11 @@ res:rubrica-cinema a eco:Rubrica ;
 res:rubrica-cultura-di-massa a eco:Rubrica ;
     rdfs:label "Cultura di massa"@it .
 
+res:rubrica-in-angulo-cum-libro a eco:Rubrica ;
+    rdfs:label "In angulo cum libro"@it .
+
 res:rubrica-schede-perforate a eco:Rubrica ;
-    rdfs:label "Schede Perforate"@it .
+    rdfs:label "Schede perforate"@it .
 
 res:libro-le-poetiche-di-joyce a eco:LibroRaccolta,
         fabio:Book ;
@@ -37108,6 +37270,11 @@ res:rivista-filosofia a fabio:Journal ;
     rdfs:label "Filosofia"@it ;
     dcterms:title "Filosofia"@it ;
     rdfs:seeAlso <https://acnpsearch.unibo.it/journal/36654> .
+
+res:rivista-l-esopo-rivista-trimestrale-di-bibliofilia a fabio:Journal ;
+    rdfs:label "L'Esopo : rivista trimestrale di bibliofilia"@it ;
+    dcterms:title "L'Esopo : rivista trimestrale di bibliofilia"@it ;
+    rdfs:seeAlso <https://acnpsearch.unibo.it/journal/31294> .
 
 res:libro-opera-aperta-1962 a eco:LibroRaccolta,
         fabio:Book,
