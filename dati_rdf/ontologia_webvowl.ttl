@@ -1,0 +1,101 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix eco: <http://example.org/eco-graph/schema#> .
+@prefix fabio: <http://purl.org/spar/fabio/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix frbr: <http://purl.org/vocab/frbr/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prism: <http://prismstandard.org/namespaces/basic/2.0/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+eco:LibroNonRaccolta a owl:Class ;
+    rdfs:label "Libro non raccolta"@it ;
+    rdfs:subClassOf fabio:Book .
+
+eco:Romanzo a owl:Class ;
+    rdfs:label "Romanzo"@it ;
+    rdfs:subClassOf fabio:Book .
+
+eco:articoloCorrispondente a owl:ObjectProperty ;
+    rdfs:label "corrisponde a"@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range fabio:JournalArticle .
+
+eco:estrattoDi a owl:ObjectProperty ;
+    rdfs:label "estratto di"@it ;
+    rdfs:domain fabio:JournalArticle ;
+    rdfs:range fabio:Book .
+
+eco:nelIndiceDi a owl:ObjectProperty ;
+    rdfs:label "voce dell'indice di"@it ;
+    rdfs:domain eco:VoceIndice ;
+    rdfs:range eco:LibroRaccolta .
+
+eco:rubrica a owl:ObjectProperty ;
+    rdfs:label "nella rubrica"@it ;
+    rdfs:domain fabio:JournalArticle ;
+    rdfs:range eco:Rubrica .
+
+<http://example.org/eco-graph/schema-webvowl> a owl:Ontology ;
+    rdfs:label "Opera Persa – schema (per WebVOWL)"@it .
+
+prism:isVersionOf a owl:ObjectProperty ;
+    rdfs:label "ristampato in"@it ;
+    rdfs:domain fabio:JournalArticle ;
+    rdfs:range eco:LibroRaccolta .
+
+dcterms:creator a owl:ObjectProperty ;
+    rdfs:label "autore"@it ;
+    rdfs:domain fabio:JournalArticle ;
+    rdfs:range foaf:Person .
+
+fabio:Newspaper a owl:Class ;
+    rdfs:label "Quotidiano"@it ;
+    rdfs:subClassOf fabio:Journal .
+
+fabio:NewspaperArticle a owl:Class ;
+    rdfs:label "Articolo di quotidiano"@it ;
+    rdfs:subClassOf fabio:JournalArticle .
+
+frbr:part a owl:ObjectProperty ;
+    rdfs:label "ha capitolo non collegato"@it ;
+    rdfs:domain eco:LibroRaccolta ;
+    rdfs:range eco:CapitoloNonCollegato .
+
+frbr:partOf a owl:ObjectProperty ;
+    rdfs:label "pubblicato su"@it ;
+    rdfs:domain fabio:JournalArticle ;
+    rdfs:range fabio:Journal .
+
+frbr:realizationOf a owl:ObjectProperty ;
+    rdfs:label "realizza"@it ;
+    rdfs:domain fabio:Book ;
+    rdfs:range frbr:Work .
+
+eco:CapitoloNonCollegato a owl:Class ;
+    rdfs:label "Capitolo non collegato"@it .
+
+eco:Rubrica a owl:Class ;
+    rdfs:label "Rubrica"@it .
+
+frbr:Work a owl:Class ;
+    rdfs:label "Opera (Work)"@it .
+
+foaf:Person a owl:Class ;
+    rdfs:label "Persona"@it .
+
+eco:VoceIndice a owl:Class ;
+    rdfs:label "Voce d'indice"@it .
+
+fabio:Journal a owl:Class ;
+    rdfs:label "Rivista"@it .
+
+eco:LibroRaccolta a owl:Class ;
+    rdfs:label "Raccolta"@it ;
+    rdfs:subClassOf fabio:Book .
+
+fabio:Book a owl:Class ;
+    rdfs:label "Libro"@it .
+
+fabio:JournalArticle a owl:Class ;
+    rdfs:label "Articolo di rivista"@it .
+
